@@ -1,0 +1,13 @@
+{
+    "name": "lib",
+    "url" : "https://github.com/MaddinXx/hx-lib",
+    "license": "MIT",
+    "tags": ["std", "cross", "library", "lib"],
+    "description": "A completing yet alternative standard library.",
+    "classPath": "src",
+    "version": "0.0.0",
+    "releasenote": "Starting a new eta",
+    "contributors": [
+       "MaddinXx"
+    ]
+}

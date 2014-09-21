@@ -1,0 +1,57 @@
+<project name="hx-lib" default="exit" basedir=".">
+    <description>A completing yet alternative standard library for Haxe.</description>
+
+    <property environment="env" />
+    <property name="workspace" location="${env.WORKSPACE}" />
+    <property name="src" location="${workspace}/src" />
+    <property name="bin"  location="${workspace}/bin" />
+    <property name="build" location="${workspace}/build" />
+    <property name="reports"  location="${workspace}/reports" />
+
+    <target name="init" description="Creates the directories needed to store output">
+        <echo>Creating all required directories...</echo>
+        <mkdir dir="${bin}" />
+        <mkdir dir="${reports}" />
+    </target>
+
+    <target name="build" depends="init" description="Builds the unit test runners">
+        <echo>Compiling the source code...</echo>
+        <exec executable="haxe" resultproperty="build.code">
+            <arg value="${build}/build.hxml" />
+        </exec>
+        <condition property="build.failed">
+            <isfailure code="${build.code}" />
+        </condition>
+    </target>
+
+    <target name="cloc" depends="build" description="Counts the lines of code">
+        <echo>Counting lines of code...</echo>
+        <exec executable="cloc">
+            <arg value="--ignore-whitespace" />
+            <arg value="--read-lang-def=/usr/share/cloc/defs/haxe.txt" />
+            <arg value="--by-file" />
+            <arg value="--xml" />
+            <arg value="-out=${reports}/cloc.xml" />
+            <arg value="${src}" />
+        </exec>
+
+        <exec executable="xsltproc">
+            <arg value="-o" />
+            <arg value="${reports}/sloccount.sc" />
+            <arg value="/usr/share/cloc/cloc2sloccount.xsl" />
+            <arg value="${reports}/cloc.xml" />
+        </exec>
+    </target>
+
+    <target name="cleanup" depends="cloc" description="Removes compiled files and directories">
+        <echo>Removing (temporary) directories...</echo>
+        <delete dir="${bin}" />
+        <delete dir="${workspace}/.temp" />
+    </target>
+
+    <target name="exit" depends="cleanup" description="Marks the build as failed if one of the targets failed">
+        <fail if="build.failed">Build step failed. Check output log for more information.</fail>
+        <fail if="test.failed">Unit tests step failed. Check output log for more information.</fail>
+        <echo>Everything went well. Good job!</echo>
+    </target>
+</project>
