@@ -82,7 +82,6 @@ class Deque<T> implements IDeque<T>
     public function pop(block:Bool):Null<T>
     {
         var top:T = null;
-
         if (block) {
             this.mutex.acquire();
             if (this.queue.isEmpty()) {

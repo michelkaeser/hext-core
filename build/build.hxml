@@ -1,0 +1,49 @@
+# C++
+-cp  src
+-cpp bin/cpp
+-xml bin/cpp.xml
+--macro "include('lib', true, [ 'lib.cs', 'lib.java' ])"
+--no-output
+
+# C#
+--next
+-cp  src
+-cs  bin/cs
+-xml bin/cs.xml
+--macro "include('lib', true, [ 'lib.java' ])"
+--no-output
+
+# Java
+--next
+-cp   src
+-java bin/java
+-xml  bin/java.xml
+--macro "include('lib', true, [ 'lib.cs' ])"
+--no-output
+
+# JS
+--next
+-cp  src
+-js  bin/main.js
+-xml bin/js.xml
+--macro "include('lib', true, [ 'lib.cs', 'lib.ds.SynchronizedCollection', 'lib.ds.SynchronizedList', 'lib.ds.SynchronizedQueue', 'lib.ds.SynchronizedSet', 'lib.io', 'lib.threading', 'lib.java', 'lib.vm' ])"
+--no-output
+
+# Neko
+--next
+-cp   src
+-neko bin/main.n
+-xml  bin/neko.xml
+--macro "include('lib', true, [ 'lib.cs', 'lib.java' ])"
+--no-output
+
+# PHP
+--next
+-cp   src
+-neko bin/php
+-xml  bin/php.xml
+--macro "include('lib', true, [ 'lib.cs', 'lib.ds.SynchronizedCollection', 'lib.ds.SynchronizedList', 'lib.ds.SynchronizedQueue', 'lib.ds.SynchronizedSet', 'lib.threading', 'lib.java', 'lib.vm' ])"
+--no-output
+
+--next
+-cmd haxelib run dox -o api -i bin -in "^lib.*" --title "hx-lib"

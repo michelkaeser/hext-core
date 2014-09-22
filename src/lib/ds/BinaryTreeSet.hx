@@ -179,8 +179,9 @@ class BinaryTreeSet<T> extends Set<T> implements ITree<T>
     /**
      * @{inherit}
      */
-    public function toArray():Array<T>
+    override public function toArray():Array<T>
     {
+        var target:Array<T> = new Array<T>();
         if (!this.isEmpty()) {
             this._traverse(this.root.right, 0, function(node:T):Void {
                 target.push(node);

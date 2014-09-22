@@ -15,7 +15,7 @@
     </target>
 
     <target name="build" depends="init" description="Builds the unit test runners">
-        <echo>Compiling the source code...</echo>
+        <echo>Building the API documentation...</echo>
         <exec executable="haxe" resultproperty="build.code">
             <arg value="${build}/build.hxml" />
         </exec>
