@@ -1,8 +1,8 @@
 package lib.ds;
 
 import lib.Callback;
-import lib.ds.Set;
 import lib.ds.ITree;
+import lib.ds.Set;
 import lib.util.Comparator;
 
 /**
@@ -21,7 +21,7 @@ class BinaryTreeSet<T> extends Set<T> implements ITree<T>
     /**
      * Constructor to initialize a new BinaryTreeSet instance.
      *
-     * @param lib.util.Comparator comparator the Comparator used to compare items
+     * @param lib.util.Comparator<T> comparator the Comparator used to compare items
      */
     public function new(comparator:Comparator<T>):Void
     {

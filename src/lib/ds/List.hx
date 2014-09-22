@@ -5,9 +5,9 @@ package lib.ds;
 #end
 import lib.IllegalArgumentException;
 import lib.NotImplementedException;
-import lib.ds.IndexOutOfBoundsException;
 import lib.ds.Collection;
 import lib.ds.IList;
+import lib.ds.IndexOutOfBoundsException;
 import lib.ds.ListIterator;
 
 /**

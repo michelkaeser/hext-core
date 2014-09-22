@@ -1,8 +1,8 @@
 package lib.ds;
 
+import lib.ds.IndexOutOfBoundsException;
 import lib.ds.List;
 import lib.ds.ListIterator;
-import lib.ds.IndexOutOfBoundsException;
 
 /**
  * IList implementation using linked elements.

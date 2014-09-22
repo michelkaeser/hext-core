@@ -51,17 +51,17 @@ class Throwable implements Stringable
      */
     private function new(msg:Dynamic = "", ?info:PosInfos):Void
     {
-        this.message            = msg;
-        this.info               = info;
         #if LIB_DEBUG
-            var es              = CallStack.exceptionStack();
-            this.exceptionStack = CallStack.toString(es);
             var cs              = CallStack.callStack();
             this.callStack      = CallStack.toString(cs);
+            var es              = CallStack.exceptionStack();
+            this.exceptionStack = CallStack.toString(es);
         #else
             this.exceptionStack = "Exception stack available in debug mode only";
             this.callStack      = "Call stack available in debug mode only";
         #end
+        this.info               = info;
+        this.message            = msg;
     }
 
     /**

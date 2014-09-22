@@ -38,7 +38,7 @@ abstract Lock(#if LIB_WIN SemaphoreSlim #else Semaphore #end)
     /**
      * @{inherit}
      */
-    public function wait(timeout:Float = -1.0):Bool
+    public function wait(?timeout:Float = -1.0):Bool
     {
         if (timeout != -1.0) {
             timeout = timeout * 1000;

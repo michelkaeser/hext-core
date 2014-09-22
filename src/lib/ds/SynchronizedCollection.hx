@@ -15,7 +15,7 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     /**
      * Stores the underlaying Collection.
      *
-     * @var lib.ds.ICollection
+     * @var lib.ds.ICollection<T>
      */
     private var collection:ICollection<T>;
 

@@ -12,7 +12,7 @@ interface IProgress
      *
      * @var Float
      */
-    /* @:isVar */ public var value(get, set):Float;
+    @:isVar public var value(get, null):Float;
 
     /**
      * Attaches the value listener.
@@ -49,4 +49,16 @@ interface IProgress
      * @return Bool
      */
     public function isCompleted():Bool;
+
+    /**
+     * Sets the progress value.
+     *
+     * @param Float value the value to set
+     *
+     * @return Float
+     *
+     * @throws lib.IllegalArgumentException if the value is less than 0
+     * @throws lib.IllegalArgumentException if the value is greater than 1
+     */
+    public function setValue(value:Float):Float;
 }

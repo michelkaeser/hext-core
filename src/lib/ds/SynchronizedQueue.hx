@@ -10,11 +10,9 @@ import lib.vm.Mutex;
 class SynchronizedQueue<T> implements IQueue<T>
 {
     /**
-     * Stores the underlaying, to synchronize, Queue.
-     *
-     * @var lib.ds.IQueue<T>
+     * @{inherit}
      */
-    private var queue:IQueue<T>;
+    public var length(get, never):Int;
 
     /**
      * Stores the Mutex used to synchronize read/write access.
@@ -24,9 +22,11 @@ class SynchronizedQueue<T> implements IQueue<T>
     private var mutex:IMutex;
 
     /**
-     * @{inherit}
+     * Stores the underlaying, to synchronize, Queue.
+     *
+     * @var lib.ds.IQueue<T>
      */
-    public var length(get, never):Int;
+    private var queue:IQueue<T>;
 
 
     /**
@@ -36,8 +36,8 @@ class SynchronizedQueue<T> implements IQueue<T>
      */
     public function new(queue:IQueue<T>):Void
     {
-        this.queue = queue;
         this.mutex = new Mutex();
+        this.queue = queue;
     }
 
     /**

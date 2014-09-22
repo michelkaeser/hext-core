@@ -3,17 +3,23 @@ package lib.ds;
 import lib.ds.IList;
 
 /**
+ * Iterator optimized for Lists.
  *
+ * @generic T the type of items the list contains
  */
 class ListIterator<T>
 {
     /**
+     * Stores the list to iterate over.
      *
+     * @var lib.ds.IList<T>
      */
     private var list:IList<T>;
 
     /**
+     * Stores the current position.
      *
+     * @var Int
      */
     private var position:Int;
 

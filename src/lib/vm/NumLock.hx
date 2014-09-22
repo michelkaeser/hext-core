@@ -19,6 +19,13 @@ class NumLock implements ILock
     private var handle:ILock;
 
     /**
+     * Mutex used to synchronize access to the times property.
+     *
+     * @var lib.vm.IMutex
+     */
+    private var mutex:IMutex;
+
+    /**
      * Stores the number of times the Lock needs to be released.
      *
      * @var Int
@@ -31,13 +38,6 @@ class NumLock implements ILock
      * @var Int
      */
     private var releases:Int;
-
-    /**
-     * Mutex used to synchronize access to the times property.
-     *
-     * @var lib.vm.IMutex
-     */
-    private var mutex:IMutex;
 
 
     /**
@@ -55,9 +55,9 @@ class NumLock implements ILock
         }
 
         this.handle   = lock;
+        this.mutex    = new Mutex();
         this.times    = times;
         this.releases = 0;
-        this.mutex    = new Mutex();
     }
 
     /**

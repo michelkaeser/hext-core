@@ -7,6 +7,7 @@ import lib.io.IOException;
 import lib.io.Path;
 import sys.FileStat;
 import sys.FileSystem;
+import sys.io.File in HaxeFile;
 import sys.io.FileInput;
 import sys.io.FileOutput;
 
@@ -78,7 +79,7 @@ class File implements Stringable
         if (copy.create()) {
             if (!this.isEmpty()) {
                 try {
-                    copy.saveBytes(this.getBytes());
+                    HaxeFile.copy(this.path, to);
                 } catch (ex:Dynamic) {
                     throw new IOException(ex);
                 }
@@ -103,7 +104,7 @@ class File implements Stringable
     {
         if (!FileSystem.exists(this.path)) {
             try {
-                var writer:FileOutput = this.write();
+                var writer:FileOutput = HaxeFile.write(this.path);
                 writer.close();
                 return true;
             } catch (ex:Dynamic) {

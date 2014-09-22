@@ -35,15 +35,7 @@ class Progress implements IProgress
      *
      * @var Float
      */
-    public var value(get, set):Float;
-
-    /**
-     * TODO: Temporary internal value variable
-     * since @:isVar prevents access to instance vars.
-     *
-     * @var Float
-     */
-    private var value_data:Float;
+    public var value(get, null):Float;
 
     /**
      * Stores the map of awaited values and the Locks blocking the waiters.
@@ -60,7 +52,7 @@ class Progress implements IProgress
     {
         this.listeners  = new SynchronizedSet<Callback<Float>>(new UnsortedSet<Callback<Float>>(Reflector.compare));
         this.mutex      = new Mutex();
-        this.value_data = 0.0;
+        this.value      = 0.0;
         this.valueLocks = new StringMap<MultiLock>();
     }
 
@@ -82,7 +74,7 @@ class Progress implements IProgress
         }
 
         this.mutex.acquire();
-        if (value > this.value_data) {
+        if (value > this.value) {
             var val:String     = Std.string(value);
             var lock:MultiLock = this.valueLocks.get(val);
             if (lock == null) {
@@ -117,7 +109,7 @@ class Progress implements IProgress
     private function get_value():Float
     {
         this.mutex.acquire();
-        var value:Float = this.value_data;
+        var value:Float = this.value;
         this.mutex.release();
 
         return value;
@@ -140,9 +132,13 @@ class Progress implements IProgress
     {
         var listener:Callback<Float>;
         for (listener in this.listeners.toArray()) {
-            try {
+            #if LIB_DEBUG
                 listener(value);
-            } catch (ex:Dynamic) {}
+            #else
+                try {
+                    listener(value);
+                } catch (ex:Dynamic) {}
+            #end
         }
     }
 
@@ -163,16 +159,9 @@ class Progress implements IProgress
     }
 
     /**
-     * Internal setter method for the value_data property.
-     *
-     * @param Float value the value to set
-     *
-     * @return Float
-     *
-     * @throws lib.IllegalArgumentException if the value is less than 0
-     * @throws lib.IllegalArgumentException if the value is greater than 1
+     * @{inherit}
      */
-    private function set_value(value:Float):Float
+    public function setValue(value:Float):Float
     {
         if (value < 0.0) {
             throw new IllegalArgumentException("Cannot set a value smaller than 0");
@@ -182,8 +171,8 @@ class Progress implements IProgress
         }
 
         this.mutex.acquire();
-        if (value != this.value_data) {
-            this.value_data = value;
+        if (value != this.value) {
+            this.value = value;
             this.notifyListeners(value);
             this.releaseLocks(value);
         }

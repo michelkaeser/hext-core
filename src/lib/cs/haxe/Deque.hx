@@ -22,13 +22,6 @@ import lib.vm.Mutex;
 class Deque<T> implements IDeque<T>
 {
     /**
-     * Stores the queue to store the items.
-     *
-     * @var lib.ds.SynchronizedQueue<T>
-     */
-    private var queue:SynchronizedQueue<T>;
-
-    /**
      * Stores the Lock used to block pop(true) calls.
      *
      * @var lib.vm.ILock
@@ -42,15 +35,22 @@ class Deque<T> implements IDeque<T>
      */
     private var mutex:IMutex;
 
+    /**
+     * Stores the queue to store the items.
+     *
+     * @var lib.ds.SynchronizedQueue<T>
+     */
+    private var queue:SynchronizedQueue<T>;
+
 
     /**
      * Constructor to initialize a new Deque.
      */
     public function new():Void
     {
-        this.queue = new SynchronizedQueue<T>(new WaitList<T>());
         this.lock  = new Lock();
         this.mutex = new Mutex();
+        this.queue = new SynchronizedQueue<T>(new WaitList<T>());
     }
 
     /**
@@ -60,10 +60,12 @@ class Deque<T> implements IDeque<T>
      */
     public function add(item:T):Void
     {
+        this.mutex.acquire();
         this.queue.push(item);
         if (this.queue.length == 1) {
             this.lock.release();
         }
+        this.mutex.release();
     }
 
     /**
@@ -80,26 +82,29 @@ class Deque<T> implements IDeque<T>
     public function pop(block:Bool):Null<T>
     {
         var top:T = null;
-        this.mutex.acquire();
-        if (this.queue.isEmpty()) {
-            this.mutex.release();
-            while (true) {
-                this.lock.wait(0.01);
-                this.mutex.acquire();
-                if (!this.queue.isEmpty()) {
-                    try {
-                        top = this.queue.pop();
-                        this.mutex.release();
-                        break;
-                    } catch (ex:Dynamic) {
-                        this.mutex.release();
-                        throw ex;
+
+        if (block) {
+            this.mutex.acquire();
+            if (this.queue.isEmpty()) {
+                this.mutex.release();
+                while (true) {
+                    this.lock.wait(0.01);
+                    this.mutex.acquire();
+                    if (!this.queue.isEmpty()) {
+                        try {
+                            top = this.queue.pop();
+                            this.mutex.release();
+                            break;
+                        } catch (ex:Dynamic) {
+                            this.mutex.release();
+                            throw ex;
+                        }
                     }
                 }
+            } else {
+                top = this.queue.pop();
+                this.mutex.release();
             }
-        } else {
-            top = this.queue.pop();
-            this.mutex.release();
         }
 
         return top;

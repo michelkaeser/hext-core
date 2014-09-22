@@ -61,6 +61,8 @@ class ArrayTools
      * @param Int      index the index to delete
      *
      * @return Array<T> the Array of deleted items
+     *
+     * @throws lib.IllegalArgumentException if the index is negative
      */
     public static function delete<T>(arr:Array<T>, index:Int):Array<T>
     {

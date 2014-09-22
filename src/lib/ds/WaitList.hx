@@ -21,7 +21,7 @@ class WaitList<T> extends Queue<T>
     /**
      * Constructor to initialize a new WaitList.
      *
-     * @param lib.ds.IList<T> list the underlaying list where items should be stored
+     * @param Null<lib.ds.IList<T>> list the underlaying list where items should be stored
      */
     public function new(?list:IList<T>):Void
     {

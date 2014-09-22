@@ -1,12 +1,14 @@
 package lib.ds;
 
-import lib.ds.LinkedList;
 import lib.ds.IList;
+import lib.ds.LinkedList;
 import lib.ds.NoSuchElementException;
 import lib.ds.Queue;
 
 /**
+ * A first-in first-out Stack implementation.
  *
+ * @var T the type of items the stack contains
  */
 class Stack<T> extends Queue<T>
 {
@@ -21,7 +23,7 @@ class Stack<T> extends Queue<T>
     /**
      * Constructor to initialize a new Stack.
      *
-     * @param lib.ds.IList<T> list the underlaying List to use
+     * @param Null<lib.ds.IList<T>> list the underlaying List to use
      */
     public function new(?list:IList<T>):Void
     {

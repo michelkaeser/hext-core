@@ -227,6 +227,8 @@ abstract Char(Bytes) from Bytes to Bytes
      * @param String str the String character to cast
      *
      * @return lib.Char
+     *
+     * @throws lib.error is the string is longer than 1 character
      */
     @:noCompletion @:noUsing
     @:from public static function fromString(str:String):Char
