@@ -40,7 +40,7 @@ class Throwable implements Stringable
      *
      * @var Dynamic
      */
-    private var message:Dynamic;
+    public var msg(default, null):Dynamic;
 
 
     /**
@@ -61,7 +61,7 @@ class Throwable implements Stringable
             this.callStack      = "Call stack available in debug mode only";
         #end
         this.info               = info;
-        this.message            = msg;
+        this.msg                = msg;
     }
 
     /**
@@ -133,7 +133,7 @@ class Throwable implements Stringable
     {
         var buffer:StringBuf = new StringBuf();
 
-        buffer.add(this.message);
+        buffer.add(this.msg);
         buffer.add("\n");
         buffer.add(this.getSource());
         buffer.add("\n\n");

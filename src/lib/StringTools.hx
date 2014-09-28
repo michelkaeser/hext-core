@@ -1,6 +1,7 @@
 package lib;
 
 import lib.Char;
+import lib.IllegalArgumentException;
 import lib.StringIterator;
 
 /**
@@ -38,6 +39,24 @@ class StringTools
         }
 
         return reverse.toString();
+    }
+
+    /**
+     * Converts the string to its Bool value.
+     *
+     * @param str the string to get the Bool value of
+     *
+     * @return Bool
+     *
+     * @throws lib.IllegalArgumentException if the string is no valid Bool value
+     */
+    public static function toBool(str:String):Bool
+    {
+        if (str != "false" && str != "true") {
+            throw new IllegalArgumentException("String is not a valid Boolean value");
+        }
+
+        return str == "true";
     }
 
     /**

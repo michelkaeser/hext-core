@@ -101,6 +101,66 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Checks if the passed character is a digit.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is a digit
+     */
+    public static function isDigit(c:Char):Bool
+    {
+        return (c:Int) >= '0'.code && (c:Int) <= '9'.code;
+    }
+
+    /**
+     * Checks if the passed character is a letter.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is a letter
+     */
+    public static function isLetter(c:Char):Bool
+    {
+        return ((c:Int) >= 'a'.code && (c:Int) <= 'z'.code) || ((c:Int) >= 'A'.code && (c:Int) <= 'Z'.code);
+    }
+
+    /**
+     * Checks if the passed character is a line-separator.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is one
+     */
+    public static function isLineSeparator(c:Char):Bool
+    {
+        return (c:Int) == '\n'.code || (c:Int) == '\r'.code;
+    }
+
+    /**
+     * Checks if the passed character is a special one (not digit, letter or whitespace).
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is a special one
+     */
+    public static function isSpecial(c:Char):Bool
+    {
+        return !Char.isDigit(c) && !Char.isLetter(c) && !Char.isWhiteSpace(c);
+    }
+
+    /**
+     * Checks if the passed character is a whitespace char.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is whitespace
+     */
+    public static function isWhiteSpace(c:Char):Bool
+    {
+        return (c:Int) == ' '.code || (c:Int) == '\t'.code || Char.isLineSeparator(c);
+    }
+
+    /**
      * Overloaded operator used when multiplying a Character by another Character.
      *
      * @param lib.Char c the Character to multiply by
