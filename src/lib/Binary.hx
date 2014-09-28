@@ -57,7 +57,7 @@ class Binary
         var i:Int   = 0;
         var exp:Int = 0;
         for (j in 0...binary.length) {
-            if (binary.charAt(j) == '1') {
+            if (binary.charCodeAt(j) == '1'.code) {
                 i += Std.int(Math.pow(2, binary.length - j - 1));
             }
         }
