@@ -31,7 +31,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A += B) public function addAssignChar(c:Char):Char
     {
-        this.set(0, (this:Char) + (c:Int));
+        this.set(0, (this:Char).toInt() + c.toInt());
         return this;
     }
 
@@ -45,7 +45,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A + B) public inline function addChar(c:Char):Char
     {
-        return cast(this, Int) + (c:Int);
+        return (this:Char).toInt() + c.toInt();
     }
 
     /**
@@ -58,7 +58,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A == B) public inline function compareEqualChar(c:Char):Bool
     {
-        return cast(this, Int) == (c:Int);
+        return (this:Char).toInt() == c.toInt();
     }
 
     /**
@@ -71,7 +71,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A > B) public inline function compareGreaterChar(c:Char):Bool
     {
-        return cast(this, Int) > (c:Int);
+        return (this:Char).toInt() > c.toInt();
     }
 
     /**
@@ -84,7 +84,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A < B) public inline function compareLessChar(c:Char):Bool
     {
-        return cast(this, Int) < (c:Int);
+        return (this:Char).toInt() < c.toInt();
     }
 
     /**
@@ -97,7 +97,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A / B) public inline function divideByChar(c:Char):Char
     {
-        return Std.int(cast(this, Int) / (c:Int));
+        return Std.int((this:Char).toInt() / c.toInt());
     }
 
     /**
@@ -121,7 +121,19 @@ abstract Char(Bytes) from Bytes to Bytes
      */
     public static function isLetter(c:Char):Bool
     {
-        return ((c:Int) >= 'a'.code && (c:Int) <= 'z'.code) || ((c:Int) >= 'A'.code && (c:Int) <= 'Z'.code);
+        return Char.isLowerCase(c) || Char.isUpperCase(c);
+    }
+
+    /**
+     * Checks if the character is a lower case letter.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is between 'a' and 'z'
+     */
+    public static function isLowerCase(c:Char):Bool
+    {
+        return (c:Int) >= 'a'.code && (c:Int) <= 'z'.code;
     }
 
     /**
@@ -134,6 +146,18 @@ abstract Char(Bytes) from Bytes to Bytes
     public static function isLineSeparator(c:Char):Bool
     {
         return (c:Int) == '\n'.code || (c:Int) == '\r'.code;
+    }
+
+    /**
+     * Checks if the character is an upper case letter.
+     *
+     * @param lib.Char c the char to check
+     *
+     * @return true if the character is between 'A' and 'Z'
+     */
+    public static function isUpperCase(c:Char):Bool
+    {
+        return (c:Int) >= 'A'.code && (c:Int) <= 'Z'.code;
     }
 
     /**
@@ -170,7 +194,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A * B) public inline function multiplyByChar(c:Char):Char
     {
-        return Std.int(cast(this, Int) * (c:Int));
+        return Std.int((this:Char).toInt() * c.toInt());
     }
 
     /**
@@ -181,7 +205,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A--) public function postDecrement():Char
     {
-        var cur:Int = cast(this, Int);
+        var cur:Int = (this:Char).toInt();
         this.set(0, cur - 1);
 
         return cur;
@@ -195,7 +219,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A++) public function postIncrement():Char
     {
-        var cur:Int = cast(this, Int);
+        var cur:Int = (this:Char).toInt();
         this.set(0, cur + 1);
 
         return cur;
@@ -221,7 +245,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(++A) public function preIncrement():Char
     {
-        this.set(0, cast(this, Int) + 1);
+        this.set(0, (this:Char).toInt() + 1);
         return this;
     }
 
@@ -235,7 +259,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A -= B) public function subsAssignChar(c:Char):Char
     {
-        this.set(0, cast(this, Int) - (c:Int));
+        this.set(0, (this:Char).toInt() - c.toInt());
         return this;
     }
 
@@ -249,7 +273,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A - B) public inline function subsChar(c:Char):Char
     {
-        return cast(this, Int) - (c:Int);
+        return (this:Char).toInt() - c.toInt();
     }
 
     /**
@@ -323,6 +347,29 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Converts the upper-case character to its lower-case equivalent.
+     *
+     * @param lib.Char c the character to convert
+     *
+     * @return lib.Char the lower-case character
+     *
+     * @throws lib.IllegalArgumentException if the character is not a letter
+     */
+    public static function toLowerCase(c:Char):Char
+    {
+        if (Char.isLetter(c)) {
+            var lower:Char = c;
+            if (Char.isUpperCase(c)) {
+                lower += 32;
+            }
+
+            return lower;
+        }
+
+        throw new IllegalArgumentException("Character is not a valid letter.");
+    }
+
+    /**
      * Implicit casting from Char to String.
      *
      * @return String the unicode character behind the char code
@@ -330,6 +377,29 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:to public inline function toString():String
     {
-        return String.fromCharCode(cast(this, Int));
+        return String.fromCharCode((this:Char));
+    }
+
+    /**
+     * Converts the lower-case character to its upper-case equivalent.
+     *
+     * @param lib.Char c the character to convert
+     *
+     * @return lib.Char the upper-case character
+     *
+     * @throws lib.IllegalArgumentException if the character is not a letter
+     */
+    public static function toUpperCase(c:Char):Char
+    {
+        if (Char.isLetter(c)) {
+            var upper:Char = c;
+            if (Char.isLowerCase(c)) {
+                upper -= 32;
+            }
+
+            return upper;
+        }
+
+        throw new IllegalArgumentException("Character is not a valid letter.");
     }
 }
