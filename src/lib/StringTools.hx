@@ -11,6 +11,50 @@ import lib.StringIterator;
 class StringTools
 {
     /**
+     * Checks if all string characters are lower-case.
+     *
+     * Attn: If the string is empty, always true is returned.
+     *
+     * @param String str the string to check
+     *
+     * @return Bool true if all is lower
+     */
+    public static function isLowerCase(str:String):Bool
+    {
+        var c:Char;
+        for (i in 0...str.length) {
+            c = str.charCodeAt(i);
+            if (Char.isLetter(c) && Char.isUpperCase(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if all string characters are upper-case.
+     *
+     * Attn: If the string is empty, always true is returned.
+     *
+     * @param String str the string to check
+     *
+     * @return Bool true if all is upper
+     */
+    public static function isUpperCase(str:String):Bool
+    {
+        var c:Char;
+        for (i in 0...str.length) {
+            c = str.charCodeAt(i);
+            if (Char.isLetter(c) && Char.isLowerCase(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Returns an Iterator that can be used to access every character of the String.
      *
      * @param String str the String to iterate over
