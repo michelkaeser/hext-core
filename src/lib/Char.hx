@@ -31,7 +31,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A += B) public function addAssignChar(c:Char):Char
     {
-        this.set(0, (this:Char).toInt() + c.toInt());
+        this.set(0, (this:Char) + (c:Int));
         return this;
     }
 
@@ -45,7 +45,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A + B) public inline function addChar(c:Char):Char
     {
-        return (this:Char).toInt() + c.toInt();
+        return cast(this, Int) + (c:Int);
     }
 
     /**
@@ -58,7 +58,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A == B) public inline function compareEqualChar(c:Char):Bool
     {
-        return (this:Char).toInt() == c.toInt();
+        return cast(this, Int) == (c:Int);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A > B) public inline function compareGreaterChar(c:Char):Bool
     {
-        return (this:Char).toInt() > c.toInt();
+        return cast(this, Int) > (c:Int);
     }
 
     /**
@@ -84,7 +84,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A < B) public inline function compareLessChar(c:Char):Bool
     {
-        return (this:Char).toInt() < c.toInt();
+        return cast(this, Int) < (c:Int);
     }
 
     /**
@@ -97,7 +97,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A / B) public inline function divideByChar(c:Char):Char
     {
-        return Std.int((this:Char).toInt() / c.toInt());
+        return Std.int(cast(this, Int) / (c:Int));
     }
 
     /**
@@ -170,7 +170,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A * B) public inline function multiplyByChar(c:Char):Char
     {
-        return Std.int((this:Char).toInt() * c.toInt());
+        return Std.int(cast(this, Int) * (c:Int));
     }
 
     /**
@@ -181,7 +181,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A--) public function postDecrement():Char
     {
-        var cur:Int = (this:Char).toInt();
+        var cur:Int = cast(this, Int);
         this.set(0, cur - 1);
 
         return cur;
@@ -195,7 +195,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A++) public function postIncrement():Char
     {
-        var cur:Int = (this:Char).toInt();
+        var cur:Int = cast(this, Int);
         this.set(0, cur + 1);
 
         return cur;
@@ -209,7 +209,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(--A) public function preDecrement():Char
     {
-        this.set(0, (this:Char).toInt() - 1);
+        this.set(0, cast(this, Int) - 1);
         return this;
     }
 
@@ -221,7 +221,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(++A) public function preIncrement():Char
     {
-        this.set(0, (this:Char).toInt() + 1);
+        this.set(0, cast(this, Int) + 1);
         return this;
     }
 
@@ -235,7 +235,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A -= B) public function subsAssignChar(c:Char):Char
     {
-        this.set(0, (this:Char).toInt() - c.toInt());
+        this.set(0, cast(this, Int) - (c:Int));
         return this;
     }
 
@@ -249,7 +249,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A - B) public inline function subsChar(c:Char):Char
     {
-        return (this:Char).toInt() - c.toInt();
+        return cast(this, Int) - (c:Int);
     }
 
     /**
@@ -330,6 +330,6 @@ abstract Char(Bytes) from Bytes to Bytes
     @:noCompletion
     @:to public inline function toString():String
     {
-        return String.fromCharCode((this:Char));
+        return String.fromCharCode(cast(this, Int));
     }
 }
