@@ -13,7 +13,7 @@ class Error extends Throwable
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "A fatal error encountered", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "A fatal error encountered.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

@@ -34,7 +34,7 @@ class Collection<T> implements ICollection<T> implements Arrayable<T> implements
      */
     public function add(item:T):Bool
     {
-        throw new NotImplementedException("Method add() not implemented in abstract class Collection");
+        throw new NotImplementedException("Method add() not implemented in abstract class Collection.");
     }
 
     /**
@@ -89,7 +89,7 @@ class Collection<T> implements ICollection<T> implements Arrayable<T> implements
      */
     public function iterator():Iterator<T>
     {
-        throw new NotImplementedException("Method iterator() not implemented in abstract class Collection");
+        throw new NotImplementedException("Method iterator() not implemented in abstract class Collection.");
     }
 
     /**
@@ -97,7 +97,7 @@ class Collection<T> implements ICollection<T> implements Arrayable<T> implements
      */
     public function remove(item:T):Bool
     {
-        throw new NotImplementedException("Method remove() not implemented in abstract class Collection");
+        throw new NotImplementedException("Method remove() not implemented in abstract class Collection.");
     }
 
     /**

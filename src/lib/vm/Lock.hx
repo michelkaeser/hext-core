@@ -1,8 +1,9 @@
 package lib.vm;
 
 #if !(cpp || cs || java || neko)
-    #error "lib.vm.Lock is not available on target platform"
+    #error "lib.vm.Lock is not available on target platform."
 #end
+
 import lib.vm.ILock;
 
 /**
@@ -13,7 +14,7 @@ class Lock implements ILock
     /**
      * Stores the underlaying native Lock.
      *
-     * @var VMLock
+     * @var lib.vm.Lock.VMLock
      */
     private var handle:VMLock;
 

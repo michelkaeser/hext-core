@@ -39,7 +39,7 @@ class List<T> extends Collection<T> implements IList<T>
      */
     public function delete(index:Int):Void
     {
-        throw new NotImplementedException("Method delete() not implemented in abstract class List");
+        throw new NotImplementedException("Method delete() not implemented in abstract class List.");
     }
 
     /**
@@ -47,7 +47,7 @@ class List<T> extends Collection<T> implements IList<T>
      */
     public function get(index:Int):T
     {
-        throw new NotImplementedException("Method get() not implemented in abstract class List");
+        throw new NotImplementedException("Method get() not implemented in abstract class List.");
     }
 
     /**
@@ -121,7 +121,7 @@ class List<T> extends Collection<T> implements IList<T>
      */
     public function set(index:Int, item:T):T
     {
-        throw new NotImplementedException("Method set() not implemented in abstract class List");
+        throw new NotImplementedException("Method set() not implemented in abstract class List.");
     }
 
     /**
@@ -130,11 +130,11 @@ class List<T> extends Collection<T> implements IList<T>
     public function subList(start:Int, end:Int):List<T>
     {
         if (end < start) {
-            throw new IllegalArgumentException("End index cannot be less than start");
+            throw new IllegalArgumentException("End index cannot be less than start.");
         }
 
         if (end > this.length) {
-            throw new IndexOutOfBoundsException("End index cannot be greater than the List's length");
+            throw new IndexOutOfBoundsException("End index cannot be greater than the List's length.");
         }
 
         var sub:List<T> = Type.createInstance(Type.getClass(this), new Array<Dynamic>());

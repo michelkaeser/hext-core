@@ -1,9 +1,9 @@
 package lib.vm;
 
+import lib.ds.LinkedList;
+import lib.ds.SynchronizedList;
 import lib.vm.ILock;
-import lib.vm.IMutex;
 import lib.vm.Lock;
-import lib.vm.Mutex;
 import lib.vm.Thread;
 
 /**
@@ -17,18 +17,11 @@ import lib.vm.Thread;
 class MultiLock extends Lock
 {
     /**
-     * Stores the Mutex to synchronize access to the waiters Array.
-     *
-     * @var lib.vm.IMutex
-     */
-    private var mutex:IMutex;
-
-    /**
      * Stores the list of Threads having called wait().
      *
-     * @var Array<lib.vm.Thread>
+     * @var lib.ds.SynchronizedList<lib.vm.Thread>
      */
-    private var waiters:Array<Thread>;
+    private var waiters:SynchronizedList<Thread>;
 
 
     /**
@@ -37,8 +30,7 @@ class MultiLock extends Lock
     public function new():Void
     {
         super();
-        this.mutex   = new Mutex();
-        this.waiters = new Array<Thread>();
+        this.waiters = new SynchronizedList<Thread>(new LinkedList<Thread>());
     }
 
     /**
@@ -47,12 +39,10 @@ class MultiLock extends Lock
     override public function release():Void
     {
         var waiter:Thread;
-        this.mutex.acquire();
-        for (waiter in this.waiters.copy()) {
+        for (waiter in this.waiters.toArray()) { // toArray so we don't iterate over the original structure (as we remove items from it)
             this.waiters.remove(waiter);
             super.release();
         }
-        this.mutex.release();
     }
 
     /**
@@ -61,21 +51,14 @@ class MultiLock extends Lock
     override public function wait(?timeout:Float = -1.0):Bool
     {
         var thread:Thread = Thread.current();
-
-        this.mutex.acquire();
-        this.waiters.push(thread);
-        this.mutex.release();
-
+        this.waiters.add(thread);
         #if (java || neko)
             if (timeout == -1.0) {
                 timeout = null;
             }
         #end
         var ret:Bool = super.wait(timeout);
-
-        this.mutex.acquire();
         this.waiters.remove(thread);
-        this.mutex.release();
 
         return ret;
     }

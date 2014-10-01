@@ -12,7 +12,7 @@ class Exception extends Throwable
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Uncaugth Exception thrown", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Uncaugth Exception thrown.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

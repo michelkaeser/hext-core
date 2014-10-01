@@ -11,7 +11,7 @@ class VMException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "VM related exception encountered", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "VM related exception encountered.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

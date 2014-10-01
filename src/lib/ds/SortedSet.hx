@@ -1,13 +1,16 @@
 package lib.ds;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import lib.IllegalArgumentException;
+import lib.Serializable;
 import lib.ds.UnsortedSet;
 import lib.util.Comparator;
 
 /**
  *
  */
-class SortedSet<T> extends UnsortedSet<T>
+class SortedSet<T> extends UnsortedSet<T> implements Serializable
 {
     /**
      * Stores either the sort() method should be called or not.
@@ -60,6 +63,25 @@ class SortedSet<T> extends UnsortedSet<T>
     /**
      * @{inherit}
      */
+    @:keep
+    override public function hxSerialize(serializer:Serializer):Void
+    {
+        super.hxSerialize(serializer);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    override public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        super.hxUnserialize(unserializer);
+        this.doSort = true;
+    }
+
+    /**
+     * @{inherit}
+     */
     override public function remove(item:T):Bool
     {
         var success:Bool = super.remove(item);
@@ -102,7 +124,7 @@ class SortedSet<T> extends UnsortedSet<T>
     override public function subSet(start:T, end:T):SortedSet<T>
     {
         if (this.comparator(start, end) == 1) {
-            throw new IllegalArgumentException("End item cannot be less than start");
+            throw new IllegalArgumentException("End item cannot be less than start.");
         }
 
         var params:Array<Dynamic> = new Array<Dynamic>();

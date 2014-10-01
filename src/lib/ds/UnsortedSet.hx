@@ -1,12 +1,15 @@
 package lib.ds;
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import lib.Serializable;
 import lib.ds.Set;
 import lib.util.Comparator;
 
 /**
  *
  */
-class UnsortedSet<T> extends Set<T>
+class UnsortedSet<T> extends Set<T> implements Serializable
 {
     /**
      * Stores the underlaying bag to store the items.
@@ -40,6 +43,24 @@ class UnsortedSet<T> extends Set<T>
         }
 
         return false;
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.bag);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.bag = unserializer.unserialize();
     }
 
     /**

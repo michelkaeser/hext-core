@@ -43,7 +43,7 @@ class Set<T> extends Collection<T> implements ISet<T>
     public function subSet(start:T, end:T):Set<T>
     {
         if (this.comparator(start, end) == 1) {
-            throw new IllegalArgumentException("End condition cannot be less than start");
+            throw new IllegalArgumentException("End condition cannot be less than start.");
         }
 
         var params:Array<Dynamic> = new Array<Dynamic>();

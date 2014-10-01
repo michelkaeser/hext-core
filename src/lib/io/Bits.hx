@@ -1,8 +1,8 @@
-package lib.ds;
+package lib.io;
 
 import haxe.io.Bytes;
-import lib.Bit;
 import lib.IllegalArgumentException;
+import lib.io.Bit;
 import lib.ds.IndexOutOfBoundsException;
 
 using lib.StringTools;

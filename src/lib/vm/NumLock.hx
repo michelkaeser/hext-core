@@ -51,7 +51,7 @@ class NumLock implements ILock
     public function new(lock:ILock, times:Int):Void
     {
         if (times <= 0) {
-            throw new IllegalArgumentException("Number of needed relases cannot be less than 1");
+            throw new IllegalArgumentException("Number of needed relases cannot be less than 1.");
         }
 
         this.handle   = lock;

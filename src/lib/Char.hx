@@ -1,5 +1,7 @@
 package lib;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.io.Bytes;
 import lib.Error;
 
@@ -101,19 +103,6 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Implicit casting from Bytes to Char.
-     *
-     * @param Bytes b the bytes to cast
-     *
-     * @return lib.Char
-     */
-    @:noCompletion @:noUsing
-    @:from public static inline function fromBytes(b:Bytes):Char
-    {
-        return new Char(b);
-    }
-
-    /**
      * Implicit casting from Int to Char.
      *
      * @param Int i the Int to cast
@@ -142,7 +131,7 @@ abstract Char(Bytes) from Bytes to Bytes
     @:from public static function fromString(str:String):Char
     {
         if (str.length > 1) {
-            throw new Error("Unclosed character literal");
+            throw new Error("Unclosed character literal.");
         }
 
         return new Char(Bytes.ofString(str));
@@ -321,17 +310,6 @@ abstract Char(Bytes) from Bytes to Bytes
     @:op(A -= B) public function subsAssign(c:Char):Char
     {
         this.set(0, (this:Char).toInt() - c.toInt());
-        return this;
-    }
-
-    /**
-     * Implicit casting from Char to Bytes.
-     *
-     * @return Bytes the bytes to store the character code
-     */
-    @:noCompletion @:noUsing
-    @:to public inline function toBytes():Bytes
-    {
         return this;
     }
 

@@ -15,6 +15,9 @@ import lib.vm.NumLock;
  *
  * Attn: If you call the iteration methods within a recursive function, make sure to use
  * a lib.threading.ThreadExecutor, as other Executors will result in deadlocks.
+ *
+ * Note: The 'executor' property is implemented with (get, set) to support lazy-loading
+ * (don't create an Executor if the dev will set one by hand).
  */
 class Parallel
 {

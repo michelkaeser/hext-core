@@ -11,7 +11,7 @@ class IllegalArgumentException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Illegal argument passed to method", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Illegal argument passed to method.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

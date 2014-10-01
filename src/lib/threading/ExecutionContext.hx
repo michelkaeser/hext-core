@@ -13,6 +13,9 @@ import lib.threading.SequentialExecutor;
  * for classes requesting access to an Executor instance.
  *
  * This class was introduced to prevent massive Executor initialization.
+ *
+ * Note: Properties are implemented using (get, set) to support lazy-loading
+ * (don't create an Executor if the dev will set one by hand).
  */
 class ExecutionContext
 {
@@ -60,7 +63,7 @@ class ExecutionContext
     private static function get_parallelExecutor():IExecutor
     {
         if (ExecutionContext.parallelExecutor == null) {
-            ExecutionContext.parallelExecutor = #if js new ThreadExecutor(); #else new PoolExecutor(2); #end
+            ExecutionContext.parallelExecutor = #if js new ThreadExecutor(); #else new PoolExecutor(4); #end
         }
 
         return ExecutionContext.parallelExecutor;

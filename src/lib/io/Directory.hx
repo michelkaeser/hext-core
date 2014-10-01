@@ -1,6 +1,9 @@
 package lib.io;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
+import lib.Serializable;
 import lib.Stringable;
 import lib.io.File;
 import lib.io.FileNotFoundException;
@@ -13,7 +16,7 @@ import sys.FileSystem;
  * Local filesystem directory abstraction class combining various methods
  * of the Std IO library and classes under the hood.
  */
-class Directory implements Stringable
+class Directory implements Serializable implements Stringable
 {
     /**
      * Stores the path of the directory.
@@ -46,7 +49,7 @@ class Directory implements Stringable
     public function copy(to:Path):Directory
     {
         if (FileSystem.exists(to)) {
-            throw new IOException("Target destination already exists");
+            throw new IOException("Target destination already exists.");
         }
 
         var copy:Directory = new Directory(to);
@@ -67,7 +70,7 @@ class Directory implements Stringable
             return copy;
         }
 
-        throw new IOException("Error creating the directory copy");
+        throw new IOException("Error creating the directory copy.");
     }
 
     /**
@@ -84,7 +87,7 @@ class Directory implements Stringable
                 FileSystem.createDirectory(this.path);
                 return true;
             } catch (ex:Dynamic) {
-                throw new IOException("Error creating the directory");
+                throw new IOException("Error creating the directory.");
             }
         }
 
@@ -109,7 +112,7 @@ class Directory implements Stringable
                     FileSystem.deleteDirectory(this.path);
                     return true;
                 } catch (ex:Dynamic) {
-                    throw new IOException("Error deleting the directory");
+                    throw new IOException("Error deleting the directory.");
                 }
             } else {
                 if (recursive) {
@@ -127,7 +130,7 @@ class Directory implements Stringable
 
                     return this.delete(false);
                 } else {
-                    throw new IOException("Directory not empty");
+                    throw new IOException("Directory not empty.");
                 }
             }
 
@@ -160,11 +163,29 @@ class Directory implements Stringable
             try {
                 return FileSystem.readDirectory(this.path);
             } catch (ex:Dynamic) {
-                throw new IOException("Error getting the directory's children");
+                throw new IOException("Error getting the directory's children.");
             }
         }
 
         throw new FileNotFoundException();
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.path);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.path = unserializer.unserialize();
     }
 
     /**
@@ -213,14 +234,14 @@ class Directory implements Stringable
     public function rename(to:Path):Bool
     {
         if (FileSystem.exists(to)) {
-            throw new IOException("Target destination already exists");
+            throw new IOException("Target destination already exists.");
         }
 
         if (this.exists()) {
             try {
                 FileSystem.rename(this.path, to);
             } catch (ex:Dynamic) {
-                throw new IOException("Error during directory renaming");
+                throw new IOException("Error during directory renaming.");
             }
         }
         this.path = HaxePath.addTrailingSlash(to);

@@ -1,5 +1,7 @@
 package lib.io;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
 import lib.Stringable;
 import lib.io.FileNotFoundException;
@@ -72,7 +74,7 @@ class File implements Stringable
     public function copy(to:Path):File
     {
         if (FileSystem.exists(to)) {
-            throw new IOException("Target destination already exists");
+            throw new IOException("Target destination already exists.");
         }
 
         var copy:File = new File(to);
@@ -88,7 +90,7 @@ class File implements Stringable
             return copy;
         }
 
-        throw new IOException("Error creating the copy of the file");
+        throw new IOException("Error creating the copy of the file.");
     }
 
     /**
@@ -195,6 +197,24 @@ class File implements Stringable
     }
 
     /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.path);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.path = unserializer.unserialize();
+    }
+
+    /**
      * Checks if the file is empty.
      *
      * @return Bool true if empty
@@ -242,7 +262,7 @@ class File implements Stringable
     public function rename(to:Path):Bool
     {
         if (FileSystem.exists(to)) {
-            throw new IOException("Target destination already exists");
+            throw new IOException("Target destination already exists.");
         }
 
         if (this.exists()) {

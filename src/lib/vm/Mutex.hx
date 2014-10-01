@@ -1,7 +1,7 @@
 package lib.vm;
 
 #if !(cpp || cs || flash || java || neko)
-    #error "lib.vm.Mutex is not available on target platform"
+    #error "lib.vm.Mutex is not available on target platform."
 #end
 import lib.vm.IMutex;
 
@@ -13,7 +13,7 @@ class Mutex implements IMutex
     /**
      * Stores the underlaying native Mutex.
      *
-     * @var VMMUtex
+     * @var lib.vm.Mutex.VMMUtex
      */
     private var handle:VMMutex;
 
@@ -37,7 +37,9 @@ class Mutex implements IMutex
         #elseif java
             try {
                 this.handle.acquire();
-            } catch (ex:Dynamic) {/* error: unreported exception InterruptedException; must be caught or declared to be thrown */}
+            } catch (ex:Dynamic) {
+                // error: unreported exception InterruptedException; must be caught or declared to be thrown
+            }
         #else
             this.handle.acquire();
         #end

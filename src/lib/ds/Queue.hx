@@ -34,7 +34,7 @@ class Queue<T> implements IQueue<T>
      */
     private function get_length():Int
     {
-        throw new NotImplementedException("Method get_length() not implemented in abstract class Queue");
+        throw new NotImplementedException("Method get_length() not implemented in abstract class Queue.");
     }
 
     /**
@@ -50,7 +50,7 @@ class Queue<T> implements IQueue<T>
      */
     public function pop():T
     {
-        throw new NotImplementedException("Method pop() not implemented in abstract class Queue");
+        throw new NotImplementedException("Method pop() not implemented in abstract class Queue.");
     }
 
     /**
@@ -58,7 +58,7 @@ class Queue<T> implements IQueue<T>
      */
     public function push(item:T):Int
     {
-        throw new NotImplementedException("Method push() not implemented in abstract class Queue");
+        throw new NotImplementedException("Method push() not implemented in abstract class Queue.");
     }
 
     /**
@@ -66,6 +66,6 @@ class Queue<T> implements IQueue<T>
      */
     public function top():T
     {
-        throw new NotImplementedException("Method top() not implemented in abstract class Queue");
+        throw new NotImplementedException("Method top() not implemented in abstract class Queue.");
     }
 }

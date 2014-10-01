@@ -60,7 +60,7 @@ class RetryHandler<T>
     public function effort(retries:Int, timeout:Float = 0.0):T
     {
         if (retries <= 0) {
-            throw new IllegalArgumentException("Number of retries cannot be 0 or less");
+            throw new IllegalArgumentException("Number of retries cannot be 0 or less.");
         }
 
         for (i in 0...retries) {

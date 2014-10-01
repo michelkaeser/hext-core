@@ -14,7 +14,7 @@ class IOException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Failed I/O operation", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Failed I/O operation.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

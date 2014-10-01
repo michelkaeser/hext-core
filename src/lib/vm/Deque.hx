@@ -1,8 +1,9 @@
 package lib.vm;
 
 #if !(cpp || cs || java || neko)
-    #error "lib.vm.Deque is not available on target platform"
+    #error "lib.vm.Deque is not available on target platform."
 #end
+
 import lib.vm.IDeque;
 
 /**
@@ -13,7 +14,7 @@ class Deque<T> implements IDeque<T>
     /**
      * Stores the underlaying native Deque.
      *
-     * @var VMDeque<T>
+     * @var lib.vm.Deque.VMDeque<T>
      */
     private var handle:VMDeque<T>;
 

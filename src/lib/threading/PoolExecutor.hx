@@ -42,7 +42,7 @@ class PoolExecutor implements IExecutor
     public function new(pool:Int = 1):Void
     {
         if (pool <= 0) {
-            throw new IllegalArgumentException("Number of pool threads cannot be less than 1");
+            throw new IllegalArgumentException("Number of pool threads cannot be less than 1.");
         }
 
         this.executors = new Vector<Looper>(pool);

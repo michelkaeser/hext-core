@@ -13,7 +13,7 @@ interface ILock
     /**
      * Waits for the Lock to be released.
      *
-     * @param Float timeout the maximal time to wait
+     * @param Null<Float> timeout the maximal time to wait
      *
      * @return Bool true if unlocked before the timeout exceeds
      */

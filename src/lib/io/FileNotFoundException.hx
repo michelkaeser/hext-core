@@ -17,7 +17,7 @@ class FileNotFoundException extends IOException
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "No such file or directory", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "No such file or directory.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

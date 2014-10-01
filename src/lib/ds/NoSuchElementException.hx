@@ -11,7 +11,7 @@ class NoSuchElementException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "No such element", ?info:PosInfos) : Void
+    public function new(msg:Dynamic = "No such element.", ?info:PosInfos) : Void
     {
         super(msg, info);
     }

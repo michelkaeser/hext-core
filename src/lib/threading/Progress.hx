@@ -1,8 +1,12 @@
 package lib.threading;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.ds.StringMap;
 import lib.Callback;
 import lib.IllegalArgumentException;
+import lib.Serializable;
+import lib.Stringable;
 import lib.ds.SynchronizedSet;
 import lib.ds.UnsortedSet;
 import lib.threading.IProgress;
@@ -14,7 +18,8 @@ import lib.vm.Mutex;
 /**
  *
  */
-class Progress implements IProgress
+class Progress implements IProgress implements Serializable
+#if !LIB_DEBUG implements Stringable #end
 {
     /**
      * Stores the registered value change listeners.
@@ -35,12 +40,12 @@ class Progress implements IProgress
      *
      * @var Float
      */
-    public var value(get, null):Float;
+    @:isVar public var value(get, null):Float;
 
     /**
      * Stores the map of awaited values and the Locks blocking the waiters.
      *
-     * @var StringMap<lib.vm.MultiLock>
+     * @var haxe.ds.StringMap<lib.vm.MultiLock>
      */
     private var valueLocks:StringMap<MultiLock>;
 
@@ -70,7 +75,7 @@ class Progress implements IProgress
     public function await(value:Float):Void
     {
         if (value > 1.0) {
-            throw new IllegalArgumentException("Cannot await a value greater than 1");
+            throw new IllegalArgumentException("Cannot await a value greater than 1.");
         }
 
         this.mutex.acquire();
@@ -113,6 +118,27 @@ class Progress implements IProgress
         this.mutex.release();
 
         return value;
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.value);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.listeners  = new SynchronizedSet<Callback<Float>>(new UnsortedSet<Callback<Float>>(Reflector.compare));
+        this.mutex      = new Mutex();
+        this.value      = unserializer.unserialize();
+        this.valueLocks = new StringMap<MultiLock>();
     }
 
     /**
@@ -164,10 +190,10 @@ class Progress implements IProgress
     public function setValue(value:Float):Float
     {
         if (value < 0.0) {
-            throw new IllegalArgumentException("Cannot set a value smaller than 0");
+            throw new IllegalArgumentException("Cannot set a value smaller than 0.");
         }
         if (value > 1.0) {
-            throw new IllegalArgumentException("Cannot set a value greater than 1");
+            throw new IllegalArgumentException("Cannot set a value greater than 1.");
         }
 
         this.mutex.acquire();
@@ -180,4 +206,14 @@ class Progress implements IProgress
 
         return value;
     }
+
+    /**
+     * @{inherit}
+     */
+    #if !LIB_DEBUG
+    public function toString():String
+    {
+        return Std.string(this.value);
+    }
+    #end
 }

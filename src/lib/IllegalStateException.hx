@@ -14,7 +14,7 @@ class IllegalStateException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Illegal state for requested operation", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Illegal state for requested operation.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

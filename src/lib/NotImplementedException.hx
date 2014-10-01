@@ -14,7 +14,7 @@ class NotImplementedException extends UnsupportedOperationException
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Requested method not implemented", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Requested method not implemented.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

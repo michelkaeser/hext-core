@@ -12,7 +12,7 @@ class RetryLimitReachedException extends Exception
     /**
      * @{inherit}
      */
-    public function new(msg:Dynamic = "Maximum number of retries reached", ?info:PosInfos):Void
+    public function new(msg:Dynamic = "Maximum number of retries reached.", ?info:PosInfos):Void
     {
         super(msg, info);
     }

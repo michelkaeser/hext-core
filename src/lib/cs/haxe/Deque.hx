@@ -1,7 +1,7 @@
 package lib.cs.haxe;
 
 #if !cs
-    #error "lib.cs.haxe.Deque is only available on C# target"
+    #error "lib.cs.haxe.Deque is only available on C# target."
 #end
 
 import lib.ds.SynchronizedQueue;

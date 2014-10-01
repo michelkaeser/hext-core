@@ -158,7 +158,7 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
      */
     public function iterator():Iterator<T>
     {
-        throw new NotImplementedException("Method iterator() not implemented in abstract class SynchronizedCollection");
+        throw new NotImplementedException("Method iterator() not implemented in abstract class SynchronizedCollection.");
     }
 
     /**

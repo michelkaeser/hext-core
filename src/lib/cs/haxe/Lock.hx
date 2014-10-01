@@ -1,7 +1,7 @@
 package lib.cs.haxe;
 
 #if !cs
-    #error "lib.cs.haxe.Lock is only available on C# target"
+    #error "lib.cs.haxe.Lock is only available on C# target."
 #end
 
 #if LIB_WIN

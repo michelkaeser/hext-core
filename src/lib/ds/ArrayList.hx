@@ -1,6 +1,9 @@
 package lib.ds;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import lib.IllegalArgumentException;
+import lib.Serializable;
 import lib.ds.IndexOutOfBoundsException;
 import lib.ds.List;
 
@@ -10,7 +13,7 @@ using lib.ArrayTools;
  * IList implementation using an Array as the underlaying data structure,
  * thus allowing fast random access.
  */
-class ArrayList<T> extends List<T>
+class ArrayList<T> extends List<T> implements Serializable
 {
     /**
      * Stores the underlaying Array that is wrapped as a List.
@@ -53,7 +56,7 @@ class ArrayList<T> extends List<T>
     override public function delete(index:Int):Void
     {
         if (index >= this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to delete() is out of range ('" + this.length + "')");
+            throw new IndexOutOfBoundsException('Index ${index} passed to delete() is out of range (${this.length}).');
         }
 
         this.array.delete(index);
@@ -66,10 +69,28 @@ class ArrayList<T> extends List<T>
     override public function get(index:Int):T
     {
         if (index >= this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to get() is out of range ('" + this.length + "').");
+            throw new IndexOutOfBoundsException('Index ${index} passed to get() is out of range (${this.length}).');
         }
 
         return this.array[index];
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.array);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:keep
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.array = unserializer.unserialize();
     }
 
     /**
@@ -93,7 +114,7 @@ class ArrayList<T> extends List<T>
     override public function set(index:Int, item:T):T
     {
         if (index > this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to set() is out of range ('" + this.length + "').");
+            throw new IndexOutOfBoundsException('Index ${index} passed to set() is out of range (${this.length}).');
         } else if (index == this.length) {
             this.add(item);
         } else {
@@ -110,11 +131,11 @@ class ArrayList<T> extends List<T>
     override public function subList(start:Int, end:Int):ArrayList<T>
     {
         if (end < start) {
-            throw new IllegalArgumentException("End index cannot be less than start");
+            throw new IllegalArgumentException("End index cannot be less than start.");
         }
 
         if (end > this.length) {
-            throw new IndexOutOfBoundsException("End index cannot be greater than the List's length");
+            throw new IndexOutOfBoundsException("End index cannot be greater than the List's length.");
         }
 
         var sub:ArrayList<T> = new ArrayList<T>();

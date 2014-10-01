@@ -83,7 +83,7 @@ class LinkedList<T> extends List<T>
     override public function delete(index:Int):Void
     {
         if (index >= this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to delete() is out of range ('" + this.length + "').");
+            throw new IndexOutOfBoundsException('Index ${index} passed to delete() is out of range (${this.length}).');
         }
 
         var current:Element<T>;
@@ -111,7 +111,7 @@ class LinkedList<T> extends List<T>
     override public function get(index:Int):T
     {
         if (index >= this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to get() is out of range ('" + this.length + "').");
+            throw new IndexOutOfBoundsException('Index ${index} passed to get() is out of range (${this.length}).');
         }
 
         var current:Element<T>;
@@ -169,7 +169,7 @@ class LinkedList<T> extends List<T>
     override public function set(index:Int, item:T):T
     {
         if (index > this.length) {
-            throw new IndexOutOfBoundsException("Index '" + index + "' passed to set() is out of range ('" + this.length + "').");
+            throw new IndexOutOfBoundsException('Index ${index} passed to set() is out of range (${this.length}).');
         } else if (index == this.length) {
             this.add(item);
         } else {

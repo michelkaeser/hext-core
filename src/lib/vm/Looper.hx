@@ -20,18 +20,18 @@ class Looper extends Thread
     private var mutex:IMutex;
 
     #if !cs
-        /**
-         * Stores the Looper's state.
-         *
-         * @var lib.vm.Looper.State
-         */
-        private var state:State;
+    /**
+     * Stores the Looper's state.
+     *
+     * @var lib.vm.Looper.State
+     */
+    private var state:State;
     #end
 
     /**
      * Constructor to initialize a new Looper instance.
      *
-     * @param VMThread handle the underlaying Thread to wrap
+     * @param lib.vm.Thread.VMThread handle the underlaying Thread to wrap
      */
     private function new(handle:VMThread):Void
     {
@@ -83,7 +83,7 @@ class Looper extends Thread
         #else
             if (this.state == State.DESTROYED) {
                 this.mutex.release();
-                throw new IllegalStateException("Cannot destroy an already destroyed Looper");
+                throw new IllegalStateException("Cannot destroy an already destroyed Looper.");
             }
 
             this.state = State.DESTROYED;
