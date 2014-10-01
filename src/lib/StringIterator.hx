@@ -36,16 +36,6 @@ class StringIterator
     }
 
     /**
-     * Returns the next character of the String.
-     *
-     * @return lib.Char
-     */
-    public inline function next():Char
-    {
-        return this.string.charAt(this.position++);
-    }
-
-    /**
      * Checks if there is another character remaining.
      *
      * @return Bool true if not yet at the end of the String
@@ -53,5 +43,15 @@ class StringIterator
     public inline function hasNext():Bool
     {
         return this.position < this.string.length;
+    }
+
+    /**
+     * Returns the next character of the String.
+     *
+     * @return lib.Char
+     */
+    public inline function next():Char
+    {
+        return this.string.charAt(this.position++);
     }
 }

@@ -97,7 +97,7 @@ class StringTools
     public static function toBool(str:String):Bool
     {
         if (str != "false" && str != "true") {
-            throw new IllegalArgumentException("String is not a valid Boolean value");
+            throw new IllegalArgumentException("String is not a valid Bool value.");
         }
 
         return str == "true";

@@ -22,30 +22,30 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Overloaded operator used when adding and assigning two Chars together.
-     *
-     * @param lib.Char c the character to add
-     *
-     * @return lib.Char
-     */
-    @:noCompletion
-    @:op(A += B) public function addAssignChar(c:Char):Char
-    {
-        this.set(0, (this:Char).toInt() + c.toInt());
-        return this;
-    }
-
-    /**
      * Overloaded operator used when adding two Chars together.
      *
      * @param lib.Char c the character to add
      *
      * @return lib.Char
      */
-    @:noCompletion
-    @:op(A + B) public inline function addChar(c:Char):Char
+    @:noCompletion @:noUsing
+    @:op(A + B) public inline function add(c:Char):Char
     {
         return (this:Char).toInt() + c.toInt();
+    }
+
+    /**
+     * Overloaded operator used when adding and assigning two Chars together.
+     *
+     * @param lib.Char c the character to add
+     *
+     * @return lib.Char
+     */
+    @:noCompletion @:noUsing
+    @:op(A += B) public function addAssign(c:Char):Char
+    {
+        this.set(0, (this:Char).toInt() + c.toInt());
+        return this;
     }
 
     /**
@@ -55,8 +55,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion
-    @:op(A == B) public inline function compareEqualChar(c:Char):Bool
+    @:noCompletion @:noUsing
+    @:op(A == B) public inline function compareEqual(c:Char):Bool
     {
         return (this:Char).toInt() == c.toInt();
     }
@@ -68,8 +68,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion
-    @:op(A > B) public inline function compareGreaterChar(c:Char):Bool
+    @:noCompletion @:noUsing
+    @:op(A > B) public inline function compareGreater(c:Char):Bool
     {
         return (this:Char).toInt() > c.toInt();
     }
@@ -81,8 +81,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion
-    @:op(A < B) public inline function compareLessChar(c:Char):Bool
+    @:noCompletion @:noUsing
+    @:op(A < B) public inline function compareLess(c:Char):Bool
     {
         return (this:Char).toInt() < c.toInt();
     }
@@ -94,10 +94,58 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
-    @:op(A / B) public inline function divideByChar(c:Char):Char
+    @:noCompletion @:noUsing
+    @:op(A / B) public inline function divideBy(c:Char):Char
     {
         return Std.int((this:Char).toInt() / c.toInt());
+    }
+
+    /**
+     * Implicit casting from Bytes to Char.
+     *
+     * @param Bytes b the bytes to cast
+     *
+     * @return lib.Char
+     */
+    @:noCompletion @:noUsing
+    @:from public static inline function fromBytes(b:Bytes):Char
+    {
+        return new Char(b);
+    }
+
+    /**
+     * Implicit casting from Int to Char.
+     *
+     * @param Int i the Int to cast
+     *
+     * @return lib.Char
+     */
+    @:noCompletion @:noUsing
+    @:from public static function fromInt(i:Int):Char
+    {
+        var bytes:Bytes = Bytes.alloc(1);
+        bytes.set(0, i);
+
+        return new Char(bytes);
+    }
+
+    /**
+     * Implicit casting from String to Char.
+     *
+     * @param String str the String character to cast
+     *
+     * @return lib.Char
+     *
+     * @throws lib.error is the string is longer than 1 character
+     */
+    @:noCompletion @:noUsing
+    @:from public static function fromString(str:String):Char
+    {
+        if (str.length > 1) {
+            throw new Error("Unclosed character literal");
+        }
+
+        return new Char(Bytes.ofString(str));
     }
 
     /**
@@ -191,8 +239,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
-    @:op(A * B) public inline function multiplyByChar(c:Char):Char
+    @:noCompletion @:noUsing
+    @:op(A * B) public inline function multiplyBy(c:Char):Char
     {
         return Std.int((this:Char).toInt() * c.toInt());
     }
@@ -202,7 +250,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:op(A--) public function postDecrement():Char
     {
         var cur:Int = (this:Char).toInt();
@@ -216,7 +264,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:op(A++) public function postIncrement():Char
     {
         var cur:Int = (this:Char).toInt();
@@ -230,7 +278,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:op(--A) public function preDecrement():Char
     {
         this.set(0, cast(this, Int) - 1);
@@ -242,24 +290,10 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:op(++A) public function preIncrement():Char
     {
         this.set(0, (this:Char).toInt() + 1);
-        return this;
-    }
-
-    /**
-     * Overloaded operator used when substracting and assigning two Chars together.
-     *
-     * @param lib.Char c the character to add
-     *
-     * @return lib.Char
-     */
-    @:noCompletion
-    @:op(A -= B) public function subsAssignChar(c:Char):Char
-    {
-        this.set(0, (this:Char).toInt() - c.toInt());
         return this;
     }
 
@@ -270,58 +304,24 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion
-    @:op(A - B) public inline function subsChar(c:Char):Char
+    @:noCompletion @:noUsing
+    @:op(A - B) public inline function subs(c:Char):Char
     {
         return (this:Char).toInt() - c.toInt();
     }
 
     /**
-     * Implicit casting from Bytes to Char.
+     * Overloaded operator used when substracting and assigning two Chars together.
      *
-     * @param Bytes b the bytes to cast
-     *
-     * @return lib.Char
-     */
-    @:noCompletion @:noUsing
-    @:from public static inline function fromBytes(b:Bytes):Char
-    {
-        return new Char(b);
-    }
-
-    /**
-     * Implicit casting from Int to Char.
-     *
-     * @param Int i the Int to cast
+     * @param lib.Char c the character to add
      *
      * @return lib.Char
      */
     @:noCompletion @:noUsing
-    @:from public static function fromInt(i:Int):Char
+    @:op(A -= B) public function subsAssign(c:Char):Char
     {
-        var bytes:Bytes = Bytes.alloc(1);
-        bytes.set(0, i);
-
-        return new Char(bytes);
-    }
-
-    /**
-     * Implicit casting from String to Char.
-     *
-     * @param String str the String character to cast
-     *
-     * @return lib.Char
-     *
-     * @throws lib.error is the string is longer than 1 character
-     */
-    @:noCompletion @:noUsing
-    @:from public static function fromString(str:String):Char
-    {
-        if (str.length > 1) {
-            throw new Error("Unclosed character literal");
-        }
-
-        return new Char(Bytes.ofString(str));
+        this.set(0, (this:Char).toInt() - c.toInt());
+        return this;
     }
 
     /**
@@ -329,7 +329,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bytes the bytes to store the character code
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:to public inline function toBytes():Bytes
     {
         return this;
@@ -340,7 +340,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Int the character code
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:to public inline function toInt():Int
     {
         return this.get(0);
@@ -374,7 +374,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return String the unicode character behind the char code
      */
-    @:noCompletion
+    @:noCompletion @:noUsing
     @:to public inline function toString():String
     {
         return String.fromCharCode((this:Char));

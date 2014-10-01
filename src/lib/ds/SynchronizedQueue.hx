@@ -43,7 +43,7 @@ class SynchronizedQueue<T> implements IQueue<T>
     /**
      * @{inherit}
      */
-    public function get_length():Int
+    private function get_length():Int
     {
         this.mutex.acquire();
         var result:Int = this.queue.length;

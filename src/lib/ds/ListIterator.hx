@@ -36,16 +36,6 @@ class ListIterator<T>
     }
 
     /**
-     * Returns the next item in the List.
-     *
-     * @return T
-     */
-    public function next():T
-    {
-        return this.list.get(this.position++);
-    }
-
-    /**
      * Checks if there is another item in the List.
      *
      * @return Bool
@@ -53,5 +43,15 @@ class ListIterator<T>
     public function hasNext():Bool
     {
         return this.position < this.list.length;
+    }
+
+    /**
+     * Returns the next item in the List.
+     *
+     * @return T
+     */
+    public function next():T
+    {
+        return this.list.get(this.position++);
     }
 }
