@@ -1,5 +1,6 @@
 package lib.io;
 
+import haxe.Int32;
 import haxe.io.Bytes;
 import lib.IllegalArgumentException;
 import lib.io.Bit;
@@ -36,7 +37,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @param Int index the index of the Bit to access
      *
-     * @return lib.Bit
+     * @return lib.io.Bit
      *
      * @throws lib.IllegalArgumentException  if the index is negative
      * @throws lib.IndexOutOfBoundsException if the index is larger than the number of stored bits
@@ -51,15 +52,18 @@ abstract Bits(Bytes) from Bytes to Bytes
             throw new IndexOutOfBoundsException();
         }
 
-        var bits:Int = this.get(Math.floor(index / 8));
-        return (bits & (1 << index)) != 0;
+        var pos:Int    = Math.floor(index / 8);
+        var bits:Int   = this.get(pos);
+        var offset:Int = index - (pos << 3);
+
+        return (bits & (1 << offset)) != 0;
      }
 
     /**
      * Array setter [index] implementation method.
      *
-     * @param Int     index the index of the Bit to set
-     * @param lib.Bit value the value to set
+     * @param Int        index the index of the Bit to set
+     * @param lib.io.Bit value the value to set
      *
      * @throws lib.IllegalArgumentException  if the index is negative
      * @throws lib.IndexOutOfBoundsException if the index is larger than the number of stored bits
@@ -74,23 +78,76 @@ abstract Bits(Bytes) from Bytes to Bytes
             throw new IndexOutOfBoundsException();
         }
 
-        var pos:Int  = Math.floor(index / 8);
-        var bits:Int = this.get(pos);
+        var pos:Int    = Math.floor(index / 8);
+        var bits:Int   = this.get(pos);
+        var offset:Int = index - (pos << 3);
         if (value) {
-            this.set(pos, bits | (1 << index));
+            this.set(pos, bits | (1 << offset));
         } else {
-            this.set(pos, bits & ~(1 << index));
+            this.set(pos, bits & ~(1 << offset));
         }
+    }
+
+    /**
+     * Flips the Bit at index 'index'.
+     *
+     * @param Int index the index of the Bit to flip
+     *
+     * @return lib.io.Bit
+     */
+    public function flip(index:Int):Bit
+    {
+        if (index < 0) {
+            throw new IllegalArgumentException("Cannot access negative index.");
+        }
+        if (index >= (this.length << 3)) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        var flipped:Bit = (this:Bits)[index];
+        (this:Bits)[index] = !flipped;
+
+        return !flipped;
     }
 
     /**
      * Returns an Iterator that can be used in for loops to access each bit, one-by-one.
      *
-     * @return lib.Bits.BitsIterator
+     * @return lib.io.Bits.BitsIterator
      */
     public function iterator():BitsIterator
     {
         return new BitsIterator(this);
+    }
+
+    /**
+     * Returns the Bits of the input integer (32bit variant).
+     *
+     * @param haxe.Int32 i the integer to get the bits for
+     *
+     * @return lib.io.Bits the integer's Bits
+     *
+     * @throws lib.IllegalArgumentException if the integer is negative
+     */
+    public static function ofInt32(i:Int32):Bits
+    {
+        if (i < 0) {
+            throw new IllegalArgumentException("Negative numbers cannot be converted to binary.");
+        }
+
+        var bits:Bits = new Bits(32);
+        var exp:Int   = 0;
+        while (Math.pow(2, ++exp) <= i) {}
+        var res:Int;
+        while (i >= 0 && --exp >= 0) {
+            res = Std.int(Math.pow(2, exp));
+            if (i - res >= 0) {
+                bits[exp] = (1:Bit);
+                i -= res;
+            }
+        }
+
+        return bits;
     }
 
     /**
@@ -126,7 +183,7 @@ class BitsIterator
     /**
      * Stores the Bits over which we iterate.
      *
-     * @var lib.Bits
+     * @var lib.io.Bits
      */
     private var bits:Bits;
 
@@ -141,7 +198,7 @@ class BitsIterator
     /**
      * Constructor to initialize a new BitsIterator instance.
      *
-     * @param lib.Bits bits the Bits to iterate over
+     * @param lib.io.Bits bits the Bits to iterate over
      */
     public function new(bits:Bits):Void
     {
@@ -162,7 +219,7 @@ class BitsIterator
     /**
      * Returns the next Bit.
      *
-     * @return lib.Bit
+     * @return lib.io.Bit
      */
     public inline function next():Bit
     {
