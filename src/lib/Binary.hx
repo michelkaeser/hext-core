@@ -16,6 +16,7 @@ class Binary
      *
      * @throws lib.IllegalArgumentException if the integer is negative
      */
+    @:deprecated('lib.Binary is deprecated. Please use lib.io.Bits.ofInt32 from now on.')
     public static function ofInt(i:Int):String
     {
         if (i < 0) {

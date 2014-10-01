@@ -104,10 +104,12 @@ abstract Bits(Bytes) from Bytes to Bytes
             throw new IndexOutOfBoundsException();
         }
 
-        var flipped:Bit = (this:Bits)[index];
-        (this:Bits)[index] = !flipped;
+        var pos:Int    = Math.floor(index / 8);
+        var bits:Int   = this.get(pos);
+        var offset:Int = index - (pos << 3);
+        this.set(pos, bits ^ (1 << offset));
 
-        return !flipped;
+        return (this:Bits)[index];
     }
 
     /**
