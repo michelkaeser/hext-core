@@ -1,6 +1,7 @@
 package lib.io;
 
 import haxe.Int32;
+import haxe.Int64;
 import haxe.io.Bytes;
 import lib.IllegalArgumentException;
 import lib.io.Bit;
@@ -45,12 +46,14 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion @:noUsing
     @:arrayAccess public function array_get(index:Int):Bit
     {
-        if (index < 0) {
-            throw new IllegalArgumentException("Cannot access negative index.");
-        }
-        if (index >= (this.length << 3)) {
-            throw new IndexOutOfBoundsException();
-        }
+        #if !LIB_PERFORMANCE
+            if (index < 0) {
+                throw new IllegalArgumentException("Cannot access negative index.");
+            }
+            if (index >= (this.length << 3)) {
+                throw new IndexOutOfBoundsException();
+            }
+        #end
 
         var pos:Int    = Math.floor(index / 8);
         var bits:Int   = this.get(pos);
@@ -71,12 +74,14 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion @:noUsing
     @:arrayAccess public function array_set(index:Int, value:Bit):Void
     {
-        if (index < 0) {
-            throw new IllegalArgumentException("Cannot access negative index.");
-        }
-        if (index >= (this.length << 3)) {
-            throw new IndexOutOfBoundsException();
-        }
+        #if !LIB_PERFORMANCE
+            if (index < 0) {
+                throw new IllegalArgumentException("Cannot access negative index.");
+            }
+            if (index >= (this.length << 3)) {
+                throw new IndexOutOfBoundsException();
+            }
+        #end
 
         var pos:Int    = Math.floor(index / 8);
         var bits:Int   = this.get(pos);
@@ -97,19 +102,22 @@ abstract Bits(Bytes) from Bytes to Bytes
      */
     public function flip(index:Int):Bit
     {
-        if (index < 0) {
-            throw new IllegalArgumentException("Cannot access negative index.");
-        }
-        if (index >= (this.length << 3)) {
-            throw new IndexOutOfBoundsException();
-        }
+        #if !LIB_PERFORMANCE
+            if (index < 0) {
+                throw new IllegalArgumentException("Cannot access negative index.");
+            }
+            if (index >= (this.length << 3)) {
+                throw new IndexOutOfBoundsException();
+            }
+        #end
 
         var pos:Int    = Math.floor(index / 8);
         var bits:Int   = this.get(pos);
         var offset:Int = index - (pos << 3);
-        this.set(pos, bits ^ (1 << offset));
+        var value:Int  = bits ^ (1 << offset);
+        this.set(pos, value);
 
-        return (this:Bits)[index];
+        return value != 0;
     }
 
     /**

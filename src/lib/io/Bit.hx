@@ -55,9 +55,11 @@ abstract Bit(Bool) from Bool to Bool
     @:noCompletion @:noUsing
     @:from public static function fromInt(value:Int):Bit
     {
-        if (value != 0 && value != 1) {
-            throw new Error("A bit can either be 0 or 1.");
-        }
+        #if !LIB_PERFORMANCE
+            if (value != 0 && value != 1) {
+                throw new Error("A bit can either be 0 or 1.");
+            }
+        #end
 
         return new Bit(value == 1);
     }
