@@ -12,6 +12,10 @@ using lib.ArrayTools;
 /**
  * IList implementation using an Array as the underlaying data structure,
  * thus allowing fast random access.
+ *
+ * Use cases:
+ *   - Needing a DS with fast read access times.
+ *   - Needing a DS that allows index based access.
  */
 class ArrayList<T> extends List<T> implements Serializable
 {

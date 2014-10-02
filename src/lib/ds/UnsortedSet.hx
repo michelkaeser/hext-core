@@ -7,14 +7,15 @@ import lib.ds.Set;
 import lib.util.Comparator;
 
 /**
- *
+ * Use cases:
+ *   - Needing a DS that does not allow duplicate entries.
  */
 class UnsortedSet<T> extends Set<T> implements Serializable
 {
     /**
      * Stores the underlaying bag to store the items.
      *
-     * @param Array<T>
+     * @var Array<T>
      */
     private var bag:Array<T>;
 

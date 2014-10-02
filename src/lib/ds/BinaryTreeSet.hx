@@ -6,7 +6,8 @@ import lib.ds.Set;
 import lib.util.Comparator;
 
 /**
- *
+ * Use cases:
+ *   - Needing a DS that allows fast checking of either an item is included or not.
  */
 class BinaryTreeSet<T> extends Set<T> implements ITree<T>
 {

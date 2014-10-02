@@ -7,6 +7,10 @@ import haxe.Unserializer;
  * Interface grouping the two internal Haxe functions that can be overriden
  * to add custom un-/serialization behavior to your own structure.
  *
+ * Use cases:
+ *   - A backup/restore system. Only data might need to be backuped/restored, but not
+ *     meta data or synchronization 'tools'. So one writes a custom serialization implementation.
+ *
  * @link http://haxe.org/manual/std-serialization.html
  */
 interface Serializable

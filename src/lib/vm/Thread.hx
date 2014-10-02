@@ -16,6 +16,10 @@ package lib.vm;
 /**
  * A wrapper class around the various platform specific VM Threads
  * included in Haxe Std package.
+ *
+ * Use cases:
+ *   - Well, doing some expensive calculations in the background...
+ *   - ...
  */
 class Thread
 {

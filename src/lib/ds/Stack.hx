@@ -8,14 +8,17 @@ import lib.ds.Queue;
 /**
  * A first-in first-out Stack implementation.
  *
- * @var T the type of items the stack contains
+ * Use cases:
+ *   - FILO
+ *
+ * @generic T the type of items the stack contains
  */
 class Stack<T> extends Queue<T>
 {
     /**
      * Stores the underlaying List used to store items.
      *
-     * @param lib.ds.IList<T>
+     * @var lib.ds.IList<T>
      */
     private var storage:IList<T>;
 

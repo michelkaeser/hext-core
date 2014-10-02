@@ -7,6 +7,11 @@ package lib;
  * Attn: If manipulating Array items leads to wrong states (e.g. in lib.ds.SortedSet),
  * a copy (also of the items if reference values) should be returned rather than the original Array.
  *
+ * Use cases:
+ *   - A function needs array access ([$i]) for it to work, but you don't want to limit
+ *     the instances passed to it to be Arrays. Having the Arrayable interface, one can
+ *     make their instances compatible by implementing it.
+ *
  * @generic T the type of items the Array will contain
  */
 interface Arrayable<T>

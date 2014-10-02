@@ -18,6 +18,9 @@ import lib.vm.NumLock;
  *
  * Note: The 'executor' property is implemented with (get, set) to support lazy-loading
  * (don't create an Executor if the dev will set one by hand).
+ *
+ * Use cases:
+ *   - You want parallism but do not want to care about synchronization.
  */
 class Parallel
 {

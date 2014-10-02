@@ -16,7 +16,10 @@ import lib.vm.MultiLock;
 import lib.vm.Mutex;
 
 /**
- *
+ * Use cases:
+ *   - Uploading a file to a remote server and showing the progress to the user.
+ *   - Compressing input bytes...
+ *   - Unlocking archivements as soon as the user solved 50% of the quiz.
  */
 class Progress implements IProgress implements Serializable
 #if !LIB_DEBUG implements Stringable #end

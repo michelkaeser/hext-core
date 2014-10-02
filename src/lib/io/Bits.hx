@@ -13,6 +13,11 @@ using lib.StringTools;
  * The Bits abstract can be used to store several true/false flags (Bit)
  * within a single Byte.
  * This should be more memory efficient than storing Bools within an Array.
+ *
+ * Use cases:
+ *   - Storing multiple flag member variables. Instead of having 8x a Bool (1 Byte in general)
+ *     == 8 Bytes one can use Bit fields == 1 Byte.
+ *   - Working on systems with few memory...
  */
 @:forward(fill, get, length, set)
 abstract Bits(Bytes) from Bytes to Bytes

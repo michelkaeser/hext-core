@@ -9,6 +9,10 @@ import lib.vm.Thread;
 /**
  * The Looper class extends Threads and execute the callback
  * function multiple times - until the Looper gets destroyed.
+ *
+ * Use cases:
+ *   - Doing action 'X' every 'Y' seconds.
+ *   - Process all callbacks passed to a lib.vm.IDeque.
  */
 class Looper extends Thread
 {

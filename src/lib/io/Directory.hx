@@ -15,6 +15,9 @@ import sys.FileSystem;
 /**
  * Local filesystem directory abstraction class combining various methods
  * of the Std IO library and classes under the hood.
+ *
+ * Use cases:
+ *   - Everything that includes working with FS directories.
  */
 class Directory implements Serializable implements Stringable
 {

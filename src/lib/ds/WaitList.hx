@@ -6,14 +6,15 @@ import lib.ds.NoSuchElementException;
 import lib.ds.Queue;
 
 /**
- *
+ * Use cases:
+ *   - FIFO
  */
 class WaitList<T> extends Queue<T>
 {
     /**
      * Stores the underlaying List used to store items.
      *
-     * @param lib.ds.IList<T>
+     * @var lib.ds.IList<T>
      */
     private var storage:IList<T>;
 

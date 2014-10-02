@@ -16,6 +16,10 @@ import lib.threading.SequentialExecutor;
  *
  * Note: Properties are implemented using (get, set) to support lazy-loading
  * (don't create an Executor if the dev will set one by hand).
+ *
+ * Use cases:
+ *   - Implementing an eco-system where a lot lib.Callbacks are executed by lib.threading.IExecutors.
+ *     Instead of passing executors each time, the implementation might get its default Executor from here.
  */
 class ExecutionContext
 {

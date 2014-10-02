@@ -8,7 +8,8 @@ import lib.ds.UnsortedSet;
 import lib.util.Comparator;
 
 /**
- *
+ * Use cases:
+ *   - Having a DS that doesn't allow duplicates and is fast to search in.
  */
 class SortedSet<T> extends UnsortedSet<T> implements Serializable
 {
@@ -58,6 +59,33 @@ class SortedSet<T> extends UnsortedSet<T> implements Serializable
         this.doSort = true;
 
         return added;
+    }
+
+    /**
+     * @{inherit}
+     */
+    // overriden for better performance
+    override public function contains(item:T):Bool
+    {
+        if (!this.isEmpty()) {
+            // Binary search implementation from hx-search
+            var first:Int = 0,
+                last:Int  = this.bag.length - 1;
+
+            var middle:Int;
+            while (last >= first) {
+                middle = Std.int((first + last) / 2);
+                if (this.comparator(this.bag[middle], item) < 0) {
+                    first = middle + 1;
+                } else if (this.comparator(this.bag[middle], item) > 0) {
+                    last = middle - 1;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

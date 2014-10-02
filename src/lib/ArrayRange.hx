@@ -4,8 +4,9 @@ package lib;
  * An ArrayRange can be used as a marker of a specified index range
  * for an Array.
  *
- * An example could be if you'd like to remove indexes 5-10 from the Array
- * - you could define that indexes as an ArrayRange and write a matching method.
+ * Use cases:
+ *   - Consider a function that is able to remove a whole range from an Array.
+ *     Instead of having two parameters (start, end), one can use this typedef.
  */
 typedef ArrayRange =
 {

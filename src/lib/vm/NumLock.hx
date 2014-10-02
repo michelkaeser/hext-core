@@ -8,6 +8,9 @@ import lib.vm.Mutex;
 
 /**
  * Lock decorator that requires multiple release calls before the Lock gets released.
+ *
+ * Use cases:
+ *   - Waiting for two Threads. Instead of having two regular Locks, one NumLock is enough.
  */
 class NumLock implements ILock
 {

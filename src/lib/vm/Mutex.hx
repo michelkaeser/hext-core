@@ -7,6 +7,11 @@ import lib.vm.IMutex;
 
 /**
  * @{inherit}
+ *
+ * Use cases:
+ *   - Synchronize access to a member variable to prevent data corruption.
+ *   - Grouping two methods (already thread safe) together. E.g. because the second call
+ *     depends on the result of the 1st.
  */
 class Mutex implements IMutex
 {

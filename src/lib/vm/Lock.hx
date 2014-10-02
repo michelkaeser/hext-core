@@ -8,6 +8,9 @@ import lib.vm.ILock;
 
 /**
  * @{inherit}
+ *
+ * Use cases:
+ *   - Block function callers until the internal state (working -> done) changes.
  */
 class Lock implements ILock
 {

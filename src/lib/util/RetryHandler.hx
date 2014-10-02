@@ -8,9 +8,14 @@ import lib.util.RetryLimitReachedException;
  * Generic wrapper that can be placed around functions throwing Exceptions to
  * auto-retry several times before giving up.
  *
- * @generic T the functions return type
+ * Use cases:
+ *   - Trying to communicate with an external server. It might have problems right now,
+ *     but before notifiying the user about that, we just try some more times as the failure
+ *     might be temporary.
  *
  * @link https://github.com/kimoto/retry-handler
+ *
+ * @generic T the functions return type
  */
 class RetryHandler<T>
 {

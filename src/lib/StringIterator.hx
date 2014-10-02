@@ -5,6 +5,9 @@ import lib.Char;
 /**
  * Iterator class to traverse all characters of a String.
  *
+ * Use cases:
+ *   - Reading character by character from an input stream. E.g. in a Scanner/Lexer.
+ *
  * @see http://api.haxe.org/Iterator.html
  */
 class StringIterator

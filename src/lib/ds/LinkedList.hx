@@ -10,6 +10,10 @@ import lib.ds.ListIterator;
  * LinkedList is a good choice if you need a dynamic growing IList,
  * as adding new items is easy and fast.
  * If you need an IList with fast random access, you'd better use an lib.ds.ArrayList.
+ *
+ * Use cases:
+ *   - Needing a DS that has fast access/deletion/insertion (start/end) times.
+ *   - Needing a DS that is fairly sparingly in terms of memory usage.
  */
 class LinkedList<T> extends List<T>
 {

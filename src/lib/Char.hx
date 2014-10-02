@@ -9,6 +9,9 @@ using StringTools;
 
 /**
  * Abstract C++/Java like single character representation.
+ *
+ * Use cases:
+ *   - Reading/writing from/to streams. Working with characters might feel more natural than integers.
  */
 @:forward(get, set)
 abstract Char(Bytes) from Bytes to Bytes

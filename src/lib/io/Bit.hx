@@ -4,6 +4,10 @@ import lib.Error;
 
 /**
  * The Bit abstract allows one to treat Bools or Ints like they were a single Bit.
+ *
+ * Use cases:
+ *   - Working on a low-level system class (e.g. unfiltered storage access) and the data returned
+ *     by member methods should feel natural. Bits should help...
  */
 abstract Bit(Bool) from Bool to Bool
 {

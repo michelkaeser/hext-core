@@ -18,6 +18,9 @@ using lib.io.FileTools;
 /**
  * Local filesystem file abstraction class combining various methods
  * of the Std File/IO library and classes under the hood.
+ *
+ * Use cases:
+ *   - Everything that includes working with FS files.
  */
 class File implements Stringable
 {
