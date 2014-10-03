@@ -225,10 +225,10 @@ abstract Bits(Bytes) from Bytes to Bytes
     public function toString():String
     {
         var buf:StringBuf = new StringBuf();
-        for (bit in (this:Bits)) {
-            buf.add(Std.string(bit));
+        for (i in 0...32) {
+            buf.add(Std.string((this:Bits)[31 - i]));
         }
 
-        return buf.toString().reverse();
+        return buf.toString();
     }
 }

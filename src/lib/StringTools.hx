@@ -11,6 +11,19 @@ import lib.StringIterator;
 class StringTools
 {
     /**
+     * Checks if the string contains the substring 'sub'.
+     *
+     * @param String str the string to search in
+     * @param String sub the substring to search
+     *
+     * @return Bool
+     */
+    public static function contains(str:String, sub:String):Bool
+    {
+        return str.indexOf(sub) != -1;
+    }
+
+    /**
      * Checks if all string characters are lower-case.
      *
      * Attn: If the string is empty, always true is returned.
