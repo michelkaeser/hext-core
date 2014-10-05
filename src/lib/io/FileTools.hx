@@ -9,8 +9,7 @@ import lib.io.FileNotFoundException;
 import lib.io.IOException;
 
 /**
- * The FileTools utilities class adds several helpful methods
- * to the lib.io.File class.
+ * The FileTools utilities class adds several helpful methods to the lib.io.File class.
  */
 class FileTools
 {
