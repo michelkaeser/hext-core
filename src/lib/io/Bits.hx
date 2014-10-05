@@ -20,7 +20,7 @@ using lib.StringTools;
  *     == 8 Bytes one can use Bit fields == 1 Byte.
  *   - Working on systems with few memory...
  */
-@:forward(fill, get, length, set)
+@:forward(fill, get, length, set, toHex)
 abstract Bits(Bytes) from Bytes to Bytes
 {
     /**
