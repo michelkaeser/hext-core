@@ -225,8 +225,9 @@ abstract Bits(Bytes) from Bytes to Bytes
     public function toString():String
     {
         var buf:StringBuf = new StringBuf();
-        for (i in 0...32) {
-            buf.add(Std.string((this:Bits)[31 - i]));
+        var nbits:Int     = (this.length << 3);
+        for (i in 0...nbits) {
+            buf.add(Std.string((this:Bits)[nbits - i - 1]));
         }
 
         return buf.toString();
