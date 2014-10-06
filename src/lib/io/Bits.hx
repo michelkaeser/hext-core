@@ -160,11 +160,16 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * @{inherit}
      */
-    public function toString():String
+    public function toString(#if (js || php) group:Int = 8 #end):String
     {
         var buf:StringBuf = new StringBuf();
         var nbits:Int     = (this.length << 3);
         for (i in 0...nbits) {
+            #if (js || php)
+            if (i % group == 0 && i != 0) {
+                buf.add(' ');
+            }
+            #end
             buf.add(Std.string((this:Bits)[nbits - i - 1]));
         }
 

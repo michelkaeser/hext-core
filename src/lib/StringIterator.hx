@@ -2,6 +2,8 @@ package lib;
 
 import lib.Char;
 
+using StringTools;
+
 /**
  * Iterator class to traverse all characters of a String.
  *
@@ -55,6 +57,6 @@ class StringIterator
      */
     public inline function next():Char
     {
-        return this.string.charAt(this.position++);
+        return this.string.fastCodeAt(this.position++);
     }
 }
