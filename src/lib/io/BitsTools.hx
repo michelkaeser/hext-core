@@ -103,7 +103,7 @@ class BitsTools
     /**
      * Converts the Bits back to its string value.
      *
-     * @param lib.io.Bits bits the Bits to get the string value for
+     * @param Null<lib.io.Bits> bits the Bits to get the string value for
      *
      * @return String
      */
