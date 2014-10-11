@@ -12,20 +12,37 @@ import lib.io.Bits;
 class BitsTools
 {
     /**
+     * Returns the Bits of the input float (64bit double).
+     *
+     * @link http://en.wikipedia.org/wiki/Double-precision_floating-point_format is used
+     *
+     * @param Float f the float to get the bits for
+     *
+     * @return lib.io.Bits the float's Bits
+     */
+    public static function ofFloat(f:Float):Bits
+    {
+        var bits:Bits = new Bits(64);
+        (bits:Bytes).setDouble(0, f);
+
+        return bits;
+    }
+
+    /**
      * Returns the Bits of the input integer (32bit variant).
+     *
+     * @link http://en.wikipedia.org/wiki/Two's_complement is used for negatie values
      *
      * @param haxe.Int32 i the integer to get the bits for
      *
      * @return lib.io.Bits the integer's Bits
-     *
-     * @throws lib.IllegalArgumentException if the integer is negative
      */
     public static function ofInt32(i:Int32):Bits
     {
         var bits:Bits = new Bits(32);
         if (i == MathTools.MIN_INT32) {
             bits.flip(31);
-        } else {
+        } else if (i != 0) {
             var negative:Bool = false;
             if (i < 0) {
                 negative = true;
@@ -45,7 +62,7 @@ class BitsTools
 
             if (negative) {
                 for (j in 0...4) { // invert bits
-                    bits.set(j, ~bits.get(j));
+                    (bits:Bytes).set(j, ~(bits:Bytes).get(j));
                 }
                 var j:Int = 0;
                 while (bits[j] == (1:Bit)) { // add 1
@@ -76,6 +93,24 @@ class BitsTools
     }
 
     /**
+     * Converts the Bits back to its Float value.
+     *
+     * @param lib.io.Bits bits the Bits to get the Float value for
+     *
+     * @return Float
+     *
+     * @throws lib.IllegalArgumentException if the bits are not from a Float
+     */
+    public static function toFloat(bits:Bits):Float
+    {
+        if (bits == null || bits.length != 8) {
+            throw new IllegalArgumentException("Bits are not a valid Float value.");
+        }
+
+        return (bits:Bytes).getDouble(0);
+    }
+
+    /**
      * Converts the Bits back to its Int32 value.
      *
      * @param lib.io.Bits bits the Bits to get the Int32 value for
@@ -87,7 +122,7 @@ class BitsTools
     public static function toInt32(bits:Bits):Int32
     {
         if (bits == null || bits.length != 4) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Bits are not a valid Int32 value.");
         }
 
         var i:Int32 = 0;

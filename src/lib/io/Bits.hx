@@ -18,7 +18,7 @@ using lib.StringTools;
  *     == 8 Bytes one can use Bit fields == 1 Byte.
  *   - Working on systems with few memory...
  */
-@:forward(fill, get, length, set, toHex)
+@:forward(length, toHex)
 abstract Bits(Bytes) from Bytes to Bytes
 {
     /**
@@ -60,7 +60,7 @@ abstract Bits(Bytes) from Bytes to Bytes
         #end
 
         var pos:Int    = Math.floor(index / 8);
-        var bits:Int   = this.get(pos);
+        var bits:Int   = (this:Bytes).get(pos);
         var offset:Int = index - (pos << 3);
 
         return (bits & (1 << offset)) != 0;
@@ -88,12 +88,12 @@ abstract Bits(Bytes) from Bytes to Bytes
         #end
 
         var pos:Int    = Math.floor(index / 8);
-        var bits:Int   = this.get(pos);
+        var bits:Int   = (this:Bytes).get(pos);
         var offset:Int = index - (pos << 3);
         if (value) {
-            this.set(pos, bits | (1 << offset));
+            (this:Bytes).set(pos, bits | (1 << offset));
         } else {
-            this.set(pos, bits & ~(1 << offset));
+            (this:Bytes).set(pos, bits & ~(1 << offset));
         }
     }
 
@@ -119,10 +119,10 @@ abstract Bits(Bytes) from Bytes to Bytes
         #end
 
         var pos:Int    = Math.floor(index / 8);
-        var bits:Int   = this.get(pos);
+        var bits:Int   = (this:Bytes).get(pos);
         var offset:Int = index - (pos << 3);
         var value:Int  = bits ^ (1 << offset);
-        this.set(pos, value);
+        (this:Bytes).set(pos, value);
 
         return value != 0;
     }
@@ -137,24 +137,12 @@ abstract Bits(Bytes) from Bytes to Bytes
         return new BitsIterator(this);
     }
 
-    @:deprecated('Conversion methods have been placed into lib.io.BitsTools class.')
-    public static function ofInt32(i:haxe.Int32):Bits
-    {
-        return lib.io.BitsTools.ofInt32(i);
-    }
-
     /**
      * Resets the Bits by setting all of them to 0.
      */
     public inline function reset():Void
     {
-        this.fill(0, this.length, 0);
-    }
-
-    @:deprecated('Conversion methods have been placed into lib.io.BitsTools class.')
-    public static function toInt32(bits:Bits):haxe.Int32
-    {
-        return lib.io.BitsTools.toInt32(bits);
+        (this:Bytes).fill(0, this.length, 0);
     }
 
     /**
