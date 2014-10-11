@@ -47,7 +47,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      * @throws lib.IllegalArgumentException  if the index is negative
      * @throws lib.IndexOutOfBoundsException if the index is larger than the number of stored bits
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:arrayAccess public function array_get(index:Int):Bit
     {
         #if !LIB_PERFORMANCE
@@ -75,7 +75,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      * @throws lib.IllegalArgumentException  if the index is negative
      * @throws lib.IndexOutOfBoundsException if the index is larger than the number of stored bits
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:arrayAccess public function array_set(index:Int, value:Bit):Void
     {
         #if !LIB_PERFORMANCE
@@ -154,9 +154,9 @@ abstract Bits(Bytes) from Bytes to Bytes
         var nbits:Int     = (this.length << 3);
         for (i in 0...nbits) {
             #if (js || php)
-            if (i % group == 0 && i != 0) {
-                buf.add(' ');
-            }
+                if (i % group == 0 && i != 0) {
+                    buf.add(' ');
+                }
             #end
             buf.add(Std.string((this:Bits)[nbits - i - 1]));
         }

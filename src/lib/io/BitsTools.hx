@@ -6,11 +6,45 @@ import lib.IllegalArgumentException;
 import lib.MathTools;
 import lib.io.Bits;
 
+using StringTools;
+
 /**
  * The BitsTools utilities class adds several helpful methods to the lib.io.Bits class.
  */
 class BitsTools
 {
+    /**
+     * Returns a Bits instance with the bits from the input string.
+     *
+     * @param Null<String> str the string with the bits
+     *
+     * @return lib.io.Bits
+     *
+     * @throws lib.IllegalArgumentException if the str contains chars other chan 0 or 1
+     */
+    public static function fromString(str:Null<String>):Bits
+    {
+        var bits:Bits;
+        if (str == null || str.length == 0) {
+            bits = new Bits(0);
+        } else {
+            bits = new Bits(str.length);
+            var code:Int;
+            for (i in 0...str.length) {
+                code = str.fastCodeAt(i);
+                if (code == '0'.code) {
+                    bits[i] = (0:Bit);
+                } else if (code == '1'.code) {
+                    bits[i] = (1:Bit);
+                } else {
+                    throw new IllegalArgumentException("Invalid Bit character detected in input string.");
+                }
+            }
+        }
+
+        return bits;
+    }
+
     /**
      * Returns the Bits of the input float (64bit double).
      *
