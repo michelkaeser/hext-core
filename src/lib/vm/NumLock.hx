@@ -1,5 +1,9 @@
 package lib.vm;
 
+#if !(cpp || cs || java || neko)
+    #error "lib.vm.NumLock is not available on target platform."
+#end
+
 import lib.IllegalArgumentException;
 import lib.vm.ILock;
 import lib.vm.IMutex;
@@ -22,7 +26,7 @@ class NumLock implements ILock
     private var handle:ILock;
 
     /**
-     * Mutex used to synchronize access to the times property.
+     * Mutex used to synchronize access to the releases property.
      *
      * @var lib.vm.IMutex
      */

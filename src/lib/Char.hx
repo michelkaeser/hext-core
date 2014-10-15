@@ -33,8 +33,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
-    @:op(A + B) public inline function add(c:Char):Char
+    @:noCompletion
+    @:op(A + B) public function add(c:Char):Char
     {
         return (this:Char).toInt() + c.toInt();
     }
@@ -46,7 +46,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(A += B) public function addAssign(c:Char):Char
     {
         this.set(0, (this:Char).toInt() + c.toInt());
@@ -60,8 +60,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion @:noUsing
-    @:op(A == B) public inline function compareEqual(c:Char):Bool
+    @:noCompletion
+    @:op(A == B) public function compareEqual(c:Char):Bool
     {
         return (this:Char).toInt() == c.toInt();
     }
@@ -73,8 +73,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion @:noUsing
-    @:op(A > B) public inline function compareGreater(c:Char):Bool
+    @:noCompletion
+    @:op(A > B) public function compareGreater(c:Char):Bool
     {
         return (this:Char).toInt() > c.toInt();
     }
@@ -86,8 +86,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Bool
      */
-    @:noCompletion @:noUsing
-    @:op(A < B) public inline function compareLess(c:Char):Bool
+    @:noCompletion
+    @:op(A < B) public function compareLess(c:Char):Bool
     {
         return (this:Char).toInt() < c.toInt();
     }
@@ -99,8 +99,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
-    @:op(A / B) public inline function divideBy(c:Char):Char
+    @:noCompletion
+    @:op(A / B) public function divideBy(c:Char):Char
     {
         return Std.int((this:Char).toInt() / c.toInt());
     }
@@ -242,7 +242,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(A--) public function postDecrement():Char
     {
         var cur:Int = (this:Char).toInt();
@@ -256,7 +256,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(A++) public function postIncrement():Char
     {
         var cur:Int = (this:Char).toInt();
@@ -270,7 +270,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(--A) public function preDecrement():Char
     {
         this.set(0, cast(this, Int) - 1);
@@ -282,7 +282,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(++A) public function preIncrement():Char
     {
         this.set(0, (this:Char).toInt() + 1);
@@ -296,8 +296,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
-    @:op(A - B) public inline function subs(c:Char):Char
+    @:noCompletion
+    @:op(A - B) public function subs(c:Char):Char
     {
         return (this:Char).toInt() - c.toInt();
     }
@@ -309,7 +309,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return lib.Char
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(A -= B) public function subsAssign(c:Char):Char
     {
         this.set(0, (this:Char).toInt() - c.toInt());
@@ -321,7 +321,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return Int the character code
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:to public inline function toInt():Int
     {
         return this.get(0);
@@ -355,8 +355,8 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return String the unicode character behind the char code
      */
-    @:noCompletion @:noUsing
-    @:to public inline function toString():String
+    @:noCompletion
+    @:to public function toString():String
     {
         return String.fromCharCode((this:Char));
     }

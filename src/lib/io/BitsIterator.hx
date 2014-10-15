@@ -40,7 +40,7 @@ class BitsIterator
      *
      * @return Bool
      */
-    public inline function hasNext():Bool
+    public function hasNext():Bool
     {
         return this.position < (this.bits.length << 3);
     }
@@ -50,7 +50,7 @@ class BitsIterator
      *
      * @return lib.io.Bit
      */
-    public inline function next():Bit
+    public function next():Bit
     {
         return this.bits[this.position++];
     }

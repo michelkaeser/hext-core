@@ -32,6 +32,7 @@ class Queue<T> implements IQueue<T>
      *
      * @return Int
      */
+    @:noCompletion
     private function get_length():Int
     {
         throw new NotImplementedException("Method get_length() not implemented in abstract class Queue.");

@@ -28,8 +28,8 @@ abstract Bit(Bool) from Bool to Bool
      *
      * @return Bool true if they are equal (e.g. both are 1)
      */
-    @:noCompletion @:noUsing
-    @:op(A == A) public inline function compareEqual(other:Bit):Bool
+    @:noCompletion
+    @:op(A == A) public function compareEqual(other:Bit):Bool
     {
         return (this:Bool) == other;
     }
@@ -41,8 +41,8 @@ abstract Bit(Bool) from Bool to Bool
      *
      * @return Bool true if they are not equal (e.g. one is 1, the other 0)
      */
-    @:noCompletion @:noUsing
-    @:op(A != A) public inline function compareNotEqual(other:Bit):Bool
+    @:noCompletion
+    @:op(A != A) public function compareNotEqual(other:Bit):Bool
     {
         return !(this:Bit).compareEqual(other);
     }
@@ -73,7 +73,7 @@ abstract Bit(Bool) from Bool to Bool
      *
      * @return lib.Bit the negated Bit
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     @:op(!A) public inline function negate():Bit
     {
         var current:Bool = this;
@@ -87,8 +87,8 @@ abstract Bit(Bool) from Bool to Bool
      *
      * @return Int
      */
-    @:noCompletion @:noUsing
-    @:to public inline function toInt():Int
+    @:noCompletion
+    @:to public function toInt():Int
     {
         return (this == true) ? 1 : 0;
     }
@@ -96,7 +96,7 @@ abstract Bit(Bool) from Bool to Bool
     /**
      * @{inherit}
      */
-    @:noCompletion @:noUsing
+    @:noCompletion
     public function toString():String
     {
         return (this == true) ? "1" : "0";

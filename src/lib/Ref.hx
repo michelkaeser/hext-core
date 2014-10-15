@@ -37,6 +37,7 @@ abstract Ref<T>(Vector<T>)
      *
      * @return T
      */
+    @:noCompletion
     @:to private inline function get_val():T
     {
         return this[0];
@@ -49,6 +50,7 @@ abstract Ref<T>(Vector<T>)
      *
      * @return T the new value
      */
+    @:noCompletion
     private inline function set_val(val:T):T
     {
         return this[0] = val;
@@ -61,6 +63,7 @@ abstract Ref<T>(Vector<T>)
      *
      * @return lib.Ref<A> the Ref instance referencing the value
      */
+    @:noCompletion @:noUsing
     @:from public static function to<A>(val:A):Ref<A>
     {
         return new Ref<A>(val);
@@ -69,7 +72,7 @@ abstract Ref<T>(Vector<T>)
     /**
      * @{inherit}
      */
-    public inline function toString():String
+    public function toString():String
     {
         return '&{${Std.string(this[0])}}';
     }

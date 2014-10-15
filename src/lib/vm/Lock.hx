@@ -21,6 +21,7 @@ class Lock implements ILock
      */
     private var handle:VMLock;
 
+
     /**
      * Constructor to initialize a new Lock instance.
      */

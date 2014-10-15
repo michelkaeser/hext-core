@@ -243,7 +243,7 @@ class Iterator<T> extends ListIterator<T>
      * @{inherit}
      */
     @:access(lib.ds.LinkedList.anchor)
-    override public inline function hasNext():Bool
+    override public function hasNext():Bool
     {
         return this.current.next != untyped this.list.anchor;
     }
@@ -251,7 +251,7 @@ class Iterator<T> extends ListIterator<T>
     /**
      * @{inherit}
      */
-    override public inline function next():T
+    override public function next():T
     {
         current = current.next;
         return current.data;

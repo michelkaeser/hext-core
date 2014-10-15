@@ -21,8 +21,7 @@ import lib.vm.Mutex;
  *   - Compressing input bytes...
  *   - Unlocking archivements as soon as the user solved 50% of the quiz.
  */
-class Progress implements IProgress implements Serializable
-#if !LIB_DEBUG implements Stringable #end
+class Progress implements IProgress implements Serializable implements Stringable
 {
     /**
      * Stores the registered value change listeners.
@@ -147,7 +146,7 @@ class Progress implements IProgress implements Serializable
     /**
      * @{inherit}
      */
-    public inline function isCompleted():Bool
+    public function isCompleted():Bool
     {
         return this.value == 1.0;
     }
@@ -213,10 +212,8 @@ class Progress implements IProgress implements Serializable
     /**
      * @{inherit}
      */
-    #if !LIB_DEBUG
     public function toString():String
     {
         return Std.string(this.value);
     }
-    #end
 }

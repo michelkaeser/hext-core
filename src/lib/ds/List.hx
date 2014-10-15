@@ -53,7 +53,8 @@ class List<T> extends Collection<T> implements IList<T>
     /**
      * @{inherit}
      */
-    private #if LIB_INLINE inline #end function get_length():Int
+    @:noCompletion
+    private function get_length():Int
     {
         return this.size;
     }

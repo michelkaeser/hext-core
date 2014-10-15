@@ -5,7 +5,7 @@ package lib.threading;
 #elseif (flash || js)
     import haxe.Timer;
 #elseif
-    #error "lib.threading.ThreadExecutor is not available on target platform"
+    #error "lib.threading.ThreadExecutor is not available on target platform."
 #end
 import lib.Callback;
 import lib.threading.IExecutor;

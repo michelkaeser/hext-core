@@ -18,6 +18,7 @@ class Deque<T> implements IDeque<T>
      */
     private var handle:VMDeque<T>;
 
+
     /**
      * Constructor to initialize a new Deque instance.
      */

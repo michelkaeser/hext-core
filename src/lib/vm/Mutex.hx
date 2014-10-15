@@ -22,6 +22,7 @@ class Mutex implements IMutex
      */
     private var handle:VMMutex;
 
+
     /**
      * Constructor to initialize a new Lock instance.
      */

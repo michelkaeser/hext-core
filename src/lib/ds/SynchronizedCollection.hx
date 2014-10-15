@@ -118,6 +118,7 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     /**
      * TODO: see size property
      */
+    @:noCompletion
     private function get_size():Int
     {
         var result:Int;

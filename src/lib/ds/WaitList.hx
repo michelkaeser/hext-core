@@ -37,7 +37,8 @@ class WaitList<T> extends Queue<T>
     /**
      * @{inherit}
      */
-    override private inline function get_length():Int
+    @:noCompletion
+    override private function get_length():Int
     {
         return this.storage.length;
     }

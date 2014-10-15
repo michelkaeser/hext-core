@@ -61,6 +61,7 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     /**
      * @{inherit}
      */
+    @:noCompletion
     private function get_length():Int
     {
         this.mutex.acquire();

@@ -140,7 +140,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Resets the Bits by setting all of them to 0.
      */
-    public inline function reset():Void
+    public function reset():Void
     {
         (this:Bytes).fill(0, this.length, 0);
     }

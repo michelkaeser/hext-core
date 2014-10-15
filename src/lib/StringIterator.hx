@@ -45,7 +45,7 @@ class StringIterator
      *
      * @return Bool true if not yet at the end of the String
      */
-    public inline function hasNext():Bool
+    public function hasNext():Bool
     {
         return this.position < this.string.length;
     }
@@ -55,7 +55,7 @@ class StringIterator
      *
      * @return lib.Char
      */
-    public inline function next():Char
+    public function next():Char
     {
         return this.string.fastCodeAt(this.position++);
     }

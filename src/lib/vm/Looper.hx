@@ -1,5 +1,9 @@
 package lib.vm;
 
+#if !(cpp || cs || java || neko)
+    #error "lib.vm.Looper is not available on target platform."
+#end
+
 import lib.Closure;
 import lib.IllegalStateException;
 import lib.vm.IMutex;
@@ -24,13 +28,14 @@ class Looper extends Thread
     private var mutex:IMutex;
 
     #if !cs
-    /**
-     * Stores the Looper's state.
-     *
-     * @var lib.vm.Looper.State
-     */
-    private var state:State;
+        /**
+         * Stores the Looper's state.
+         *
+         * @var lib.vm.Looper.State
+         */
+        private var state:State;
     #end
+
 
     /**
      * Constructor to initialize a new Looper instance.
@@ -50,7 +55,7 @@ class Looper extends Thread
     /**
      * @{inherit}
      */
-    public static inline function current():Looper
+    public static function current():Looper
     {
         return new Looper(Thread.current().handle);
     }

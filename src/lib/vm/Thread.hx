@@ -31,24 +31,24 @@ class Thread
     private var handle:VMThread;
 
     #if cs
-    /**
-     * Stores the message queue.
-     *
-     * @var lib.vm.IDeque<Dynamic>
-     */
-    private var messages:IDeque<Dynamic>;
+        /**
+         * Stores the message queue.
+         *
+         * @var lib.vm.IDeque<Dynamic>
+         */
+        private var messages:IDeque<Dynamic>;
 
-    /**
-     * Stores the map of Threads so we can access their messages field.
-     *
-     * @var ObjectMap<lib.vm.Thread.VMThread, lib.vm.Thread>
-     */
-    private static var threads:ObjectMap<VMThread, Thread> = {
-        var map    = new ObjectMap<VMThread, Thread>();
-        var handle = VMThread.CurrentThread;
-        map.set(handle, new Thread(handle));
-        map;
-    }
+        /**
+         * Stores the map of Threads so we can access their messages field.
+         *
+         * @var ObjectMap<lib.vm.Thread.VMThread, lib.vm.Thread>
+         */
+        private static var threads:ObjectMap<VMThread, Thread> = {
+            var map    = new ObjectMap<VMThread, Thread>();
+            var handle = VMThread.CurrentThread;
+            map.set(handle, new Thread(handle));
+            map;
+        }
     #end
 
 
@@ -70,7 +70,7 @@ class Thread
      *
      * @return lib.vm.Thread
      */
-    public static inline function current():Thread
+    public static function current():Thread
     {
         #if cs
             return new Thread(VMThread.CurrentThread);

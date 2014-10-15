@@ -80,7 +80,7 @@ class ExecutionContext
      *
      * @return lib.threading.IExecutor
      */
-    private static inline function set_defaultExecutor(executor:IExecutor):IExecutor
+    private static function set_defaultExecutor(executor:IExecutor):IExecutor
     {
         return ExecutionContext.defaultExecutor = executor;
     }
@@ -92,7 +92,7 @@ class ExecutionContext
      *
      * @return lib.threading.IExecutor
      */
-    private static inline function set_parallelExecutor(executor:IExecutor):IExecutor
+    private static function set_parallelExecutor(executor:IExecutor):IExecutor
     {
         return ExecutionContext.parallelExecutor = executor;
     }

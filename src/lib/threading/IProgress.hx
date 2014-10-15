@@ -14,6 +14,7 @@ interface IProgress
      */
     @:isVar public var value(get, null):Float;
 
+
     /**
      * Attaches the value listener.
      *

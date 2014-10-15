@@ -2,6 +2,7 @@ package lib.util;
 
 import haxe.Constraints.Function;
 import lib.IllegalArgumentException;
+import lib.threading.Atomic;
 import lib.util.RetryHandlerAbortedException;
 import lib.util.RetryLimitReachedException;
 
@@ -23,9 +24,9 @@ class RetryHandler<T>
     /**
      * Stores either 'effort' should stop after the current retry.
      *
-     * @var Bool
+     * @var lib.threading.Atomic<Bool>
      */
-    private var aborted:Bool;
+    private var aborted:Atomic<Bool>;
 
     /**
      * Stores the arguments to pass when calling the function.
@@ -63,7 +64,7 @@ class RetryHandler<T>
      */
     public function abort():Void
     {
-        this.aborted = true;
+        this.aborted.val = true;
     }
 
     /**
@@ -85,10 +86,10 @@ class RetryHandler<T>
         if (retries <= 0) {
             throw new IllegalArgumentException("Number of retries cannot be 0 or less.");
         }
-        this.aborted = false;
 
+        this.aborted.val = false;
         var i:Int = 0;
-        while (!this.aborted && i < retries) {
+        while (!this.aborted.val && i < retries) {
             try {
                 return Reflect.callMethod(this, this.fn, this.args);
             } catch (ex:Dynamic) {

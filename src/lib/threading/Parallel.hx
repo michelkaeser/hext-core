@@ -1,5 +1,9 @@
 package lib.threading;
 
+#if !(cpp || cs || java || neko)
+    #error "lib.threading.Parallel is not available on target platform."
+#end
+
 import lib.Callback;
 import lib.Closure;
 import lib.threading.ExecutionContext;
@@ -128,7 +132,7 @@ class Parallel
      *
      * @return lib.threading.IExecutor
      */
-    private static inline function set_executor(executor:IExecutor):IExecutor
+    private static function set_executor(executor:IExecutor):IExecutor
     {
         return Parallel.executor = executor;
     }

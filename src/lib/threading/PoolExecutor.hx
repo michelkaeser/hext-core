@@ -1,5 +1,9 @@
 package lib.threading;
 
+#if !(cpp || cs || java || neko)
+    #error "lib.threading.PoolExecutor is not available on target platform."
+#end
+
 import haxe.ds.Vector;
 import lib.Callback;
 import lib.IllegalArgumentException;
