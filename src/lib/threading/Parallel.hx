@@ -35,7 +35,7 @@ class Parallel
     /**
      * Executes the callback function for each value in 'it' (in parallel).
      *
-     * @param Iterable<T>       it the iterable for which values the callback is executed
+     * @param Iterable<T>     it the iterable for which values the callback is executed
      * @param lib.Callback<T> fn the callback function to execute
      */
     public static function forEach<T>(it:Iterable<T>, fn:Callback<T>):Void
@@ -60,8 +60,8 @@ class Parallel
     /**
      * Executes the callback function for each value in the range between 'start' and 'end'
      *
-     * @param T:Int                 start the range's start value
-     * @param T:Int                 end   the range's end value
+     * @param T:Int               start the range's start value
+     * @param T:Int               end   the range's end value
      * @param lib.Callback<T:Int> fn    the callback function to execute
      */
     public static function forRange<T:Int>(start:T, end:T, fn:Callback<T>):Void
