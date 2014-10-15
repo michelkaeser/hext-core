@@ -2,6 +2,7 @@ package lib.util;
 
 import haxe.Constraints.Function;
 import lib.IllegalArgumentException;
+import lib.util.RetryHandlerAbortedException;
 import lib.util.RetryLimitReachedException;
 
 /**
@@ -19,6 +20,13 @@ import lib.util.RetryLimitReachedException;
  */
 class RetryHandler<T>
 {
+    /**
+     * Stores either 'effort' should stop after the current retry.
+     *
+     * @var Bool
+     */
+    private var aborted:Bool;
+
     /**
      * Stores the arguments to pass when calling the function.
      *
@@ -42,11 +50,20 @@ class RetryHandler<T>
      */
     public function new(fn:Function, ?args:Array<Dynamic>):Void
     {
-        this.fn = fn;
+        this.aborted = false;
+        this.fn      = fn;
         if (args == null) {
             args = new Array<Dynamic>();
         }
         this.args = args;
+    }
+
+    /**
+     * Tells the 'effort' function to abort after the current retry.
+     */
+    public function abort():Void
+    {
+        this.aborted = true;
     }
 
     /**
@@ -59,16 +76,19 @@ class RetryHandler<T>
      *
      * @return T
      *
-     * @throws lib.util.IllegalArgumentException   if 'retries' if less than 1
-     * @throws lib.util.RetryLimitReachedException if the function doesn't return successfully after 'retries' retries
+     * @throws lib.util.IllegalArgumentException     if 'retries' if less than 1
+     * @throws lib.util.RetryLimitReachedException   if the function doesn't return successfully after 'retries' retries
+     * @throws lib.util.RetryHandlerAbortedException if the abort call has ended the retry loop
      */
     public function effort(retries:Int, timeout:Float = 0.0):T
     {
         if (retries <= 0) {
             throw new IllegalArgumentException("Number of retries cannot be 0 or less.");
         }
+        this.aborted = false;
 
-        for (i in 0...retries) {
+        var i:Int = 0;
+        while (!this.aborted && i < retries) {
             try {
                 return Reflect.callMethod(this, this.fn, this.args);
             } catch (ex:Dynamic) {
@@ -77,13 +97,14 @@ class RetryHandler<T>
                 }
 
                 #if sys
-                if (timeout > 0.0) {
-                    Sys.sleep(timeout);
-                }
+                    if (timeout > 0.0) {
+                        Sys.sleep(timeout);
+                    }
                 #end
             }
+            ++i;
         }
 
-        return null; // never reached
+        throw new RetryHandlerAbortedException();
     }
 }
