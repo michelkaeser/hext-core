@@ -5,10 +5,10 @@ package lib.vm;
 #end
 
 import lib.IllegalArgumentException;
+import lib.threading.ISynchronizer;
+import lib.threading.Synchronizer;
 import lib.vm.ILock;
-import lib.vm.IMutex;
 import lib.vm.Lock;
-import lib.vm.Mutex;
 
 /**
  * Lock decorator that requires multiple release calls before the Lock gets released.
@@ -26,11 +26,11 @@ class NumLock implements ILock
     private var handle:ILock;
 
     /**
-     * Mutex used to synchronize access to the releases property.
+     * Stores the Synchronizer used to perform atomic operations.
      *
-     * @var lib.vm.IMutex
+     * @var lib.threading.ISynchronizer
      */
-    private var mutex:IMutex;
+    private var synchronizer:ISynchronizer;
 
     /**
      * Stores the number of times the Lock needs to be released.
@@ -61,10 +61,10 @@ class NumLock implements ILock
             throw new IllegalArgumentException("Number of needed relases cannot be less than 1.");
         }
 
-        this.handle   = lock;
-        this.mutex    = new Mutex();
-        this.times    = times;
-        this.releases = 0;
+        this.handle       = lock;
+        this.synchronizer = new Synchronizer();
+        this.times        = times;
+        this.releases     = 0;
     }
 
     /**
@@ -72,12 +72,12 @@ class NumLock implements ILock
      */
     public function release():Void
     {
-        this.mutex.acquire();
-        if (++this.releases == this.times) {
-            this.handle.release();
-            this.releases = 0;
-        }
-        this.mutex.release();
+        this.synchronizer.sync(function():Void {
+            if (++this.releases == this.times) {
+                this.handle.release();
+                this.releases = 0;
+            }
+        });
     }
 
     /**

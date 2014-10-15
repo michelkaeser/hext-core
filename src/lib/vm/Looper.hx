@@ -6,8 +6,8 @@ package lib.vm;
 
 import lib.Closure;
 import lib.IllegalStateException;
-import lib.vm.IMutex;
-import lib.vm.Mutex;
+import lib.threading.ISynchronizer;
+import lib.threading.Synchronizer;
 import lib.vm.Thread;
 
 /**
@@ -21,11 +21,11 @@ import lib.vm.Thread;
 class Looper extends Thread
 {
     /**
-     * Stores the Mutex used to synchronize access to the state.
+     * Stores the Synchronizer used to perform atomic operations.
      *
-     * @var lib.vm.IMutex
+     * @var lib.threading.ISynchronizer
      */
-    private var mutex:IMutex;
+    private var synchronizer:ISynchronizer;
 
     #if !cs
         /**
@@ -46,7 +46,7 @@ class Looper extends Thread
     {
         super(handle);
 
-        this.mutex = new Mutex();
+        this.synchronizer = new Synchronizer();
         #if !cs
             this.state = State.INITIALIZED;
         #end
@@ -82,22 +82,21 @@ class Looper extends Thread
      *
      * The Looper is not destroyed immediately, but when the next loop
      * iteration would be entered.
+     *
+     * @throws lib.IllegalStateException if the Looper has already been destroyed
      */
     public function destroy():Void
     {
-        this.mutex.acquire();
-        #if cs
-            this.handle.Abort();
-            this.mutex.release();
-        #else
-            if (this.state == State.DESTROYED) {
-                this.mutex.release();
-                throw new IllegalStateException("Cannot destroy an already destroyed Looper.");
-            }
-
-            this.state = State.DESTROYED;
-            this.mutex.release();
-        #end
+        this.synchronizer.sync(function():Void {
+            #if cs
+                this.handle.Abort();
+            #else
+                if (this.state == State.DESTROYED) {
+                    throw new IllegalStateException("Cannot destroy an already destroyed Looper.");
+                }
+                this.state = State.DESTROYED;
+            #end
+        });
     }
 
     /**
@@ -117,13 +116,14 @@ class Looper extends Thread
      */
     public function isDestroyed():Bool
     {
-        this.mutex.acquire();
-        #if cs
-            var ret:Bool = !this.handle.IsAlive;
-        #else
-            var ret:Bool = (this.state == State.DESTROYED);
-        #end
-        this.mutex.release();
+        var ret:Bool;
+        this.synchronizer.sync(function():Void {
+            #if cs
+                ret = !this.handle.IsAlive;
+            #else
+                ret = (this.state == State.DESTROYED);
+            #end
+        });
 
         return ret;
     }

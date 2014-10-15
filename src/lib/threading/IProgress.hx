@@ -3,7 +3,7 @@ package lib.threading;
 import lib.Callback;
 
 /**
- *
+ * TODO
  */
 interface IProgress
 {
