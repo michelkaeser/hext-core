@@ -1,9 +1,5 @@
 package lib.vm;
 
-#if !(cpp || cs || java || neko)
-    #error "lib.vm.MultiLock is not available on target platform."
-#end
-
 import lib.ds.LinkedList;
 import lib.ds.SynchronizedList;
 import lib.vm.ILock;

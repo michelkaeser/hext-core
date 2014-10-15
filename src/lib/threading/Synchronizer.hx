@@ -1,9 +1,5 @@
 package lib.threading;
 
-#if !(cpp || cs || java || neko)
-    #error "lib.threading.Synchronizer is not available on target platform."
-#end
-
 import lib.Closure;
 import lib.threading.ISynchronizer;
 import lib.vm.IMutex;
@@ -18,13 +14,15 @@ import lib.vm.Mutex;
  */
 class Synchronizer implements ISynchronizer
 {
-    /**
-     * Stores the Mutex used to ensure only one Thread a time is executing the sync
-     * function.
-     *
-     * @var lib.vm.IMutex
-     */
-    private var mutex:IMutex;
+    #if (cpp || cs || java || neko)
+        /**
+         * Stores the Mutex used to ensure only one Thread a time is executing the sync
+         * function.
+         *
+         * @var lib.vm.IMutex
+         */
+        private var mutex:IMutex;
+    #end
 
 
     /**
@@ -32,7 +30,9 @@ class Synchronizer implements ISynchronizer
      */
     public function new():Void
     {
-        this.mutex = new Mutex();
+        #if (cpp || cs || java || neko)
+            this.mutex = new Mutex();
+        #end
     }
 
     /**
@@ -40,13 +40,17 @@ class Synchronizer implements ISynchronizer
      */
     public function sync(fn:Closure):Void
     {
-        this.mutex.acquire();
-        try {
-            fn();
-        } catch (ex:Dynamic) {
+        #if (cpp || cs || java || neko)
+            this.mutex.acquire();
+            try {
+                fn();
+            } catch (ex:Dynamic) {
+                this.mutex.release();
+                throw ex;
+            }
             this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        #else
+            fn();
+        #end
     }
 }

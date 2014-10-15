@@ -4,7 +4,7 @@ import lib.ds.ISet;
 import lib.ds.SynchronizedCollection;
 
 /**
- *
+ * TODO
  */
 class SynchronizedSet<T> extends SynchronizedCollection<T> implements ISet<T>
 {
@@ -24,15 +24,9 @@ class SynchronizedSet<T> extends SynchronizedCollection<T> implements ISet<T>
     public function subSet(start:T, end:T):SynchronizedSet<T>
     {
         var result:ISet<T>;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection).subSet(start, end);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return new SynchronizedSet<T>(result);
     }

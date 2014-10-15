@@ -4,7 +4,7 @@ import lib.ds.IList;
 import lib.ds.SynchronizedCollection;
 
 /**
- *
+ * TODO
  */
 class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
 {
@@ -29,14 +29,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
      */
     public function delete(index:Int):Void
     {
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             cast(this.collection, IList<Dynamic>).delete(index);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
     }
 
     /**
@@ -45,15 +40,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function get(index:Int):T
     {
         var result:T;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection, IList<Dynamic>).get(index);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -64,9 +53,10 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     @:noCompletion
     private function get_length():Int
     {
-        this.mutex.acquire();
-        var result:Int = cast(this.collection, IList<Dynamic>).length;
-        this.mutex.release();
+        var result:Int;
+        this.synchronizer.sync(function():Void {
+            result = cast(this.collection, IList<Dynamic>).length;
+        });
 
         return result;
     }
@@ -77,15 +67,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function indexOf(item:T):Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection, IList<Dynamic>).indexOf(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -96,15 +80,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function indexesOf(item:T):Array<Int>
     {
         var result:Array<Int>;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection, IList<Dynamic>).indexesOf(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -123,15 +101,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function lastIndexOf(item:T):Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection, IList<Dynamic>).lastIndexOf(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -142,15 +114,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function set(index:Int, item:T):T
     {
         var result:T;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection, IList<Dynamic>).set(index, item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -161,15 +127,9 @@ class SynchronizedList<T> extends SynchronizedCollection<T> implements IList<T>
     public function subList(start:Int, end:Int):SynchronizedList<T>
     {
         var result:IList<T>;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = cast(this.collection).subList(start, end);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return new SynchronizedList<T>(result);
     }

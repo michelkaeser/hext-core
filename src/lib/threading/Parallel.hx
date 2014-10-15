@@ -1,9 +1,5 @@
 package lib.threading;
 
-#if !(cpp || cs || java || neko)
-    #error "lib.threading.Parallel is not available on target platform."
-#end
-
 import lib.Callback;
 import lib.Closure;
 import lib.threading.ExecutionContext;

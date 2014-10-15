@@ -4,11 +4,11 @@ import lib.Arrayable;
 import lib.NotImplementedException;
 import lib.Stringable;
 import lib.ds.ICollection;
-import lib.vm.IMutex;
-import lib.vm.Mutex;
+import lib.threading.ISynchronizer;
+import lib.threading.Synchronizer;
 
 /**
- *
+ * TODO
  */
 class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T> implements Stringable
 {
@@ -20,16 +20,16 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     private var collection:ICollection<T>;
 
     /**
-     * Stores the Mutex used to synchronize read/write access.
-     *
-     * @param lib.vm.IMutex
-     */
-    private var mutex:IMutex;
-
-    /**
      * TODO: get, never is required...
      */
     public var size(default, null):Int;
+
+    /**
+     * Stores the Synchronizer used to perform atomic operations.
+     *
+     * @var lib.threading.ISynchronizer
+     */
+    private var synchronizer:ISynchronizer;
 
 
     /**
@@ -39,8 +39,8 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
      */
     private function new(collection:ICollection<T>):Void
     {
-        this.collection = collection;
-        this.mutex      = new Mutex();
+        this.collection   = collection;
+        this.synchronizer = new Synchronizer();
     }
 
     /**
@@ -49,15 +49,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function add(item:T):Bool
     {
         var result:Bool;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.add(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -68,15 +62,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function addAll(items:Iterable<T>):Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.addAll(items);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -86,14 +74,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
      */
     public function clear():Void
     {
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             this.collection.clear();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
     }
 
     /**
@@ -102,15 +85,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function contains(item:T):Bool
     {
         var result:Bool;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.contains(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -122,15 +99,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     private function get_size():Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.size;
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -141,15 +112,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function isEmpty():Bool
     {
         var result:Bool;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.isEmpty();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -168,15 +133,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function remove(item:T):Bool
     {
         var result:Bool;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.remove(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -187,15 +146,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function removeAll(items:Iterable<T>):Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.collection.removeAll(items);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -208,15 +161,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function toArray():Array<T>
     {
         var arr:Array<T>;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             arr = cast(this.collection).toArray();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return arr;
     }
@@ -229,15 +176,9 @@ class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T
     public function toString():String
     {
         var str:String;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             str = cast(this.collection).toString();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return str;
     }

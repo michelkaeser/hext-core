@@ -1,9 +1,5 @@
 package lib.vm;
 
-#if !(cpp || cs || java || neko)
-    #error "lib.vm.NumLock is not available on target platform."
-#end
-
 import lib.IllegalArgumentException;
 import lib.threading.ISynchronizer;
 import lib.threading.Synchronizer;

@@ -1,11 +1,11 @@
 package lib.ds;
 
 import lib.ds.IQueue;
-import lib.vm.IMutex;
-import lib.vm.Mutex;
+import lib.threading.ISynchronizer;
+import lib.threading.Synchronizer;
 
 /**
- *
+ * TODO
  */
 class SynchronizedQueue<T> implements IQueue<T>
 {
@@ -15,11 +15,11 @@ class SynchronizedQueue<T> implements IQueue<T>
     public var length(get, never):Int;
 
     /**
-     * Stores the Mutex used to synchronize read/write access.
+     * Stores the Synchronizer used to perform atomic operations.
      *
-     * @param lib.vm.IMutex
+     * @var lib.threading.ISynchronizer
      */
-    private var mutex:IMutex;
+    private var synchronizer:ISynchronizer;
 
     /**
      * Stores the underlaying, to synchronize, Queue.
@@ -36,8 +36,8 @@ class SynchronizedQueue<T> implements IQueue<T>
      */
     public function new(queue:IQueue<T>):Void
     {
-        this.mutex = new Mutex();
-        this.queue = queue;
+        this.synchronizer = new Synchronizer();
+        this.queue        = queue;
     }
 
     /**
@@ -46,9 +46,10 @@ class SynchronizedQueue<T> implements IQueue<T>
     @:noCompletion
     private function get_length():Int
     {
-        this.mutex.acquire();
-        var result:Int = this.queue.length;
-        this.mutex.release();
+        var result:Int;
+        this.synchronizer.sync(function():Void {
+            result = this.queue.length;
+        });
 
         return result;
     }
@@ -59,15 +60,9 @@ class SynchronizedQueue<T> implements IQueue<T>
     public function isEmpty():Bool
     {
         var result:Bool;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.queue.isEmpty();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -78,15 +73,9 @@ class SynchronizedQueue<T> implements IQueue<T>
     public function pop():T
     {
         var result:T;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.queue.pop();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -97,15 +86,9 @@ class SynchronizedQueue<T> implements IQueue<T>
     public function push(item:T):Int
     {
         var result:Int;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.queue.push(item);
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
@@ -116,15 +99,9 @@ class SynchronizedQueue<T> implements IQueue<T>
     public function top():T
     {
         var result:T;
-
-        this.mutex.acquire();
-        try {
+        this.synchronizer.sync(function():Void {
             result = this.queue.top();
-        } catch (ex:Dynamic) {
-            this.mutex.release();
-            throw ex;
-        }
-        this.mutex.release();
+        });
 
         return result;
     }
