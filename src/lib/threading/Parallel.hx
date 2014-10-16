@@ -43,15 +43,15 @@ class Parallel
         if (!Lambda.empty(it)) {
             var lock:NumLock = new NumLock(new Lock(), Lambda.count(it));
             for (item in it) {
-                Parallel.executor.execute(function(item:T):Void {
+                Parallel.executor.execute(function(fn:Callback<T>, arg:T):Void {
                     try {
-                        fn(item);
+                        fn(arg);
                     } catch (ex:Dynamic) {
                         lock.release();
                         throw ex;
                     }
                     lock.release();
-                }.bind(item));
+                }.bind(fn, item));
             }
             lock.wait();
         }
@@ -69,15 +69,15 @@ class Parallel
         if (end > start) {
             var lock:NumLock = new NumLock(new Lock(), end - start);
             for (i in start...end) {
-                Parallel.executor.execute(function(i:T):Void {
+                Parallel.executor.execute(function(fn:Callback<T>, arg:T):Void {
                     try {
-                        fn(i);
+                        fn(arg);
                     } catch (ex:Dynamic) {
                         lock.release();
                         throw ex;
                     }
                     lock.release();
-                }.bind(cast i));
+                }.bind(fn, cast i));
             }
             lock.wait();
         }

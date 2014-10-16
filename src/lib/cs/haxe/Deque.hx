@@ -76,34 +76,29 @@ class Deque<T> implements IDeque<T>
      * @param Bool block if true, wait until an item is available if the queue is empty
      *
      * @return Null<T>
-     *
-     * @throws Dynamic exceptions thrown by the underlaying queue
      */
     public function pop(block:Bool):Null<T>
     {
         var top:T = null;
-        if (block) {
-            this.mutex.acquire();
-            if (this.queue.isEmpty()) {
-                this.mutex.release();
+        this.mutex.acquire();
+        if (this.queue.isEmpty()) {
+            this.mutex.release();
+            if (block) {
                 while (true) {
                     this.lock.wait(0.01);
                     this.mutex.acquire();
                     if (!this.queue.isEmpty()) {
-                        try {
-                            top = this.queue.pop();
-                            this.mutex.release();
-                            break;
-                        } catch (ex:Dynamic) {
-                            this.mutex.release();
-                            throw ex;
-                        }
+                        top = this.queue.pop();
+                        this.mutex.release();
+                        break;
+                    } else {
+                        this.mutex.release();
                     }
                 }
-            } else {
-                top = this.queue.pop();
-                this.mutex.release();
             }
+        } else {
+            top = this.queue.pop();
+            this.mutex.release();
         }
 
         return top;
