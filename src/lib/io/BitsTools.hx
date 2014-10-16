@@ -26,7 +26,7 @@ class BitsTools
     {
         var bits:Bits;
         if (str == null || str.length == 0) {
-            bits = new Bits(0);
+            bits = Bytes.alloc(0);
         } else {
             bits = new Bits(str.length);
             var code:Int;
@@ -117,10 +117,10 @@ class BitsTools
      *
      * @return lib.io.Bits the string's bits
      */
-    public static function ofString(str:String):Bits
+    public static function ofString(str:Null<String>):Bits
     {
         if (str == null || str.length == 0) {
-            return new Bits(0);
+            return Bytes.alloc(0);
         }
 
         return Bytes.ofString(str);
