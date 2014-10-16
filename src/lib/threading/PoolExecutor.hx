@@ -1,7 +1,7 @@
 package lib.threading;
 
 import haxe.ds.Vector;
-import lib.Callback;
+import lib.Closure;
 import lib.IllegalArgumentException;
 import lib.threading.IExecutor;
 import lib.vm.Deque;
@@ -27,9 +27,9 @@ class PoolExecutor implements IExecutor
     /**
      * Stores the jobs/callbacks the executors need to process.
      *
-     * @var lib.vm.IDeque<lib.threading.PoolExecutor.Job<Dynamic>>
+     * @var lib.vm.IDeque<lib.Closure>
      */
-    private var jobs:IDeque<Job<Dynamic>>;
+    private var jobs:IDeque<Closure>;
 
 
     /**
@@ -46,7 +46,7 @@ class PoolExecutor implements IExecutor
         }
 
         this.executors = new Vector<Looper>(pool);
-        this.jobs      = new Deque<Job<Dynamic>>();
+        this.jobs      = new Deque<Closure>();
         this.initialize();
     }
 
@@ -57,12 +57,12 @@ class PoolExecutor implements IExecutor
     {
         for (i in 0...this.executors.length) {
             this.executors.set(i, Looper.create(function():Void {
-                var job:Job<Dynamic> = this.jobs.pop(true);
+                var fn:Closure = this.jobs.pop(true);
                 #if LIB_DEBUG
-                    job.fn(job.arg);
+                    fn();
                 #else
                     try {
-                        job.fn(job.arg);
+                        fn();
                     } catch (ex:Dynamic) {}
                 #end
             }));
@@ -72,18 +72,8 @@ class PoolExecutor implements IExecutor
     /**
      * @{inherit}
      */
-    public function execute<T>(callback:Callback<T>, arg:T):Void
+    public function execute(fn:Closure):Void
     {
-        this.jobs.add({ fn: callback, arg: arg });
+        this.jobs.add(fn);
     }
-}
-
-
-/**
- * Typedef representing a Job for the execution threads.
- */
-private typedef Job<T> =
-{
-    var fn:Callback<T>;
-    var arg:T;
 }

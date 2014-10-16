@@ -7,7 +7,7 @@ package lib.threading;
 #elseif
     #error "lib.threading.ThreadExecutor is not available on target platform."
 #end
-import lib.Callback;
+import lib.Closure;
 import lib.threading.IExecutor;
 
 /**
@@ -26,16 +26,12 @@ class ThreadExecutor implements IExecutor
     /**
      * @{inherit}
      */
-    public function execute<T>(callback:Callback<T>, arg:T):Void
+    public function execute(fn:Closure):Void
     {
         #if (flash || js)
-            Timer.delay(function():Void {
-                callback(arg);
-            }, 0);
+            Timer.delay(fn, 0);
         #else
-            Thread.create(function():Void {
-                callback(arg);
-            });
+            Thread.create(fn);
         #end
     }
 }

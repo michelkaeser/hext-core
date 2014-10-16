@@ -1,6 +1,6 @@
 package lib.threading;
 
-import lib.Callback;
+import lib.Closure;
 
 /**
  * The Executor interface can be used to realize an (asynchronous)
@@ -14,10 +14,10 @@ interface IExecutor
     /**
      * Executes the provided callback with the given argument.
      *
-     * @param lib.Callback<T> callback the callback to execute
-     * @param T               arg      the argument to pass to the callback
+     * Note: If you'd like to execute functions that accept arguments, you can either wrap them inside
+     * another function block or "make them parameterless" with function.bind(<params>)
      *
-     * @generic T the type of argument(s) the callback accepts
+     * @param lib.Closure fn the function to execute
      */
-    public function execute<T>(callback:Callback<T>, arg:T):Void;
+    public function execute(fn:Closure):Void;
 }

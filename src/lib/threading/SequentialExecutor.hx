@@ -1,6 +1,6 @@
 package lib.threading;
 
-import lib.Callback;
+import lib.Closure;
 import lib.NotImplementedException;
 import lib.threading.IExecutor;
 
@@ -18,8 +18,8 @@ class SequentialExecutor implements IExecutor
     /**
      * @{inherit}
      */
-    public function execute<T>(callback:Callback<T>, arg:T):Void
+    public function execute(fn:Closure):Void
     {
-        callback(arg);
+        fn();
     }
 }

@@ -10,6 +10,8 @@ import haxe.ds.Vector;
  *     This can be helpful if the function returns something already.
  *
  * @link https://github.com/haxetink/tink_core/blob/master/src/tink/core/Ref.hx
+ *
+ * @generic T the type of value to reference
  */
 abstract Ref<T>(Vector<T>)
 {

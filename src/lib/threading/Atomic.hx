@@ -12,6 +12,8 @@ package lib.threading;
  *   - Having a read/write only (no further actions are done depending on its value) variable
  *     that is accessed by multiple threads and thus needs some kind of synchronization to prevent
  *     memory corruption.
+ *
+ * @generic T the type of the value to wrap
  */
 abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, mutex:IMutex } #else T #end)
 {
