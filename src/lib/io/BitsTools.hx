@@ -28,10 +28,11 @@ class BitsTools
         if (str == null || str.length == 0) {
             bits = Bytes.alloc(0);
         } else {
-            bits = new Bits(str.length);
+            var length:Int = str.length;
+            bits = new Bits(length);
             var code:Int;
-            for (i in 0...str.length) {
-                code = str.fastCodeAt(i);
+            for (i in 0...length) {
+                code = str.fastCodeAt(length - i - 1);
                 if (code == '0'.code) {
                     bits[i] = (0:Bit);
                 } else if (code == '1'.code) {
