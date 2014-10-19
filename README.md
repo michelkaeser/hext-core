@@ -1,14 +1,14 @@
-# hx-lib
+# hext-core
 
-> A completing yet alternative standard library for Haxe.
+> Hext core, a completing yet alternative standard library for Haxe.
 
 ## Compilation Flags
 
-`-D LIB_DEBUG` which enables debug mode. Setting this flag will tell the `lib.Throwable`s to include full Call- and ExceptionStack information and `lib.threading.IExecutor`s to not catch exceptions. Though this can be helpful during development, it should not be enabled for production/releases as the operations are expensive.
+`-D HEXT_DEBUG` which enables debug mode. Setting this flag will tell the `hext.Throwable`s to include full Call- and ExceptionStack information and `hext.threading.IExecutor`s to not catch exceptions. Though this can be helpful during development, it should not be enabled for production/releases as the operations are expensive.
 
-`-D LIB_PERFORMANCE` which will disable runtime checks in `lib.io.Bit(s)` abstracts. This gives a little performance boost to the cost of safety.
+`-D HEXT_PERFORMANCE` which will disable runtime checks in `hext.io.Bits` abstracts. This gives a little performance boost to the cost of safety.
 
-`-D LIB_WIN` which will tell the library that we are compiling on a Windows system. This flag is used in `lib.vm.Lock` class, as `SemaphoreSlim` doesn't work on non-Windows environments.
+`-D HEXT_WIN` which will tell the library that we are compiling on a Windows system. This flag is used in `hext.vm.Lock` class, as `SemaphoreSlim` doesn't work on non-Windows environments.
 
 ## Nullability
 

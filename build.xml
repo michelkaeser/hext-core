@@ -1,5 +1,5 @@
-<project name="hx-lib" default="exit" basedir=".">
-    <description>A completing yet alternative standard library for Haxe.</description>
+<project name="hext-core" default="exit" basedir=".">
+    <description>Hext core, a completing yet alternative standard library for Haxe.</description>
 
     <property environment="env" />
     <property name="workspace" location="${env.WORKSPACE}" />

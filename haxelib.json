@@ -1,12 +1,12 @@
 {
-    "name": "lib",
-    "url" : "https://github.com/MaddinXx/hx-lib",
+    "name": "hext-core",
+    "url" : "",
     "license": "MIT",
-    "tags": ["std", "cross", "library", "lib"],
-    "description": "A completing yet alternative standard library.",
+    "tags": ["core", "library", "std", "cross"],
+    "description": "Hext core, a completing yet alternative standard library for Haxe.",
     "classPath": "src",
     "version": "0.0.0",
-    "releasenote": "Starting a new eta",
+    "releasenote": "",
     "contributors": [
        "MaddinXx"
     ]
