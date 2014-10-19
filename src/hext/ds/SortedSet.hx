@@ -5,7 +5,7 @@ import haxe.Unserializer;
 import hext.IllegalArgumentException;
 import hext.Serializable;
 import hext.ds.UnsortedSet;
-import hext.util.Comparator;
+import hext.utils.Comparator;
 
 /**
  * TODO
@@ -26,7 +26,7 @@ class SortedSet<T> extends UnsortedSet<T> implements Serializable
     /**
      * Constructor to initialize a new SortedSet.
      *
-     * @param hext.util.Comparator<T> comparator the Comparator used to check for item equality
+     * @param hext.utils.Comparator<T> comparator the Comparator used to check for item equality
      */
     public function new(comparator:Comparator<T>):Void
     {

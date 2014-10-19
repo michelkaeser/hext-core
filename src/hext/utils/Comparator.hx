@@ -1,4 +1,4 @@
-package hext.util;
+package hext.utils;
 
 /**
  * The Comparator typedef defines a function/method

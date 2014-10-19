@@ -6,7 +6,7 @@ package hext.ds;
 import hext.IllegalArgumentException;
 import hext.ds.Collection;
 import hext.ds.ISet;
-import hext.util.Comparator;
+import hext.utils.Comparator;
 
 /**
  * Abstract base implementation of the ISet interface
@@ -21,7 +21,7 @@ class Set<T> extends Collection<T> implements ISet<T>
     /**
      * Stores the Comparator used to compare items for equality.
      *
-     * @var hext.util.Comparator<T>
+     * @var hext.utils.Comparator<T>
      */
     private var comparator:Comparator<T>;
 
@@ -29,7 +29,7 @@ class Set<T> extends Collection<T> implements ISet<T>
     /**
      * Constructor to initialize a new Set.
      *
-     * @param hext.util.Comparator<T> comparator the Comparator to compare items
+     * @param hext.utils.Comparator<T> comparator the Comparator to compare items
      */
     private function new(comparator:Comparator<T>):Void
     {

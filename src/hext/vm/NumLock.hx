@@ -49,7 +49,7 @@ class NumLock implements ILock
      * @param hext.vm.ILock lock  the Lock to decorate
      * @param Int           times the num of required released
      *
-     * @throws hext.util.IllegalArgumentException if 'times' is less than 1
+     * @throws hext.IllegalArgumentException if 'times' is less than 1
      */
     public function new(lock:ILock, times:Int):Void
     {

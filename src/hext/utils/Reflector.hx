@@ -1,4 +1,4 @@
-package hext.util;
+package hext.utils;
 
 /**
  * Reflection methods/algorithms wrapper class that provides various
@@ -9,7 +9,7 @@ class Reflector
     /**
      * Compares the two objects.
      *
-     * @see hext.util.Comparator
+     * @see hext.utils.Comparator
      *
      * @param T x the object based on which the return value is calculated
      * @param T y the object to compare against

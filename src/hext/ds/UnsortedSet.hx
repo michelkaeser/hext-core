@@ -4,7 +4,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import hext.Serializable;
 import hext.ds.Set;
-import hext.util.Comparator;
+import hext.utils.Comparator;
 
 /**
  * Use cases:
@@ -23,7 +23,7 @@ class UnsortedSet<T> extends Set<T> implements Serializable
     /**
      * Constructor to initialize a new UnsortedSet.
      *
-     * @param hext.util.Comparator<T> comparator the comparator to check items for equality.
+     * @param hext.utils.Comparator<T> comparator the comparator to check items for equality.
      */
     public function new(comparator:Comparator<T>):Void
     {

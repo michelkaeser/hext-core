@@ -1,4 +1,4 @@
-package hext.util;
+package hext.utils;
 
 /**
  * The Predicator typedef defines a function/method

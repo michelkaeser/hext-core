@@ -37,7 +37,7 @@ class PoolExecutor implements IExecutor
      *
      * @param Int pool the number of threads to put into the pool
      *
-     * @throws hext.util.IllegalArgumentException if 'pool' is less than 1
+     * @throws hext.IllegalArgumentException if 'pool' is less than 1
      */
     public function new(pool:Int = 1):Void
     {

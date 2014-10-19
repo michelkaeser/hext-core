@@ -12,7 +12,7 @@ import hext.ds.UnsortedSet;
 import hext.threading.IProgress;
 import hext.threading.ISynchronizer;
 import hext.threading.Synchronizer;
-import hext.util.Reflector;
+import hext.utils.Reflector;
 import hext.vm.MultiLock;
 
 /**

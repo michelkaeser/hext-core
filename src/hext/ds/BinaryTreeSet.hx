@@ -3,7 +3,7 @@ package hext.ds;
 import hext.Callback;
 import hext.ds.ITree;
 import hext.ds.Set;
-import hext.util.Comparator;
+import hext.utils.Comparator;
 
 /**
  * TODO
@@ -24,7 +24,7 @@ class BinaryTreeSet<T> extends Set<T> implements ITree<T>
     /**
      * Constructor to initialize a new BinaryTreeSet instance.
      *
-     * @param hext.util.Comparator<T> comparator the Comparator used to compare items
+     * @param hext.utils.Comparator<T> comparator the Comparator used to compare items
      */
     public function new(comparator:Comparator<T>):Void
     {
