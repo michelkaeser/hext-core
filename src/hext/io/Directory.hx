@@ -155,16 +155,31 @@ class Directory implements Serializable implements Stringable
     /**
      * Returns the paths of all iles and directories in the directory.
      *
+     * @param Bool fullPath either to return the full paths (including directories) or not
+     *
      * @return Array<Path> the directory entries
      *
      * @throws hext.io.IOException           when the content could not be read
      * @throws hext.io.FileNotFoundException when the directory does not exist
      */
-    public function getChildren():Array<Path>
+    public function getChildren(fullPath:Bool = false):Array<Path>
     {
         if (this.exists()) {
             try {
-                return FileSystem.readDirectory(this.path);
+                var children:Array<Path> = FileSystem.readDirectory(this.path);
+                if (fullPath) {
+                    var i:Int = 0;
+                    while (i < children.length) {
+                        children[i] = this.path + children[i];
+                        ++i;
+                    }
+                    // Not so good as it creates a new Array
+                    // children = children.map(function(child:Path):Path {
+                    //     return this.path + child;
+                    // });
+                }
+
+                return children;
             } catch (ex:Dynamic) {
                 throw new IOException("Error getting the directory's children.");
             }
