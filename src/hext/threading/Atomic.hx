@@ -1,7 +1,8 @@
 package hext.threading;
 
 #if (cpp || cs || java || neko)
-    import hext.vm.Mutex;
+    import hext.threading.ISynchronizer;
+    import hext.threading.Synchronizer;
 #end
 
 /**
@@ -14,7 +15,7 @@ package hext.threading;
  *
  * @generic T the type of the value to wrap
  */
-abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, mutex:Mutex } #else T #end)
+abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISynchronizer } #else T #end)
 {
     /**
      * Property to access and set the Atomic's value.
@@ -32,7 +33,7 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, mutex:Mutex } #els
     private inline function new(val:T):Void
     {
         #if (cpp || cs || java || neko)
-            this = { value: val, mutex: new Mutex() };
+            this = { value: val, synchronizer: new Synchronizer() };
         #else
             this = val;
         #end
@@ -61,9 +62,9 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, mutex:Mutex } #els
     {
         var val:T;
         #if (cpp || cs || java || neko)
-            this.mutex.acquire();
-            val = this.value;
-            this.mutex.release();
+            this.synchronizer.sync(function():Void {
+                val = this.value;
+            });
         #else
             val = this;
         #end
@@ -82,9 +83,9 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, mutex:Mutex } #els
     private #if !(cpp || cs || java || neko) inline #end function set_val(val:T):T
     {
         #if (cpp || cs || java || neko)
-            this.mutex.acquire();
-            this.value = val;
-            this.mutex.release();
+            this.synchronizer.sync(function():Void {
+                this.value = val;
+            });
         #else
             this = val;
         #end
