@@ -35,12 +35,14 @@ class Parallel
     /**
      * Executes the callback function for each value in 'it' (in parallel).
      *
-     * @param Iterable<T>      it the iterable for which values the callback is executed
-     * @param hext.Callback<T> fn the callback function to execute
+     * This function does not return before all items were processed.
+     *
+     * @param Null<Iterable<T>> it the iterable for which values the callback is executed
+     * @param hext.Callback<T>  fn the callback function to execute
      */
-    public static function forEach<T>(it:Iterable<T>, fn:Callback<T>):Void
+    public static function forEach<T>(it:Null<Iterable<T>>, fn:Callback<T>):Void
     {
-        if (!Lambda.empty(it)) {
+        if (it != null && !Lambda.empty(it)) {
             var lock:NumLock = new NumLock(new Lock(), Lambda.count(it));
             for (item in it) {
                 Parallel.executor.execute(function(fn:Callback<T>, arg:T):Void {
@@ -58,7 +60,9 @@ class Parallel
     }
 
     /**
-     * Executes the callback function for each value in the range between 'start' and 'end'
+     * Executes the callback function for each value in the range between 'start' and 'end'.
+     *
+     * This function does not return before the whole range was processed.
      *
      * @param T:Int                start the range's start value
      * @param T:Int                end   the range's end value
@@ -100,11 +104,13 @@ class Parallel
     /**
      * Executes all the functions in parallel.
      *
-     * @param Iterable<hext.Closure> fns the functions to execute
+     * This function does not return before all functions were executed.
+     *
+     * @param Null<Iterable<hext.Closure>> fns the functions to execute
      */
-    public static function invoke(fns:Iterable<Closure>):Void
+    public static function invoke(fns:Null<Iterable<Closure>>):Void
     {
-        if (!Lambda.empty(fns)) {
+        if (fns != null && !Lambda.empty(fns)) {
             var lock:NumLock = new NumLock(new Lock(), Lambda.count(fns));
             for (fn in fns) {
                 Parallel.executor.execute(function(fn:Closure):Void {
@@ -131,5 +137,24 @@ class Parallel
     private static function set_executor(executor:IExecutor):IExecutor
     {
         return Parallel.executor = executor;
+    }
+
+    /**
+     * Executes the provided Closure until the condition is not meet anymore.
+     *
+     * @param hext.Closure fn the function to execute
+     * @param Void->Bool   condition the condition to check to decide either another
+     *                     loop should be done or not
+     */
+    public static function until(fn:Closure, condition:Void->Bool):Void
+    {
+        var loop:Closure = null;
+        loop = function():Void {
+            fn();
+            if (condition()) {
+                Parallel.executor.execute(loop);
+            }
+        }
+        Parallel.executor.execute(loop);
     }
 }
