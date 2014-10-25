@@ -67,7 +67,8 @@ class ExecutionContext
     private static function get_parallelExecutor():IExecutor
     {
         if (ExecutionContext.parallelExecutor == null) {
-            ExecutionContext.parallelExecutor = #if js new ThreadExecutor(); #else new PoolExecutor(4); #end
+            // TODO: set the number of Threads in PoolExecutor in relation to number of cores
+            ExecutionContext.parallelExecutor = #if js new ThreadExecutor(); #else new PoolExecutor(100); #end
         }
 
         return ExecutionContext.parallelExecutor;
