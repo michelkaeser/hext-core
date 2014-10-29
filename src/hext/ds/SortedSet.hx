@@ -70,16 +70,17 @@ class SortedSet<T> extends UnsortedSet<T> implements Serializable
     override public function contains(item:T):Bool
     {
         if (!this.isEmpty()) {
-            // Binary search implementation from hx-search
+            // Binary search implementation from hext-search
             var first:Int = 0,
                 last:Int  = this.bag.length - 1;
 
             var middle:Int;
             while (last >= first) {
                 middle = Std.int((first + last) / 2);
-                if (this.comparator(this.bag[middle], item) < 0) {
+                var ret:Int = this.comparator(this.bag[middle], item);
+                if (ret < 0) {
                     first = middle + 1;
-                } else if (this.comparator(this.bag[middle], item) > 0) {
+                } else if (ret > 0) {
                     last = middle - 1;
                 } else {
                     return true;
