@@ -13,7 +13,7 @@ import haxe.Unserializer;
  *
  * @link http://haxe.org/manual/std-serialization.html
  */
-interface Serializable
+interface ISerializable
 {
     /**
      * Method that is called by the serializer.

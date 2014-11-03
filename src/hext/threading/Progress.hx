@@ -5,8 +5,8 @@ import haxe.Unserializer;
 import haxe.ds.StringMap;
 import hext.Callback;
 import hext.IllegalArgumentException;
-import hext.Serializable;
-import hext.Stringable;
+import hext.ISerializable;
+import hext.IStringable;
 import hext.ds.SynchronizedSet;
 import hext.ds.UnsortedSet;
 import hext.threading.IProgress;
@@ -21,7 +21,7 @@ import hext.vm.MultiLock;
  *   - Compressing input bytes...
  *   - Unlocking archivements as soon as the user solved 50% of the quiz.
  */
-class Progress implements IProgress implements Serializable implements Stringable
+class Progress implements IProgress implements ISerializable implements IStringable
 {
     /**
      * Stores the registered value change listeners.

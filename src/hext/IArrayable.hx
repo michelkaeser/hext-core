@@ -1,7 +1,7 @@
 package hext;
 
 /**
- * The Arrayable interface forces the implementing class
+ * The IArrayable interface forces the implementing class
  * to offer a public API method to get an Array representative of the instance.
  *
  * Attn: If manipulating Array items leads to wrong states (e.g. in hext.ds.SortedSet),
@@ -14,7 +14,7 @@ package hext;
  *
  * @generic T the type of items the Array will contain
  */
-interface Arrayable<T>
+interface IArrayable<T>
 {
     /**
      * Returns an Array representing the instance.

@@ -3,7 +3,9 @@ package hext.io;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
-import hext.Stringable;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.IStringable;
 import hext.io.FileNotFoundException;
 import hext.io.IOException;
 import hext.io.Path;
@@ -22,7 +24,7 @@ using hext.io.FileTools;
  * Use cases:
  *   - Everything that includes working with FS files.
  */
-class File implements Stringable
+class File implements ICloneable<File> implements ISerializable implements IStringable
 {
     /**
      * Property to access the file's extension.
@@ -61,6 +63,14 @@ class File implements Stringable
     public function new(path:Path):Void
     {
         this.path = path;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():File
+    {
+        return new File(this.path);
     }
 
     /**

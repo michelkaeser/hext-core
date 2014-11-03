@@ -7,7 +7,7 @@ import hext.Exception;
  * Exception to be thrown when the called method is not supported.
  *
  * Use cases:
- *   - Inheriting from an interface or abstract class where a method do not make sense in context.
+ *   - Inheriting from an interface or abstract class where a method does not make sense in context.
  */
 class UnsupportedOperationException extends Exception
 {

@@ -1,8 +1,8 @@
 package hext.ds;
 
-import hext.Arrayable;
+import hext.IArrayable;
+import hext.IStringable;
 import hext.NotImplementedException;
-import hext.Stringable;
 import hext.ds.ICollection;
 import hext.threading.ISynchronizer;
 import hext.threading.Synchronizer;
@@ -10,7 +10,7 @@ import hext.threading.Synchronizer;
 /**
  * TODO
  */
-class SynchronizedCollection<T> implements ICollection<T> implements Arrayable<T> implements Stringable
+class SynchronizedCollection<T> implements ICollection<T> implements IArrayable<T> implements IStringable
 {
     /**
      * Stores the underlaying Collection.

@@ -2,7 +2,7 @@ package hext;
 
 import haxe.CallStack;
 import haxe.PosInfos;
-import hext.Stringable;
+import hext.IStringable;
 
 using StringTools;
 
@@ -12,7 +12,7 @@ using StringTools;
  * as it helps finding bugs and program faults by providing the initially mentioned
  * information to the developer.
  */
-class Throwable implements Stringable
+class Throwable implements IStringable
 {
     /**
      * Stores the method call stack.
@@ -46,8 +46,8 @@ class Throwable implements Stringable
     /**
      * Constructor to initialize a new Throwable.
      *
-     * @param Dynamic       msg  the message to display
-     * @param haxe.PosInfos info the position information object
+     * @param Dynamic             msg  the message to display
+     * @param Null<haxe.PosInfos> info the position information object
      */
     private function new(msg:Dynamic = "", ?info:PosInfos):Void
     {

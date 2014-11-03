@@ -3,8 +3,9 @@ package hext.io;
 import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
-import hext.Serializable;
-import hext.Stringable;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.IStringable;
 import hext.io.File;
 import hext.io.FileNotFoundException;
 import hext.io.IOException;
@@ -19,7 +20,7 @@ import sys.FileSystem;
  * Use cases:
  *   - Everything that includes working with FS directories.
  */
-class Directory implements Serializable implements Stringable
+class Directory implements ICloneable<Directory> implements ISerializable implements IStringable
 {
     /**
      * Stores the path of the directory.
@@ -37,6 +38,14 @@ class Directory implements Serializable implements Stringable
     public function new(path:Path):Void
     {
         this.path = HaxePath.addTrailingSlash(path);
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Directory
+    {
+        return new Directory(this.path);
     }
 
     /**

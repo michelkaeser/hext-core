@@ -1,0 +1,2 @@
+--macro keep('Map')
+--macro keep('haxe.ds.GenericStack')

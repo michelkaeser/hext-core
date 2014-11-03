@@ -3,9 +3,11 @@ package hext.ds;
 import haxe.Serializer;
 import haxe.Unserializer;
 import hext.IllegalArgumentException;
-import hext.Serializable;
+import hext.ISerializable;
 import hext.ds.UnsortedSet;
 import hext.utils.Comparator;
+
+using hext.utils.Reflector;
 
 /**
  * TODO
@@ -13,7 +15,7 @@ import hext.utils.Comparator;
  * Use cases:
  *   - Having a DS that doesn't allow duplicates and is fast to search in.
  */
-class SortedSet<T> extends UnsortedSet<T> implements Serializable
+class SortedSet<T> extends UnsortedSet<T> implements ISerializable
 {
     /**
      * Stores either the sort() method should be called or not.
@@ -161,15 +163,15 @@ class SortedSet<T> extends UnsortedSet<T> implements Serializable
         var params:Array<Dynamic> = new Array<Dynamic>();
         params.push(Reflect.field(this, "comparator"));
         var sub:SortedSet<T> = Type.createInstance(Type.getClass(this), params);
-
         if (!this.isEmpty() && this.comparator(start, end) == -1) {
             var current:T = this.bag[0];
             var index:Int = 0;
+            // TODO: binary search like implementation
             while (this.comparator(current, start) == -1) {
                 current = this.bag[++index];
             }
             while (this.comparator(current, end) == -1) {
-                sub.add(current);
+                sub.add(current.clone(true));
                 current = this.bag[++index];
             }
         }

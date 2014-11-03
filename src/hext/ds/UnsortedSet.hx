@@ -2,15 +2,17 @@ package hext.ds;
 
 import haxe.Serializer;
 import haxe.Unserializer;
-import hext.Serializable;
+import hext.ISerializable;
 import hext.ds.Set;
 import hext.utils.Comparator;
+
+using hext.utils.Reflector;
 
 /**
  * Use cases:
  *   - Needing a DS that does not allow duplicate entries.
  */
-class UnsortedSet<T> extends Set<T> implements Serializable
+class UnsortedSet<T> extends Set<T> implements ISerializable
 {
     /**
      * Stores the underlaying bag to store the items.
@@ -37,7 +39,7 @@ class UnsortedSet<T> extends Set<T> implements Serializable
     override public function add(item:T):Bool
     {
         if (this.isEmpty() || !this.contains(item)) {
-            this.bag.push(item);
+            this.bag.push(item.clone(true));
             ++this.size;
 
             return true;
@@ -83,14 +85,5 @@ class UnsortedSet<T> extends Set<T> implements Serializable
         }
 
         return false;
-    }
-
-    /**
-     * @{inherit}
-     */
-    // overriden for better performance than in Collection
-    override public function toArray():Array<T>
-    {
-        return Lambda.array(this.bag);
     }
 }

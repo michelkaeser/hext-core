@@ -1,8 +1,8 @@
 package hext.ds;
 
-import hext.Arrayable;
+import hext.IArrayable;
+import hext.IStringable;
 import hext.NotImplementedException;
-import hext.Stringable;
 import hext.ds.ICollection;
 
 /**
@@ -13,7 +13,7 @@ import hext.ds.ICollection;
  *
  * @generic T the type of items the Collection can store
  */
-class Collection<T> implements ICollection<T> implements Arrayable<T> implements Stringable
+class Collection<T> implements ICollection<T> implements IArrayable<T> implements IStringable
 {
     /**
      * @{inherit}

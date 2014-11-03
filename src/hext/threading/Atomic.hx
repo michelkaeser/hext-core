@@ -4,6 +4,7 @@ package hext.threading;
     import hext.threading.ISynchronizer;
     import hext.threading.Synchronizer;
 #end
+import hext.utils.Reflector;
 
 /**
  * Abstract helper that can be used to make any type thread safe.
@@ -16,6 +17,7 @@ package hext.threading;
  * @generic T the type of the value to wrap
  */
 abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISynchronizer } #else T #end)
+// implements ICloneable
 {
     /**
      * Property to access and set the Atomic's value.
@@ -37,6 +39,14 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
         #else
             this = val;
         #end
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Atomic<T>
+    {
+        return new Atomic<T>(Reflector.clone(this.value));
     }
 
     /**

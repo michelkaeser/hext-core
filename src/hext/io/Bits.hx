@@ -20,6 +20,7 @@ using hext.StringTools;
  */
 @:forward(length, toHex)
 abstract Bits(Bytes) from Bytes to Bytes
+// implements ICloneable
 {
     /**
      * Constructor to initialize a new Bits instance.
@@ -95,6 +96,20 @@ abstract Bits(Bytes) from Bytes to Bytes
         } else {
             (this:Bytes).set(pos, bits & ~(1 << offset));
         }
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Bits
+    {
+        var bits:Int  = this.length << 3;
+        var copy:Bits = new Bits(bits);
+        for (i in 0...bits) {
+            (copy:Bits)[i] = (this:Bits)[i];
+        }
+
+        return copy;
     }
 
     /**

@@ -3,7 +3,7 @@ package hext.ds;
 import haxe.Serializer;
 import haxe.Unserializer;
 import hext.IllegalArgumentException;
-import hext.Serializable;
+import hext.ISerializable;
 import hext.ds.IndexOutOfBoundsException;
 import hext.ds.List;
 
@@ -17,7 +17,7 @@ using hext.ArrayTools;
  *   - Needing a DS with fast read access times.
  *   - Needing a DS that allows index based access.
  */
-class ArrayList<T> extends List<T> implements Serializable
+class ArrayList<T> extends List<T> implements ISerializable
 {
     /**
      * Stores the underlaying Array that is wrapped as a List.

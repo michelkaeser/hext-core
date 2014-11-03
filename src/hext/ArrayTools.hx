@@ -67,7 +67,7 @@ class ArrayTools
     public static function delete<T>(arr:Array<T>, index:Int):Array<T>
     {
         if (index < 0) {
-            throw new IllegalArgumentException("Array index cannot be negative");
+            throw new IllegalArgumentException("Array index cannot be negative.");
         }
 
         return arr.splice(index, 1);
