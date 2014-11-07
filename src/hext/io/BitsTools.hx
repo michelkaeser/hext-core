@@ -30,9 +30,8 @@ class BitsTools
         } else {
             var length:Int = str.length;
             bits = new Bits(length);
-            var code:Int;
             for (i in 0...length) {
-                code = str.fastCodeAt(length - i - 1);
+                var code:Int = str.fastCodeAt(length - i - 1);
                 if (code == '0'.code) {
                     bits[i] = (0:Bit);
                 } else if (code == '1'.code) {
@@ -86,9 +85,8 @@ class BitsTools
 
             var exp:Int = 0;
             while (Math.pow(2, ++exp) <= i) {}
-            var res:Int;
             while (i >= 0 && --exp >= 0) {
-                res = Std.int(Math.pow(2, exp)); // (1 << exp) doesn't work e.g. with hext.MathTools.MAX_INT32
+                var res:Int = Std.int(Math.pow(2, exp)); // (1 << exp) doesn't work e.g. with hext.MathTools.MAX_INT32
                 if (i - res >= 0) {
                     bits[exp] = (1:Bit);
                     i -= res;

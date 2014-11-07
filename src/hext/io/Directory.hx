@@ -66,8 +66,7 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
 
         var copy:Directory = new Directory(to);
         if (copy.create()) {
-            var children:Array<Path> = this.getChildren();
-            for (child in children) {
+            for (child in this.getChildren()) {
                 var path:Path     = this.path + child;
                 var copyPath:Path = copy.path + child;
                 if (FileSystem.isDirectory(path)) {
@@ -128,8 +127,7 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
                 }
             } else {
                 if (recursive) {
-                    var children:Array<Path> = this.getChildren();
-                    for (child in children) {
+                    for (child in this.getChildren()) {
                         var path:Path = this.path + child;
                         if (FileSystem.isDirectory(path)) {
                             var directory:Directory = new Directory(path);

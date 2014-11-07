@@ -34,9 +34,8 @@ class StringTools
      */
     public static function isLowerCase(str:String):Bool
     {
-        var c:Char;
         for (i in 0...str.length) {
-            c = str.charCodeAt(i);
+            var c:Char = str.charCodeAt(i);
             if (Char.isLetter(c) && Char.isUpperCase(c)) {
                 return false;
             }
@@ -56,9 +55,8 @@ class StringTools
      */
     public static function isUpperCase(str:String):Bool
     {
-        var c:Char;
         for (i in 0...str.length) {
-            c = str.charCodeAt(i);
+            var c:Char = str.charCodeAt(i);
             if (Char.isLetter(c) && Char.isLowerCase(c)) {
                 return false;
             }

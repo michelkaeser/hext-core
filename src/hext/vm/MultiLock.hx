@@ -38,8 +38,7 @@ class MultiLock extends Lock
      */
     override public function release():Void
     {
-        var waiter:Thread;
-        for (waiter in this.waiters.toArray()) { // toArray so we don't iterate over the original structure (as we remove items from it)
+        for (waiter in this.waiters.toArray()) { // waiter = Thread; toArray so we don't iterate over the original structure (as we remove items from it)
             this.waiters.remove(waiter);
             super.release();
         }

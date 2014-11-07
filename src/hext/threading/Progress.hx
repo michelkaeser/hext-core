@@ -158,8 +158,7 @@ class Progress implements IProgress implements ISerializable implements IStringa
      */
     private function notifyListeners(value:Float):Void
     {
-        var listener:Callback<Float>;
-        for (listener in this.listeners.toArray()) {
+        for (listener in this.listeners.toArray()) { // listener = Callback<Float>; toArray to make sure we iterate over a copy
             #if LIB_DEBUG
                 listener(value);
             #else

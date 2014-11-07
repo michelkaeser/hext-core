@@ -73,13 +73,11 @@ class SortedSet<T> extends UnsortedSet<T> implements ISerializable
     {
         if (!this.isEmpty()) {
             // Binary search implementation from hext-search
-            var first:Int = 0,
-                last:Int  = this.bag.length - 1;
-
-            var middle:Int;
+            var first:Int = 0;
+            var last:Int  = this.bag.length - 1;
             while (last >= first) {
-                middle = Std.int((first + last) / 2);
-                var ret:Int = this.comparator(this.bag[middle], item);
+                var middle:Int = Std.int((first + last) / 2);
+                var ret:Int    = this.comparator(this.bag[middle], item);
                 if (ret < 0) {
                     first = middle + 1;
                 } else if (ret > 0) {
