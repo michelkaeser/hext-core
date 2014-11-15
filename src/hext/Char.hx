@@ -10,10 +10,12 @@ using StringTools;
 /**
  * Abstract C++/Java like single character representation.
  *
+ * They are implemented immutable, meaning, that every operation returns a new Bit rather than
+ * manipulating the existing one in-place.
+ *
  * Use cases:
  *   - Reading/writing from/to streams. Working with characters might feel more natural than integers.
  */
-@:forward(get, set)
 abstract Char(Bytes) from Bytes to Bytes
 {
     /**
@@ -37,20 +39,6 @@ abstract Char(Bytes) from Bytes to Bytes
     @:op(A + B) public function add(c:Char):Char
     {
         return (this:Char).toInt() + c.toInt();
-    }
-
-    /**
-     * Overloaded operator used when adding and assigning two Chars together.
-     *
-     * @param hext.Char c the character to add
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(A += B) public function addAssign(c:Char):Char
-    {
-        this.set(0, (this:Char).toInt() + c.toInt());
-        return this;
     }
 
     /**
@@ -90,19 +78,6 @@ abstract Char(Bytes) from Bytes to Bytes
     @:op(A < B) public function compareLess(c:Char):Bool
     {
         return (this:Char).toInt() < c.toInt();
-    }
-
-    /**
-     * Overloaded operator used when dividing a Character by another Character.
-     *
-     * @param hext.Char c the Character to divide by
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(A / B) public function divideBy(c:Char):Char
-    {
-        return Std.int((this:Char).toInt() / c.toInt());
     }
 
     /**
@@ -225,71 +200,6 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Overloaded operator used when multiplying a Character by another Character.
-     *
-     * @param hext.Char c the Character to multiply by
-     *
-     * @return hext.Char
-     */
-    @:noCompletion @:noUsing
-    @:op(A * B) public inline function multiplyBy(c:Char):Char
-    {
-        return Std.int((this:Char).toInt() * c.toInt());
-    }
-
-    /**
-     * Post decrements the current Character.
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(A--) public function postDecrement():Char
-    {
-        var cur:Int = (this:Char).toInt();
-        this.set(0, cur - 1);
-
-        return cur;
-    }
-
-    /**
-     * Post increments the current Character.
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(A++) public function postIncrement():Char
-    {
-        var cur:Int = (this:Char).toInt();
-        this.set(0, cur + 1);
-
-        return cur;
-    }
-
-    /**
-     * Pre decrements the current Character.
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(--A) public function preDecrement():Char
-    {
-        this.set(0, cast(this, Int) - 1);
-        return this;
-    }
-
-    /**
-     * Pre increment the current Character.
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(++A) public function preIncrement():Char
-    {
-        this.set(0, (this:Char).toInt() + 1);
-        return this;
-    }
-
-    /**
      * Overloaded operator used when substracting one Char from another.
      *
      * @param hext.Char c the Character to substract
@@ -300,20 +210,6 @@ abstract Char(Bytes) from Bytes to Bytes
     @:op(A - B) public function subs(c:Char):Char
     {
         return (this:Char).toInt() - c.toInt();
-    }
-
-    /**
-     * Overloaded operator used when substracting and assigning two Chars together.
-     *
-     * @param hext.Char c the character to add
-     *
-     * @return hext.Char
-     */
-    @:noCompletion
-    @:op(A -= B) public function subsAssign(c:Char):Char
-    {
-        this.set(0, (this:Char).toInt() - c.toInt());
-        return this;
     }
 
     /**
