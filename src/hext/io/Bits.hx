@@ -7,8 +7,6 @@ import hext.io.Bit;
 import hext.io.BitsIterator;
 import hext.ds.IndexOutOfBoundsException;
 
-using hext.StringTools;
-
 /**
  * TODO
  *
@@ -193,12 +191,12 @@ abstract Bits(Bytes) from Bytes to Bytes
         var shifted:Bits = (this:Bits).clone();
         var shift:Int    = times % nbits;
         if (shift != 0) {
-            var index:Int  = nbits - 1;
-            var source:Int = index - shift;
-            while (source >= 0) {
-                shifted[index] = shifted[source];
-                --index;
-                source = index - shift;
+            var index:Int  = 0;
+            var target:Int = index + shift;
+            while (target < nbits) {
+                shifted[target] = (this:Bits)[index];
+                ++index;
+                target = index + shift;
             }
             for (i in 0...shift) {
                 shifted[i] = (0:Bit);
@@ -264,12 +262,12 @@ abstract Bits(Bytes) from Bytes to Bytes
         var shifted:Bits = (this:Bits).clone();
         var shift:Int    = times % nbits;
         if (shift != 0) {
-            var index:Int  = 0;
-            var source:Int = index + shift;
-            while (source < nbits) {
-                shifted[index] = shifted[source];
-                ++index;
-                source = index + shift;
+            var index:Int  = nbits - 1;
+            var target:Int = index - shift;
+            while (target >= 0) {
+                shifted[target] = (this:Bits)[index];
+                --index;
+                target = index - shift;
             }
             var msb:Bit = shifted[nbits - 1];
             for (i in (nbits - shift)...nbits) {
@@ -313,12 +311,12 @@ abstract Bits(Bytes) from Bytes to Bytes
         var shifted:Bits = (this:Bits).clone();
         var shift:Int    = times % nbits;
         if (shift != 0) {
-            var index:Int  = 0;
-            var source:Int = index + shift;
-            while (source < nbits) {
-                shifted[index] = shifted[source];
-                ++index;
-                source = index + shift;
+            var index:Int  = nbits - 1;
+            var target:Int = index - shift;
+            while (target >= 0) {
+                shifted[target] = (this:Bits)[index];
+                --index;
+                target = index - shift;
             }
             for (i in (nbits - shift)...nbits) {
                 shifted[i] = (0:Bit);
