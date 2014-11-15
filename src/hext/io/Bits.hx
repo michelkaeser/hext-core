@@ -57,7 +57,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A & B) public function and(b:Bits):Bits
     {
         var anded:Bytes = (this:Bits).clone();
-        for (i in 0...(this.length > b.length ? this.length : b.length)) {
+        for (i in 0...(this.length > b.length ? b.length : this.length)) {
             anded.set(i, this.get(i) & (b:Bytes).get(i));
         }
 
@@ -233,7 +233,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A | B) public function or(b:Bits):Bits
     {
         var ored:Bytes = (this:Bits).clone();
-        for (i in 0...(this.length > b.length ? this.length : b.length)) {
+        for (i in 0...(this.length > b.length ? b.length : this.length)) {
             ored.set(i, this.get(i) | (b:Bytes).get(i));
         }
 
@@ -337,7 +337,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A ^ B) public function xor(b:Bits):Bits
     {
         var xored:Bytes = (this:Bits).clone();
-        for (i in 0...(this.length > b.length ? this.length : b.length)) {
+        for (i in 0...(this.length > b.length ? b.length : this.length)) {
             xored.set(i, this.get(i) ^ (b:Bytes).get(i));
         }
 
