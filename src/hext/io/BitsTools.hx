@@ -16,7 +16,7 @@ class BitsTools
     /**
      * Returns a Bits instance with the bits from the input string.
      *
-     * @param Null<String> str the string with the bits
+     * @param Null<String> str the string with the bits (e.g. "01001")
      *
      * @return hext.io.Bits
      *
@@ -26,10 +26,10 @@ class BitsTools
     {
         var bits:Bits;
         if (str == null || str.length == 0) {
-            bits = Bytes.alloc(0);
+            bits = Bits.alloc(0);
         } else {
             var length:Int = str.length;
-            bits = new Bits(length);
+            bits = Bits.alloc(length);
             for (i in 0...length) {
                 var code:Int = str.fastCodeAt(length - i - 1);
                 if (code == '0'.code) {
@@ -56,53 +56,29 @@ class BitsTools
      */
     public static function ofFloat(f:Float):Bits
     {
-        var bits:Bits = new Bits(64);
+        var bits:Bits = Bits.alloc(64);
         (bits:Bytes).setDouble(0, f);
 
         return bits;
     }
 
     /**
-     * Returns the Bits of the input integer (32bit variant).
+     * Returns the Bits of the input Int (32bit variant).
      *
      * @link http://en.wikipedia.org/wiki/Two's_complement is used for negatie values
      *
-     * @param haxe.Int32 i the integer to get the bits for
+     * @param haxe.Int32 i the Int to get the bits for
      *
-     * @return hext.io.Bits the integer's Bits
+     * @return hext.io.Bits the Int's Bits
      */
     public static function ofInt32(i:Int32):Bits
     {
-        var bits:Bits = new Bits(32);
+        var bits:Bits = Bits.alloc(32);
         if (i == MathTools.MIN_INT32) {
             bits.flip(31);
         } else if (i != 0) {
-            var negative:Bool = false;
-            if (i < 0) {
-                negative = true;
-                i = Std.int(Math.abs(i));
-            }
-
-            var exp:Int = 0;
-            while (Math.pow(2, ++exp) <= i) {}
-            while (i >= 0 && --exp >= 0) {
-                var res:Int = Std.int(Math.pow(2, exp)); // (1 << exp) doesn't work e.g. with hext.MathTools.MAX_INT32
-                if (i - res >= 0) {
-                    bits[exp] = (1:Bit);
-                    i -= res;
-                }
-            }
-
-            if (negative) {
-                for (j in 0...4) { // invert bits
-                    (bits:Bytes).set(j, ~(bits:Bytes).get(j));
-                }
-                var j:Int = 0;
-                while (bits[j] == (1:Bit)) { // add 1
-                    bits[j] = (0:Bit);
-                    ++j;
-                }
-                bits[j] = (1:Bit);
+            for (j in 0...4) {
+                (bits:Bytes).set(j, i >> (j * 8));
             }
         }
 
@@ -119,7 +95,7 @@ class BitsTools
     public static function ofString(str:Null<String>):Bits
     {
         if (str == null || str.length == 0) {
-            return Bytes.alloc(0);
+            return Bits.alloc(0);
         }
 
         return Bytes.ofString(str);
@@ -159,10 +135,8 @@ class BitsTools
         }
 
         var i:Int32 = 0;
-        for (j in 0...32) {
-            if (bits[j] == (1:Bit)) {
-                i += 1 << j;
-            }
+        for (j in 0...4) {
+            i |= (bits:Bytes).get(j) << (j * 8);
         }
 
         return i;

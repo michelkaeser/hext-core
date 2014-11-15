@@ -32,7 +32,7 @@ class BitsIterator
     public function new(bits:Bits):Void
     {
         this.bits     = bits;
-        this.position = 0;
+        this.position = -1;
     }
 
     /**
@@ -52,6 +52,6 @@ class BitsIterator
      */
     public function next():Bit
     {
-        return this.bits[this.position++];
+        return this.bits[++this.position];
     }
  }

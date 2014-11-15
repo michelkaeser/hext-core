@@ -2,6 +2,7 @@ package hext.io;
 
 import haxe.io.Bytes;
 import hext.IllegalArgumentException;
+import hext.MathTools;
 import hext.io.Bit;
 import hext.io.BitsIterator;
 import hext.ds.IndexOutOfBoundsException;
@@ -9,8 +10,7 @@ import hext.ds.IndexOutOfBoundsException;
 using hext.StringTools;
 
 /**
- * The Bits abstract can be used to store several true/false flags (Bit) within a single Byte.
- * This should be more memory efficient than storing Bools within an Array.
+ * TODO
  *
  * Use cases:
  *   - Storing multiple flag member variables. Instead of having 8x a Bool (1 Byte in general)
@@ -49,14 +49,17 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when anding two Bits instances.
      *
+     * @param hext.io.Bits b the Bits to and with
+     *
+     * @return hext.io.Bits
      */
     @:noCompletion
     @:op(A & B) public function and(b:Bits):Bits
     {
-        var length:Int  = this.length > b.length ? this.length : b.length;
         var anded:Bytes = (this:Bits).clone();
-        for (i in 0...length) {
+        for (i in 0...(this.length > b.length ? this.length : b.length)) {
             anded.set(i, this.get(i) & (b:Bytes).get(i));
         }
 
@@ -124,7 +127,9 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Returns a copy of the current instance.
      *
+     * @return hext.io.Bits
      */
     public function clone():Bits
     {
@@ -169,36 +174,44 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @return hext.io.BitsIterator
      */
-    public function iterator():BitsIterator
+    public inline function iterator():BitsIterator
     {
         return new BitsIterator(this);
     }
 
+    /**
+     * Operator method that is called when left shifting the Bits.
+     *
+     * @param Int times the number of times to shift
+     *
+     * @return hext.io.Bits
+     */
     @:noCompletion
     @:op(A << B) public function lshift(times:Int):Bits
     {
-        var nbits:Int     = this.length << 3;
-        var shifted:Bytes = Bits.alloc(nbits);
-        var carry:UInt    = 0;
-        for (i in 0...this.length) {
-            var byte:Int       = this.get(i);
-            var byteShift:Int  = times % nbits;
-            var carryShift:Int = (times - (i << 3)); // apply carry to correct byte (e.g << 16 -> 2)
-            if (carryShift > 0) {
-                shifted.set(i, (byte << byteShift) | (carry << carryShift));
-            } else {
-                shifted.set(i, (byte << byteShift) | (carry >> -carryShift));
+        var nbits:Int    = this.length << 3;
+        var shifted:Bits = (this:Bits).clone();
+        var shift:Int    = times % nbits;
+        if (shift != 0) {
+            var index:Int  = nbits - 1;
+            var source:Int = index - shift;
+            while (source >= 0) {
+                shifted[index] = shifted[source];
+                --index;
+                source = index - shift;
             }
-
-            var offset:Int = times >= 8 ? 8 : times;
-            carry |= byte & ((1 << 31) >> (23 + offset)); // bits that were shifted out
+            for (i in 0...shift) {
+                shifted[i] = (0:Bit);
+            }
         }
 
         return shifted;
     }
 
     /**
+     * Operator method that is called when negating the Bits.
      *
+     * @return hext.io.Bits
      */
     @:noCompletion
     @:op(~A) public function neg():Bits
@@ -212,14 +225,17 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when oring two Bits instances.
      *
+     * @param hext.io.Bits b the Bits to or with
+     *
+     * @return hext.io.Bits
      */
     @:noCompletion
     @:op(A | B) public function or(b:Bits):Bits
     {
-        var length:Int = this.length > b.length ? this.length : b.length;
         var ored:Bytes = (this:Bits).clone();
-        for (i in 0...length) {
+        for (i in 0...(this.length > b.length ? this.length : b.length)) {
             ored.set(i, this.get(i) | (b:Bytes).get(i));
         }
 
@@ -229,26 +245,36 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Resets the Bits by setting all of them to 0.
      */
-    public function reset():Void
+    public inline function reset():Void
     {
         this.fill(0, this.length, 0);
     }
 
+    /**
+     * Operator method that is called when right shifting the Bits.
+     *
+     * @param Int times the number of times to shift
+     *
+     * @return hext.io.Bits
+     */
     @:noCompletion
     @:op(A >> B) public function rshift(times:Int):Bits
     {
-        var shifted:Bytes = Bits.alloc(this.length << 3);
-        var carry:Int     = 0;
-        for (i in 0...this.length) {
-            var index:Int = this.length - i - 1;
-            var byte:Int  = this.get(index);
-            if (i == 0) {
-                shifted.set(index, ((byte << 24) >> 24) >> times);
-            } else {
-                shifted.set(index, (byte >>> times) | (carry << (8 - times)));
+        var nbits:Int    = this.length << 3;
+        var shifted:Bits = (this:Bits).clone();
+        var shift:Int    = times % nbits;
+        if (shift != 0) {
+            var index:Int  = 0;
+            var source:Int = index + shift;
+            while (source < nbits) {
+                shifted[index] = shifted[source];
+                ++index;
+                source = index + shift;
             }
-            carry = byte & ((2 << (times - 1)) - 1);
-            trace(carry);
+            var msb:Bit = shifted[nbits - 1];
+            for (i in (nbits - shift)...nbits) {
+                shifted[i] = msb;
+            }
         }
 
         return shifted;
@@ -274,14 +300,46 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when right shifting (unsigned) the Bits.
      *
+     * @param Int times the number of times to shift
+     *
+     * @return hext.io.Bits
+     */
+    @:noCompletion
+    @:op(A >>> B) public function urshift(times:Int):Bits
+    {
+        var nbits:Int    = this.length << 3;
+        var shifted:Bits = (this:Bits).clone();
+        var shift:Int    = times % nbits;
+        if (shift != 0) {
+            var index:Int  = 0;
+            var source:Int = index + shift;
+            while (source < nbits) {
+                shifted[index] = shifted[source];
+                ++index;
+                source = index + shift;
+            }
+            for (i in (nbits - shift)...nbits) {
+                shifted[i] = (0:Bit);
+            }
+        }
+
+        return shifted;
+    }
+
+    /**
+     * Operator method that is called when xoring two Bits instances.
+     *
+     * @param hext.io.Bits b the Bits to xor with
+     *
+     * @return hext.io.Bits
      */
     @:noCompletion
     @:op(A ^ B) public function xor(b:Bits):Bits
     {
-        var length:Int  = this.length > b.length ? this.length : b.length;
         var xored:Bytes = (this:Bits).clone();
-        for (i in 0...length) {
+        for (i in 0...(this.length > b.length ? this.length : b.length)) {
             xored.set(i, this.get(i) ^ (b:Bytes).get(i));
         }
 

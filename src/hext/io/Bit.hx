@@ -5,7 +5,7 @@ import hext.Error;
 /**
  * The Bit abstract allows one to treat Bools or Ints like they were a single Bit.
  *
- * They are implemented immutable, meaning, that every operation returns a new Bit rather than
+ * They are implemented immutable, so every operation returns a new Bit rather than
  * manipulating the existing one in-place.
  *
  * Use cases:
@@ -25,7 +25,20 @@ abstract Bit(Bool) from Bool to Bool
     }
 
     /**
-     * Overloaded operator that is called when comparing two Bits.
+     * Operator method that is called when anding two Bits.
+     *
+     * @param hext.io.Bit b the Bit to and with
+     *
+     * @return hext.io.Bit
+     */
+    @:noCompletion
+    @:op(A & B) public inline function and(b:Bit):Bit
+    {
+        return this && b;
+    }
+
+    /**
+     * Operator method that is called when comparing two Bits.
      *
      * @param hext.io.Bit b the Bit to compare against
      *
@@ -34,11 +47,11 @@ abstract Bit(Bool) from Bool to Bool
     @:noCompletion
     @:op(A == A) public inline function compareEqual(b:Bit):Bool
     {
-        return (this:Bool) == b;
+        return this == b;
     }
 
     /**
-     * Overloaded operator that is called when comparing for NE two Bits.
+     * Operator method that is called when comparing for NE two Bits.
      *
      * @param hext.io.Bit b the Bit to compare against
      *
@@ -47,17 +60,17 @@ abstract Bit(Bool) from Bool to Bool
     @:noCompletion
     @:op(A != A) public inline function compareNotEqual(b:Bit):Bool
     {
-        return (this:Bool) != b;
+        return this != b;
     }
 
     /**
-     * Type-casting helper method to convert an integer to a Bit.
+     * Type-casting helper method to convert an Int to a Bit.
      *
-     * @param Int value the integer value to convert
+     * @param Int value the Int to convert
      *
      * @return hext.io.Bit
      *
-     * @throws hext.Error if the integer is not 0 or 1
+     * @throws hext.Error if the Int is not 0 or 1
      */
     @:noCompletion @:noUsing
     @:from public static function fromInt(i:Int):Bit
@@ -77,13 +90,26 @@ abstract Bit(Bool) from Bool to Bool
      * @return hext.io.Bit
      */
     @:noCompletion
-    @:op(!A) public inline function negate():Bit
+    @:op(~A) public inline function neg():Bit
     {
         return !this;
     }
 
     /**
-     * Type-casting helper method to convert the Bit to an integer.
+     * Operator method that is called when oring two Bits.
+     *
+     * @param hext.io.Bit b the Bit to or with
+     *
+     * @return hext.io.Bit
+     */
+    @:noCompletion
+    @:op(A | B) public inline function or(b:Bit):Bit
+    {
+        return this || b;
+    }
+
+    /**
+     * Type-casting helper method to convert the Bit to an Int.
      *
      * @return Int
      */
@@ -100,5 +126,18 @@ abstract Bit(Bool) from Bool to Bool
     public function toString():String
     {
         return (this == true) ? "1" : "0";
+    }
+
+    /**
+     * Operator method that is called when xoring two Bits.
+     *
+     * @param hext.io.Bit b the Bit to xor with
+     *
+     * @return hext.io.Bit
+     */
+    @:noCompletion
+    @:op(A ^ B) public inline function xor(b:Bit):Bit
+    {
+        return (this || b) && (this != b);
     }
 }
