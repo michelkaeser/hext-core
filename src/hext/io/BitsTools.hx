@@ -85,6 +85,8 @@ class BitsTools
         return bits;
     }
 
+    // TODO: ofInt64
+
     /**
      * Returns the Bits of the input string.
      *
@@ -141,6 +143,8 @@ class BitsTools
 
         return i;
     }
+
+    // TODO: toInt64
 
     /**
      * Converts the Bits back to its string value.

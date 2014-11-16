@@ -1,5 +1,6 @@
 package hext.io;
 
+import haxe.ds.IntMap;
 import haxe.io.Bytes;
 import hext.IllegalArgumentException;
 import hext.MathTools;
@@ -16,9 +17,8 @@ import hext.ds.IndexOutOfBoundsException;
  *   - Working on systems with few memory...
  *   - Implementing a new number type (like Int128)
  */
-@:forward(length, toHex)
+@:forward(length)
 abstract Bits(Bytes) from Bytes to Bytes
-// implements ICloneable
 {
     /**
      * Constructor to initialize a new Bits instance.
@@ -56,7 +56,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A & B) public function and(b:Bits):Bits
     {
-        var anded:Bytes = (this:Bits).clone();
+        var anded:Bytes = (this:Bits).copy();
         for (i in 0...(this.length > b.length ? b.length : this.length)) {
             anded.set(i, this.get(i) & (b:Bytes).get(i));
         }
@@ -129,7 +129,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @return hext.io.Bits
      */
-    public function clone():Bits
+    public function copy():Bits
     {
         var copy:Bytes = Bits.alloc(this.length << 3);
         copy.blit(0, this, 0, this.length);
@@ -188,7 +188,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A << B) public function lshift(times:Int):Bits
     {
         var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).clone();
+        var shifted:Bits = (this:Bits).copy();
         var shift:Int    = times % nbits;
         if (shift != 0) {
             var index:Int  = 0;
@@ -214,7 +214,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(~A) public function neg():Bits
     {
-        var negd:Bytes = (this:Bits).clone();
+        var negd:Bytes = (this:Bits).copy();
         for (i in 0...this.length) {
             negd.set(i, ~this.get(i));
         }
@@ -232,7 +232,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A | B) public function or(b:Bits):Bits
     {
-        var ored:Bytes = (this:Bits).clone();
+        var ored:Bytes = (this:Bits).copy();
         for (i in 0...(this.length > b.length ? b.length : this.length)) {
             ored.set(i, this.get(i) | (b:Bytes).get(i));
         }
@@ -259,7 +259,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A >> B) public function rshift(times:Int):Bits
     {
         var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).clone();
+        var shifted:Bits = (this:Bits).copy();
         var shift:Int    = times % nbits;
         if (shift != 0) {
             var index:Int  = nbits - 1;
@@ -276,6 +276,22 @@ abstract Bits(Bytes) from Bytes to Bytes
         }
 
         return shifted;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function toHex():String
+    {
+        var buf:StringBuf = new StringBuf();
+        for (i in 0...this.length) {
+            var byte:Int = this.get(this.length - i - 1);
+            buf.add(std.StringTools.hex(byte >> 4));
+            buf.add(std.StringTools.hex(byte & 15));
+            buf.add(' ');
+        }
+
+        return buf.toString();
     }
 
     /**
@@ -308,7 +324,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:op(A >>> B) public function urshift(times:Int):Bits
     {
         var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).clone();
+        var shifted:Bits = (this:Bits).copy();
         var shift:Int    = times % nbits;
         if (shift != 0) {
             var index:Int  = nbits - 1;
@@ -336,7 +352,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A ^ B) public function xor(b:Bits):Bits
     {
-        var xored:Bytes = (this:Bits).clone();
+        var xored:Bytes = (this:Bits).copy();
         for (i in 0...(this.length > b.length ? b.length : this.length)) {
             xored.set(i, this.get(i) ^ (b:Bytes).get(i));
         }
