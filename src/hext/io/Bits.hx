@@ -138,6 +138,28 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when two Bits instances are checked for equality.
+     *
+     * @param hext.io.Bits b the Bits to check against
+     *
+     * @return Bool
+     */
+    @:op(A == B) public function equals(b:Bits):Bool
+    {
+        var equal:Bool = false;
+        if (this.length == b.length) {
+            var i:Int = 0;
+            while (i < this.length && this.get(i) == (b:Bytes).get(i)) {
+                ++i;
+            }
+
+            equal = (i == this.length);
+        }
+
+        return equal;
+    }
+
+    /**
      * Flips the Bit at index 'index'.
      *
      * @param Int index the index of the Bit to flip
@@ -172,7 +194,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @return hext.io.BitsIterator
      */
-    public inline function iterator():BitsIterator
+    public function iterator():BitsIterator
     {
         return new BitsIterator(this);
     }
@@ -223,6 +245,28 @@ abstract Bits(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when two Bits instances are checked for not equality.
+     *
+     * @param hext.io.Bits b the Bits to check against
+     *
+     * @return Bool
+     */
+    @:op(A != B) public function nequals(b:Bits):Bool
+    {
+        var nequal:Bool = true;
+        if (this.length == b.length) {
+            var i:Int = 0;
+            while (i < this.length && this.get(i) == (b:Bytes).get(i)) {
+                ++i;
+            }
+
+            nequal = (i != this.length);
+        }
+
+        return nequal;
+    }
+
+    /**
      * Operator method that is called when oring two Bits instances.
      *
      * @param hext.io.Bits b the Bits to or with
@@ -243,7 +287,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Resets the Bits by setting all of them to 0.
      */
-    public inline function reset():Void
+    public function reset():Void
     {
         this.fill(0, this.length, 0);
     }

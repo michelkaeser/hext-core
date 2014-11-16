@@ -18,7 +18,7 @@ class StringTools
      *
      * @return Bool
      */
-    public static function contains(str:String, sub:String):Bool
+    public static inline function contains(str:String, sub:String):Bool
     {
         return str.indexOf(sub) != -1;
     }
@@ -72,7 +72,7 @@ class StringTools
      *
      * @return hext.StringIterator
      */
-    public static inline function iterator(str:String):StringIterator
+    public static function iterator(str:String):StringIterator
     {
         return new StringIterator(str);
     }

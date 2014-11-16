@@ -38,29 +38,16 @@ abstract Bit(Bool) from Bool to Bool
     }
 
     /**
-     * Operator method that is called when comparing two Bits.
+     * Operator method that is called when checking two Bits for equality.
      *
-     * @param hext.io.Bit b the Bit to compare against
+     * @param hext.io.Bit b the Bit to check against
      *
      * @return Bool true if they are equal (e.g. both are 1)
      */
     @:noCompletion
-    @:op(A == A) public inline function compareEqual(b:Bit):Bool
+    @:op(A == A) public inline function equals(b:Bit):Bool
     {
         return this == b;
-    }
-
-    /**
-     * Operator method that is called when comparing for NE two Bits.
-     *
-     * @param hext.io.Bit b the Bit to compare against
-     *
-     * @return Bool true if they are not equal (e.g. one is 1, the other 0)
-     */
-    @:noCompletion
-    @:op(A != A) public inline function compareNotEqual(b:Bit):Bool
-    {
-        return this != b;
     }
 
     /**
@@ -93,6 +80,19 @@ abstract Bit(Bool) from Bool to Bool
     @:op(~A) public inline function neg():Bit
     {
         return !this;
+    }
+
+    /**
+     * Operator method that is called when checking two Bits for NOT equality.
+     *
+     * @param hext.io.Bit b the Bit to check against
+     *
+     * @return Bool true if they are not equal (e.g. one is 0 and the other 1)
+     */
+    @:noCompletion
+    @:op(A != A) public inline function nequals(b:Bit):Bool
+    {
+        return this != b;
     }
 
     /**

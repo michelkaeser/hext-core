@@ -1,6 +1,7 @@
 package hext;
 
 import haxe.Int32;
+import haxe.Int64;
 import haxe.io.Bytes;
 import hext.io.Bit;
 import hext.io.Bits;
@@ -13,22 +14,33 @@ abstract Int128({ bits:Bits })
     /**
      *
      */
+    private static inline var NBITS:Int  = Int128.NBYTES << 3;
+    private static inline var NBYTES:Int = 16;
+
+
+    /**
+     *
+     */
     private inline function new(b:Bits):Void
     {
         this = { bits: b };
     }
 
-    public function bitss():Bits
-    {
-        return untyped this.bits;
-    }
-
     /**
-     *
+     * @{inherit}
      */
     public static function alloc():Int128
     {
-        return new Int128(Bits.alloc(128));
+        return new Int128(Bits.alloc(Int128.NBITS));
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:noCompletion
+    @:op(A & B) public function and(i:Int128):Int128
+    {
+        return new Int128(this.bits & untyped i.bits);
     }
 
     /**
@@ -37,36 +49,31 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A + B) public function add(i:Int128):Int128
     {
-        var x:Bits    = this.bits.copy();
+        var x:Bits    = this.bits;
         var y:Bits    = untyped i.bits;
+        var z:Bits    = Bits.alloc(Int128.NBITS);
+
         var carry:Bit = (0:Bit);
-
-        for (i in 0...128) {
-            var z:Bit = x[i];
-            x[i]      = (z ^ y[i]) ^ carry;
-            carry     = (carry & x[i]) | (z & y[i]);
-
-            /*if (x[i] | y[i]) {
-                if (x[i] && y[i]) {
-                    x[i] = (0:Bit);
-                    var j:Int = i + 1;
-                    while (x[j] == (1:Bit) && j < 127) {
-                        x[j] = (0:Bit);
-                        ++j;
-                    }
-                    x[j] = (1:Bit);
-                } else {
-                    x[i] = (1:Bit);
-                }
-            }*/
+        for (i in 0...Int128.NBITS) {
+            z[i]  = (x[i] ^ y[i]) ^ carry;
+            carry = (carry & x[i]) | (x[i] & y[i]);
         }
-        return new Int128(x);
+
+        return new Int128(z);
     }
 
     @:noCompletion
     @:op(A / B) public function div(i:Int128):Int128
     {
         return cast this;
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:op(A == B) public function equals(i:Int128):Bool
+    {
+        return this.bits == untyped i.bits;
     }
 
     /**
@@ -86,10 +93,41 @@ abstract Int128({ bits:Bits })
     /**
      *
      */
+    @:noCompletion @:noUsing
+    @:from public static function fromInt64(i:Int64):Int128
+    {
+        var i128:Int128 = Int128.alloc();
+        for (j in 0...8) {
+            untyped (i128.bits:Bytes).set(j, Int64.toInt(Int64.shr(i, j * 8)));
+        }
+
+        return i128;
+    }
+
+    /**
+     * @{inherit}
+     */
     @:noCompletion
     @:op(A << B) public function lshift(times:Int):Int128
     {
-        return new Int128(this.bits.copy() << times);
+        return new Int128(this.bits << times);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:noCompletion
+    @:op(~A) public function neg():Int128
+    {
+        return new Int128(~this.bits);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:op(A != B) public function nequals(i:Int128):Bool
+    {
+        return (this.bits != untyped i.bits);
     }
 
     @:noCompletion
@@ -99,12 +137,21 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     *
+     * @{inherit}
+     */
+    @:noCompletion
+    @:op(A | B) public function or(i:Int128):Int128
+    {
+        return new Int128(this.bits | untyped i.bits);
+    }
+
+    /**
+     * @{inherit}
      */
     @:noCompletion
     @:op(A >> B) public function rshift(times:Int):Int128
     {
-        return new Int128(this.bits.copy() >> times);
+        return new Int128(this.bits >> times);
     }
 
     @:noCompletion
@@ -113,14 +160,31 @@ abstract Int128({ bits:Bits })
         return cast this;
     }
 
+    /**
+     * TODO: x must be larget y?
+     *
+     * @link http://en.wikipedia.org/wiki/Bitwise_operation#Applications
+     */
     @:noCompletion
     @:op(A * B) public function times(i:Int128):Int128
     {
-        return cast this;
+        var x:Int128 = new Int128(this.bits.copy());
+        var y:Int128 = new Int128((untyped i.bits:Bits).copy());
+        var z:Int128 = Int128.alloc();
+
+        while (y != 0) {
+            if ((y & 1) != 0) {
+                z += x;
+            }
+            x <<= 1;
+            y >>= 1;
+        }
+
+        return z;
     }
 
     /**
-     *
+     * @{inherit}
      */
     @:noCompletion
     public function toHex():String
@@ -141,11 +205,20 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     *
+     * @{inherit}
      */
     @:noCompletion
     @:op(A >>> B) public function urshift(times:Int):Int128
     {
-        return new Int128(this.bits.copy() >>> times);
+        return new Int128(this.bits >>> times);
+    }
+
+    /**
+     * @{inherit}
+     */
+    @:noCompletion
+    @:op(A ^ B) public function xor(i:Int128):Int128
+    {
+        return new Int128(this.bits ^ untyped i.bits);
     }
 }
