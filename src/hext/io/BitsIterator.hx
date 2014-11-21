@@ -17,7 +17,14 @@ class BitsIterator
     private var bits:Bits;
 
     /**
-    * Stores current index/position.
+     * Stores the number of total Bits in the Bits instance.
+     *
+     * @var Int
+     */
+    private var nbits:Int;
+
+    /**
+    * Stores the current index/position.
     *
     * @var Int
     */
@@ -32,7 +39,8 @@ class BitsIterator
     public function new(bits:Bits):Void
     {
         this.bits     = bits;
-        this.position = -1;
+        this.nbits    = bits.length << 3;
+        this.position = 0;
     }
 
     /**
@@ -42,7 +50,7 @@ class BitsIterator
      */
     public function hasNext():Bool
     {
-        return this.position < (this.bits.length << 3);
+        return this.position < this.nbits;
     }
 
     /**
@@ -52,6 +60,6 @@ class BitsIterator
      */
     public function next():Bit
     {
-        return this.bits[++this.position];
+        return this.bits[this.position++];
     }
  }

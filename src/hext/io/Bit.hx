@@ -32,41 +32,30 @@ abstract Bit(Bool) from Bool to Bool
      * @return hext.io.Bit
      */
     @:noCompletion
+    @:commutative
     @:op(A & B) public inline function and(b:Bit):Bit
     {
         return this && b;
     }
 
     /**
-     * Operator method that is called when comparing two Bits.
+     * Operator method that is called when checking two Bits for equality.
      *
-     * @param hext.io.Bit b the Bit to compare against
+     * @param hext.io.Bit b the Bit to check against
      *
      * @return Bool true if they are equal (e.g. both are 1)
      */
     @:noCompletion
-    @:op(A == A) public inline function compareEqual(b:Bit):Bool
+    @:commutative
+    @:op(A == A) public inline function equals(b:Bit):Bool
     {
         return this == b;
     }
 
     /**
-     * Operator method that is called when comparing for NE two Bits.
-     *
-     * @param hext.io.Bit b the Bit to compare against
-     *
-     * @return Bool true if they are not equal (e.g. one is 1, the other 0)
-     */
-    @:noCompletion
-    @:op(A != A) public inline function compareNotEqual(b:Bit):Bool
-    {
-        return this != b;
-    }
-
-    /**
      * Type-casting helper method to convert an Int to a Bit.
      *
-     * @param Int value the Int to convert
+     * @param Int i the Int to convert
      *
      * @return hext.io.Bit
      *
@@ -77,7 +66,7 @@ abstract Bit(Bool) from Bool to Bool
     {
         #if !HEXT_PERFORMANCE
             if (i != 0 && i != 1) {
-                throw new Error("A bit can either be 0 or 1.");
+                throw new Error("A Bit can either be 0 or 1.");
             }
         #end
 
@@ -96,6 +85,20 @@ abstract Bit(Bool) from Bool to Bool
     }
 
     /**
+     * Operator method that is called when checking two Bits for NOT equality.
+     *
+     * @param hext.io.Bit b the Bit to check against
+     *
+     * @return Bool true if they are not equal (e.g. one is 0 and the other 1)
+     */
+    @:noCompletion
+    @:commutative
+    @:op(A != A) public inline function nequals(b:Bit):Bool
+    {
+        return this != b;
+    }
+
+    /**
      * Operator method that is called when oring two Bits.
      *
      * @param hext.io.Bit b the Bit to or with
@@ -103,6 +106,7 @@ abstract Bit(Bool) from Bool to Bool
      * @return hext.io.Bit
      */
     @:noCompletion
+    @:commutative
     @:op(A | B) public inline function or(b:Bit):Bit
     {
         return this || b;
@@ -136,6 +140,7 @@ abstract Bit(Bool) from Bool to Bool
      * @return hext.io.Bit
      */
     @:noCompletion
+    @:commutative
     @:op(A ^ B) public inline function xor(b:Bit):Bit
     {
         return (this || b) && (this != b);

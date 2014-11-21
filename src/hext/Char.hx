@@ -1,7 +1,5 @@
 package hext;
 
-import haxe.Serializer;
-import haxe.Unserializer;
 import haxe.io.Bytes;
 import hext.Error;
 
@@ -10,7 +8,7 @@ using StringTools;
 /**
  * Abstract C++/Java like single character representation.
  *
- * They are implemented immutable, meaning, that every operation returns a new Bit rather than
+ * They are implemented immutable, so every operation returns a new Char rather than
  * manipulating the existing one in-place.
  *
  * Use cases:
@@ -29,59 +27,35 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Overloaded operator used when adding two Chars together.
+     * Operator method that is called when adding two Chars.
      *
-     * @param hext.Char c the character to add
+     * @param hext.Char c the char to add
      *
      * @return hext.Char
      */
     @:noCompletion
+    @:commutative
     @:op(A + B) public function add(c:Char):Char
     {
-        return (this:Char).toInt() + c.toInt();
+        return this.get(0) + c.toInt();
     }
 
     /**
-     * Overloaded operator used when checking if the Chars are equal.
+     * Operator method that is called when checking two Chars for equality.
      *
-     * @param hext.Char c the Character to compare against
+     * @param hext.Char c the char to check against
      *
-     * @return Bool
+     * @return hext.Char
      */
     @:noCompletion
-    @:op(A == B) public function compareEqual(c:Char):Bool
+    @:commutative
+    @:op(A == B) public function equals(c:Char):Bool
     {
-        return (this:Char).toInt() == c.toInt();
+        return this.get(0) == c.toInt();
     }
 
     /**
-     * Overloaded operator used when comparing two Chars for "greater than".
-     *
-     * @param hext.Char c the Character to check for "greaterness"
-     *
-     * @return Bool
-     */
-    @:noCompletion
-    @:op(A > B) public function compareGreater(c:Char):Bool
-    {
-        return (this:Char).toInt() > c.toInt();
-    }
-
-    /**
-     * Overloaded operator used when comparing two Chars for "less than".
-     *
-     * @param hext.Char c the Character to check for "lessness"
-     *
-     * @return Bool
-     */
-    @:noCompletion
-    @:op(A < B) public function compareLess(c:Char):Bool
-    {
-        return (this:Char).toInt() < c.toInt();
-    }
-
-    /**
-     * Implicit casting from Int to Char.
+     * Type-casting helper method to cast the Int to a Char.
      *
      * @param Int i the Int to cast
      *
@@ -97,13 +71,13 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Implicit casting from String to Char.
+     * Type-casting helper method to cast the string to a Char.
      *
-     * @param String str the String character to cast
+     * @param String str the string to cast
      *
      * @return hext.Char
      *
-     * @throws hext.error is the string is longer than 1 character
+     * @throws hext.Error is the string has more than one character
      */
     @:noCompletion @:noUsing
     @:from public static function fromString(str:String):Char
@@ -116,11 +90,24 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
+     * Operator method that is called when checking for "is greater than" against another Char.
+     *
+     * @param hext.Char c the char to check against
+     *
+     * @return hext.Char
+     */
+    @:noCompletion
+    @:op(A > B) public function greater(c:Char):Bool
+    {
+        return this.get(0) > c.toInt();
+    }
+
+    /**
      * Checks if the passed character is a digit.
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is a digit
+     * @return Bool
      */
     public static function isDigit(c:Char):Bool
     {
@@ -132,7 +119,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is a letter
+     * @return Bool
      */
     public static function isLetter(c:Char):Bool
     {
@@ -144,7 +131,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is between 'a' and 'z'
+     * @return Bool
      */
     public static function isLowerCase(c:Char):Bool
     {
@@ -156,7 +143,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is one
+     * @return Bool
      */
     public static function isLineSeparator(c:Char):Bool
     {
@@ -168,7 +155,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is between 'A' and 'Z'
+     * @return Bool
      */
     public static function isUpperCase(c:Char):Bool
     {
@@ -180,7 +167,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is a special one
+     * @return Bool
      */
     public static function isSpecial(c:Char):Bool
     {
@@ -192,7 +179,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check
      *
-     * @return true if the character is whitespace
+     * @return Bool
      */
     public static function isWhiteSpace(c:Char):Bool
     {
@@ -200,25 +187,52 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Overloaded operator used when substracting one Char from another.
+     * Operator method that is called when checking for "is less than" against another Char.
      *
-     * @param hext.Char c the Character to substract
+     * @param hext.Char c the char to check against
+     *
+     * @return hext.Char
+     */
+    @:noCompletion
+    @:op(A < B) public function less(c:Char):Bool
+    {
+        return this.get(0) < c.toInt();
+    }
+
+    /**
+     * Operator method that is called when checking two Chars for not equality.
+     *
+     * @param hext.Char c the char to check against
+     *
+     * @return hext.Char
+     */
+    @:noCompletion
+    @:commutative
+    @:op(A != B) public function nequals(c:Char):Bool
+    {
+        return this.get(0) != c.toInt();
+    }
+
+    /**
+     * Operator method that is called when substracting one Char from another.
+     *
+     * @param hext.Char c the char to substract
      *
      * @return hext.Char
      */
     @:noCompletion
     @:op(A - B) public function subs(c:Char):Char
     {
-        return (this:Char).toInt() - c.toInt();
+        return this.get(0) - c.toInt();
     }
 
     /**
-     * Implicit casting from Char to Int.
+     * Type-casting helper method to cast the Char to an Int.
      *
-     * @return Int the character code
+     * @return Int
      */
     @:noCompletion
-    @:to public inline function toInt():Int
+    @:to public #if HEXT_PERFORMANCE #end function toInt():Int
     {
         return this.get(0);
     }
@@ -226,7 +240,7 @@ abstract Char(Bytes) from Bytes to Bytes
     /**
      * Converts the upper-case character to its lower-case equivalent.
      *
-     * @param hext.Char c the character to convert
+     * @param hext.Char c the char to convert
      *
      * @return hext.Char the lower-case character
      *
@@ -247,14 +261,14 @@ abstract Char(Bytes) from Bytes to Bytes
     }
 
     /**
-     * Implicit casting from Char to String.
+     * Type-casting helper method to cast the Char to a string.
      *
-     * @return String the unicode character behind the char code
+     * @return String
      */
     @:noCompletion
     @:to public function toString():String
     {
-        return String.fromCharCode((this:Char));
+        return String.fromCharCode(this.get(0));
     }
 
     /**

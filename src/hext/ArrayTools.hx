@@ -28,7 +28,7 @@ class ArrayTools
      * @param Array<T>    arr   the Array to which the items should be added
      * @param Iterable<T> items the items to add
      *
-     * @return hext.ArrayRange range of indexes where the items have been added
+     * @return hext.ArrayRange range of indexes where the items have been placed
      */
     public static function addAll<T>(arr:Array<T>, items:Iterable<T>):ArrayRange
     {
@@ -76,8 +76,7 @@ class ArrayTools
     /**
      * Purges the item from the Array.
      *
-     * A purge means that all references to the item are removed
-     * rather than just the first one.
+     * A purge means that all references to the item are removed rather than just the first one.
      *
      * @param Array<T>  arr  the Array to purge the item from
      * @param T         item the item to purge
@@ -95,13 +94,12 @@ class ArrayTools
     /**
      * Purges all items defined in 'items' from the Array.
      *
-     * A purge means that all references to the item are removed
-     * rather than just the first one.
+     * A purge means that all references to the item are removed rather than just the first one.
      *
      * @param Array<T>    arr   the Array to purge the items from
      * @param Iterable<T> items the items to purge
      *
-     * @return Int the number of purge items
+     * @return Int the number of purged items
      */
     public static function purgeAll<T>(arr:Array<T>, items:Iterable<T>):Int
     {

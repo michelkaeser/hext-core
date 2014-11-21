@@ -1,8 +1,7 @@
 package hext;
 
 /**
- * An ArrayRange can be used as a marker of a specified index range
- * for an Array.
+ * The ArrayRange type can be used as a marker for an index range within an Array.
  *
  * Use cases:
  *   - Consider a function that is able to remove a whole range from an Array.
