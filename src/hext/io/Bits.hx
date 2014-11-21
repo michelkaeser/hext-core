@@ -1,6 +1,5 @@
 package hext.io;
 
-import haxe.ds.IntMap;
 import haxe.io.Bytes;
 import hext.IllegalArgumentException;
 import hext.MathTools;
@@ -15,7 +14,7 @@ import hext.ds.IndexOutOfBoundsException;
  *   - Storing multiple flag member variables. Instead of having 8x a Bool (1 Byte in general)
  *     == 8 Bytes one can use Bit fields == 1 Byte.
  *   - Working on systems with few memory...
- *   - Implementing a new number type (like Int128)
+ *   - Implementing a new number type
  */
 @:forward(length)
 abstract Bits(Bytes) from Bytes to Bytes
@@ -49,16 +48,24 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Operator method that is called when anding two Bits instances.
      *
-     * @param hext.io.Bits b the Bits to and with
+     * Note: The returned Bits are always of the same length as 'this'.
+     *
+     * @param Null<hext.io.Bits> b the Bits to and with
      *
      * @return hext.io.Bits
      */
     @:noCompletion
-    @:op(A & B) public function and(b:Bits):Bits
+    @:op(A & B) public function and(b:Null<Bits>):Bits
     {
-        var anded:Bytes = (this:Bits).copy();
-        for (i in 0...(this.length > b.length ? b.length : this.length)) {
-            anded.set(i, this.get(i) & (b:Bytes).get(i));
+        var anded:Bytes = Bytes.alloc(this.length);
+        if (b != null) {
+            var diff:Int = (this.length > b.length) ? (this.length - b.length) : (b.length - this.length);
+            var max:Int  = (this.length > b.length) ? this.length : b.length;
+            var same:Int = max - diff;
+            for (i in 0...same) {
+                anded.set(i, this.get(i) & (b:Bytes).get(i));
+            }
+            anded.blit(same, this, same, diff);
         }
 
         return anded;
@@ -140,20 +147,24 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Operator method that is called when two Bits instances are checked for equality.
      *
-     * @param hext.io.Bits b the Bits to check against
+     * @param Null<hext.io.Bits> b the Bits to check against
      *
      * @return Bool
      */
-    @:op(A == B) public function equals(b:Bits):Bool
+    @:commutative
+    @:op(A == B) public function equals(b:Null<Bits>):Bool
     {
         var equal:Bool = false;
-        if (this.length == b.length) {
+        if (this == null && b == null) {
+            equal = true;
+        } else if (this == null || b == null) {
+            equal = false;
+        } else if (this.length == b.length) {
             var i:Int = 0;
             while (i < this.length && this.get(i) == (b:Bytes).get(i)) {
                 ++i;
             }
-
-            equal = (i == this.length);
+            equal = i == this.length;
         }
 
         return equal;
@@ -209,23 +220,53 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A << B) public function lshift(times:Int):Bits
     {
-        var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).copy();
-        var shift:Int    = times % nbits;
-        if (shift != 0) {
-            var index:Int  = 0;
-            var target:Int = index + shift;
-            while (target < nbits) {
-                shifted[target] = (this:Bits)[index];
-                ++index;
-                target = index + shift;
+        times            %= this.length << 3;
+        var ntimes:Int    = times >>> 3; // how many bytes to shift
+        var shift:Int     = times % 8;   // how many bits to shift per byte
+        var mask:Int      = (MathTools.MIN_INT32 >> 24) >>> shift; // mask to access shifted out bits
+        var shifted:Bytes;
+        if (shift == 0 && ntimes == 0) {
+            shifted = (this:Bits).copy();
+        } else {
+            shifted = Bytes.alloc(this.length);
+            if (shift == 0) {
+                shifted.blit(0, this, 0, this.length);
+            } else {
+                // shift within the bytes
+                var i:Int = this.length - ntimes - 1;
+                while (i != 0) {
+                    shifted.set(i, (this.get(i) << shift) | ((this.get(i - 1) & mask) >>> (8 - shift)));
+                    --i;
+                }
+                shifted.set(0, this.get(0) << shift);
             }
-            for (i in 0...shift) {
-                shifted[i] = (0:Bit);
+            // move byte to byte
+            shifted.blit(ntimes, shifted, 0, this.length - ntimes);
+            for (j in 0...ntimes) {
+                shifted.set(j, 0);
             }
         }
 
         return shifted;
+
+        // not so fast...
+        // var nbits:Int    = this.length << 3;
+        // var shifted:Bits = (this:Bits).copy();
+        // var shift:Int    = times % nbits;
+        // if (shift != 0) {
+        //     var index:Int  = 0;
+        //     var target:Int = index + shift;
+        //     while (target < nbits) {
+        //         shifted[target] = (this:Bits)[index];
+        //         ++index;
+        //         target = index + shift;
+        //     }
+        //     for (i in 0...shift) {
+        //         shifted[i] = (0:Bit);
+        //     }
+        // }
+
+        // return shifted;
     }
 
     /**
@@ -236,7 +277,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(~A) public function neg():Bits
     {
-        var negd:Bytes = (this:Bits).copy();
+        var negd:Bytes = Bytes.alloc(this.length);
         for (i in 0...this.length) {
             negd.set(i, ~this.get(i));
         }
@@ -247,38 +288,40 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Operator method that is called when two Bits instances are checked for not equality.
      *
-     * @param hext.io.Bits b the Bits to check against
+     * @param Null<hext.io.Bits> b the Bits to check against
      *
      * @return Bool
      */
-    @:op(A != B) public function nequals(b:Bits):Bool
+    @:commutative
+    @:op(A != B) public function nequals(b:Null<Bits>):Bool
     {
-        var nequal:Bool = true;
-        if (this.length == b.length) {
-            var i:Int = 0;
-            while (i < this.length && this.get(i) == (b:Bytes).get(i)) {
-                ++i;
-            }
-
-            nequal = (i != this.length);
-        }
-
-        return nequal;
+        return !(this:Bits).equals(b);
     }
 
     /**
      * Operator method that is called when oring two Bits instances.
      *
-     * @param hext.io.Bits b the Bits to or with
+     * Note: The returned Bits are always of the same length as 'this'.
+     *
+     * @param Null<hext.io.Bits> b the Bits to or with
      *
      * @return hext.io.Bits
      */
     @:noCompletion
-    @:op(A | B) public function or(b:Bits):Bits
+    @:op(A | B) public function or(b:Null<Bits>):Bits
     {
-        var ored:Bytes = (this:Bits).copy();
-        for (i in 0...(this.length > b.length ? b.length : this.length)) {
-            ored.set(i, this.get(i) | (b:Bytes).get(i));
+        var ored:Bytes;
+        if (b == null) {
+            ored = (this:Bits).copy();
+        } else {
+            ored         = Bytes.alloc(this.length);
+            var diff:Int = (this.length > b.length) ? (this.length - b.length) : (b.length - this.length);
+            var max:Int  = (this.length > b.length) ? this.length : b.length;
+            var same:Int = max - diff;
+            for (i in 0...same) {
+                ored.set(i, this.get(i) | (b:Bytes).get(i));
+            }
+            ored.blit(same, this, same, diff);
         }
 
         return ored;
@@ -302,40 +345,84 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A >> B) public function rshift(times:Int):Bits
     {
-        var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).copy();
-        var shift:Int    = times % nbits;
-        if (shift != 0) {
-            var index:Int  = nbits - 1;
-            var target:Int = index - shift;
-            while (target >= 0) {
-                shifted[target] = (this:Bits)[index];
-                --index;
-                target = index - shift;
+        times            %= this.length << 3;
+        var ntimes:Int    = times >>> 3;      // how many bytes to shift
+        var shift:Int     = times % 8;        // how many bits to shift per byte
+        var mask:Int      = (1 << shift) - 1; // mask to access shifted out bits
+        var shifted:Bytes;
+        if (shift == 0 && ntimes == 0) {
+            shifted = (this:Bits).copy();
+        } else {
+            var length:Int = this.length - 1;
+            shifted        = Bytes.alloc(this.length);
+            // shift within the bytes
+            var i:Int = ntimes;
+            while (i < length) {
+                shifted.set(i, (this.get(i) >>> shift) | ((this.get(i + 1) & mask) << (8 - shift)));
+                ++i;
             }
-            var msb:Bit = shifted[nbits - 1];
-            for (i in (nbits - shift)...nbits) {
-                shifted[i] = msb;
+            shifted.set(length, (this.get(length) << 24) >> (24 + shift));
+            // move byte to byte
+            shifted.blit(0, shifted, ntimes, this.length - ntimes);
+            var mask:Int = if ((this.get(length) >>> 7) == 0) {
+                mask = 0;
+            } else {
+                mask = 0xFF;
+            }
+            for (j in 0...ntimes) {
+                shifted.set(length - j, mask);
             }
         }
 
         return shifted;
+
+        // not so fast...
+        // var nbits:Int    = this.length << 3;
+        // var shifted:Bits = (this:Bits).copy();
+        // var shift:Int    = times % nbits;
+        // if (shift != 0) {
+        //     var index:Int  = nbits - 1;
+        //     var target:Int = index - shift;
+        //     while (target >= 0) {
+        //         shifted[target] = (this:Bits)[index];
+        //         --index;
+        //         target = index - shift;
+        //     }
+        //     var msb:Bit = shifted[nbits - 1];
+        //     for (i in (nbits - shift)...nbits) {
+        //         shifted[i] = msb;
+        //     }
+        // }
+
+        // return shifted;
     }
 
     /**
      * @{inherit}
+     *
+     * @param Bool group either to add a space after each byte or not
      */
-    public function toHex():String
+    public function toHex(group:Bool = true):String
     {
         var buf:StringBuf = new StringBuf();
         for (i in 0...this.length) {
             var byte:Int = this.get(this.length - i - 1);
-            buf.add(std.StringTools.hex(byte >> 4));
-            buf.add(std.StringTools.hex(byte & 15));
-            buf.add(' ');
+            buf.add(std.StringTools.hex(byte >>> 4));
+            buf.add(std.StringTools.hex(byte & 0x0F));
+            if (group) {
+                buf.add(' ');
+            }
         }
 
         return buf.toString();
+    }
+
+    /**
+     * TODO
+     */
+    public function toOctal(group:Bool = true):String
+    {
+        return "";
     }
 
     /**
@@ -367,38 +454,80 @@ abstract Bits(Bytes) from Bytes to Bytes
     @:noCompletion
     @:op(A >>> B) public function urshift(times:Int):Bits
     {
-        var nbits:Int    = this.length << 3;
-        var shifted:Bits = (this:Bits).copy();
-        var shift:Int    = times % nbits;
-        if (shift != 0) {
-            var index:Int  = nbits - 1;
-            var target:Int = index - shift;
-            while (target >= 0) {
-                shifted[target] = (this:Bits)[index];
-                --index;
-                target = index - shift;
+        times            %= this.length << 3;
+        var ntimes:Int    = times >>> 3;      // how many bytes to shift
+        var shift:Int     = times % 8;        // how many bits to shift per byte
+        var mask:Int      = (1 << shift) - 1; // mask to access shifted out bits
+        var shifted:Bytes;
+        if (shift == 0 && ntimes == 0) {
+            shifted = (this:Bits).copy();
+        } else {
+            var length:Int = this.length - 1;
+            shifted        = Bytes.alloc(this.length);
+            if (shift == 0) {
+                shifted.blit(0, this, 0, this.length);
+            } else {
+                // shift within the bytes
+                var i:Int = ntimes;
+                while (i < length) {
+                    shifted.set(i, (this.get(i) >>> shift) | ((this.get(i + 1) & mask) << (8 - shift)));
+                    ++i;
+                }
+                shifted.set(length, this.get(length) >>> shift);
             }
-            for (i in (nbits - shift)...nbits) {
-                shifted[i] = (0:Bit);
+            // move byte to byte
+            shifted.blit(0, shifted, ntimes, this.length - ntimes);
+            for (j in this.length - ntimes...this.length) {
+                shifted.set(j, 0);
             }
         }
 
         return shifted;
+
+        // not so fast...
+        // var nbits:Int    = this.length << 3;
+        // var shifted:Bits = (this:Bits).copy();
+        // var shift:Int    = times % nbits;
+        // if (shift != 0) {
+        //     var index:Int  = nbits - 1;
+        //     var target:Int = index - shift;
+        //     while (target >= 0) {
+        //         shifted[target] = (this:Bits)[index];
+        //         --index;
+        //         target = index - shift;
+        //     }
+        //     for (i in (nbits - shift)...nbits) {
+        //         shifted[i] = (0:Bit);
+        //     }
+        // }
+
+        // return shifted;
     }
 
     /**
      * Operator method that is called when xoring two Bits instances.
      *
-     * @param hext.io.Bits b the Bits to xor with
+     * Note: The returned Bits are always of the same length as 'this'.
+     *
+     * @param Null<hext.io.Bits> b the Bits to xor with
      *
      * @return hext.io.Bits
      */
     @:noCompletion
-    @:op(A ^ B) public function xor(b:Bits):Bits
+    @:op(A ^ B) public function xor(b:Null<Bits>):Bits
     {
-        var xored:Bytes = (this:Bits).copy();
-        for (i in 0...(this.length > b.length ? b.length : this.length)) {
-            xored.set(i, this.get(i) ^ (b:Bytes).get(i));
+        var xored:Bytes;
+        if (b == null) {
+            xored = (this:Bits).copy();
+        } else {
+            xored        = Bytes.alloc(this.length);
+            var diff:Int = (this.length > b.length) ? (this.length - b.length) : (b.length - this.length);
+            var max:Int  = (this.length > b.length) ? this.length : b.length;
+            var same:Int = max - diff;
+            for (i in 0...same) {
+                xored.set(i, this.get(i) ^ (b:Bytes).get(i));
+            }
+            xored.blit(same, this, same, diff);
         }
 
         return xored;

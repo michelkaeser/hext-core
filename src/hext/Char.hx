@@ -34,6 +34,7 @@ abstract Char(Bytes) from Bytes to Bytes
      * @return hext.Char
      */
     @:noCompletion
+    @:commutative
     @:op(A + B) public function add(c:Char):Char
     {
         return this.get(0) + c.toInt();
@@ -47,6 +48,7 @@ abstract Char(Bytes) from Bytes to Bytes
      * @return hext.Char
      */
     @:noCompletion
+    @:commutative
     @:op(A == B) public function equals(c:Char):Bool
     {
         return this.get(0) == c.toInt();
@@ -205,6 +207,7 @@ abstract Char(Bytes) from Bytes to Bytes
      * @return hext.Char
      */
     @:noCompletion
+    @:commutative
     @:op(A != B) public function nequals(c:Char):Bool
     {
         return this.get(0) != c.toInt();
