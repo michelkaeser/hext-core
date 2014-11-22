@@ -3,7 +3,13 @@ package hext.threading;
 import hext.Callback;
 
 /**
- * TODO
+ * IProgress instances are a great way to keep listeners updated
+ * about the current progress or allow them to wait until a given progress is reached.
+ *
+ * Use cases:
+ *   - Progress bars
+ *   - Callback actions that should take place as soon as a given milestone (progress)
+ *     is reached.
  */
 interface IProgress
 {
@@ -29,7 +35,7 @@ interface IProgress
     /**
      * Waits until the Progress reaches the given value.
      *
-     * @var Float value the value to wait for
+     * @param Float value the value to wait for
      *
      * @throws hext.IllegalArgumentException when trying to await a value larger as possible
      */

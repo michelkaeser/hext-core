@@ -79,11 +79,14 @@ class ExecutionContext
      *
      * @param hext.threading.IExecutor executor the Executor to set
      *
-     * @return hext.threading.IExecutor
+     * @return hext.threading.IExecutor the old executor
      */
     private static function set_defaultExecutor(executor:IExecutor):IExecutor
     {
-        return ExecutionContext.defaultExecutor = executor;
+        var old:IExecutor = ExecutionContext.defaultExecutor;
+        ExecutionContext.defaultExecutor = executor;
+
+        return old;
     }
 
     /**
@@ -91,10 +94,13 @@ class ExecutionContext
      *
      * @param hext.threading.IExecutor executor the Executor to set
      *
-     * @return hext.threading.IExecutor
+     * @return hext.threading.IExecutor the old executor
      */
     private static function set_parallelExecutor(executor:IExecutor):IExecutor
     {
-        return ExecutionContext.parallelExecutor = executor;
+        var old:IExecutor = ExecutionContext.parallelExecutor;
+        ExecutionContext.parallelExecutor = executor;
+
+        return old;
     }
 }

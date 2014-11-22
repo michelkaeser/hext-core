@@ -17,7 +17,7 @@ import hext.utils.Reflector;
  * @generic T the type of the value to wrap
  */
 abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISynchronizer } #else T #end)
-// implements ICloneable
+// implements ICloneable implements IStringable
 {
     /**
      * Property to access and set the Atomic's value.
@@ -46,7 +46,7 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
      */
     public function clone():Atomic<T>
     {
-        return new Atomic<T>(Reflector.clone(this.value));
+        return new Atomic<T>(Reflector.clone((cast this:Atomic<Dynamic>).val));
     }
 
     /**
@@ -68,7 +68,7 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
      * @return T
      */
     @:noCompletion
-    @:to private #if !(cpp || cs || java || neko) inline #end function get_val():T
+    @:to private function get_val():T
     {
         var val:T;
         #if (cpp || cs || java || neko)
@@ -87,19 +87,30 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
      *
      * @param T val the value to set
      *
-     * @return T the set value
+     * @return T the old value
      */
     @:noCompletion
     private #if !(cpp || cs || java || neko) inline #end function set_val(val:T):T
     {
+        var old:T;
         #if (cpp || cs || java || neko)
             this.synchronizer.sync(function():Void {
+                old = this.value;
                 this.value = val;
             });
         #else
+            old = this;
             this = val;
         #end
 
-        return val;
+        return old;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function toString():String
+    {
+        return Std.string((cast this:Atomic<Dynamic>).val);
     }
 }

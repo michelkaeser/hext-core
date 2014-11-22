@@ -4,6 +4,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import haxe.ds.StringMap;
 import hext.Callback;
+import hext.ICloneable;
 import hext.IllegalArgumentException;
 import hext.ISerializable;
 import hext.IStringable;
@@ -16,12 +17,15 @@ import hext.utils.Reflector;
 import hext.vm.MultiLock;
 
 /**
+ * @{inherit}
+ *
  * Use cases:
  *   - Uploading a file to a remote server and showing the progress to the user.
  *   - Compressing input bytes...
  *   - Unlocking archivements as soon as the user solved 50% of the quiz.
  */
-class Progress implements IProgress implements ISerializable implements IStringable
+class Progress implements IProgress
+implements ICloneable<Progress> implements ISerializable implements IStringable
 {
     /**
      * Stores the registered value change listeners.
@@ -102,6 +106,17 @@ class Progress implements IProgress implements ISerializable implements IStringa
     /**
      * @{inherit}
      */
+    public function clone():Progress
+    {
+        var clone:Progress = new Progress();
+        clone.setValue(this.value);
+
+        return clone;
+    }
+
+    /**
+     * @{inherit}
+     */
     public function dettachValueListener(listener:Callback<Float>):Bool
     {
         return this.listeners.remove(listener);
@@ -125,7 +140,6 @@ class Progress implements IProgress implements ISerializable implements IStringa
     /**
      * @{inherit}
      */
-    @:keep
     public function hxSerialize(serializer:Serializer):Void
     {
         serializer.serialize(this.value);
@@ -134,7 +148,6 @@ class Progress implements IProgress implements ISerializable implements IStringa
     /**
      * @{inherit}
      */
-    @:keep
     public function hxUnserialize(unserializer:Unserializer):Void
     {
         this.listeners    = new SynchronizedSet<Callback<Float>>(new UnsortedSet<Callback<Float>>(Reflector.compare));
@@ -146,7 +159,7 @@ class Progress implements IProgress implements ISerializable implements IStringa
     /**
      * @{inherit}
      */
-    public function isCompleted():Bool
+    public inline function isCompleted():Bool
     {
         return this.value == 1.0;
     }
@@ -159,7 +172,7 @@ class Progress implements IProgress implements ISerializable implements IStringa
     private function notifyListeners(value:Float):Void
     {
         for (listener in this.listeners.toArray()) { // listener = Callback<Float>; toArray to make sure we iterate over a copy
-            #if LIB_DEBUG
+            #if HEXTDEBUG
                 listener(value);
             #else
                 try {
@@ -176,8 +189,7 @@ class Progress implements IProgress implements ISerializable implements IStringa
      */
     private function releaseLocks(value:Float):Void
     {
-        // TODO: create copy of keys since we remove within the loop
-        for (key in this.valueLocks.keys()) {
+        for (key in Lambda.array(this.valueLocks.keys())) {
             if (Std.parseFloat(key) <= value) {
                 this.valueLocks.get(key).release();
                 this.valueLocks.remove(key);
@@ -198,7 +210,7 @@ class Progress implements IProgress implements ISerializable implements IStringa
         }
 
         this.synchronizer.sync(function():Void {
-            if (value != this.value) { // TODO: float comparison
+            if (Math.abs(value - this.value) < 0.000001) {
                 this.value = value;
                 this.notifyListeners(value);
                 this.releaseLocks(value);
