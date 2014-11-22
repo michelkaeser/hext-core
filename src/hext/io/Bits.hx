@@ -7,6 +7,8 @@ import hext.io.Bit;
 import hext.io.BitsIterator;
 import hext.ds.IndexOutOfBoundsException;
 
+using hext.ArrayTools;
+
 /**
  * TODO
  *
@@ -18,6 +20,7 @@ import hext.ds.IndexOutOfBoundsException;
  */
 @:forward(length)
 abstract Bits(Bytes) from Bytes to Bytes
+// implements implements IArrayable implements IStringable
 {
     /**
      * Constructor to initialize a new Bits instance.
@@ -175,29 +178,15 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @param Int index the index of the Bit to flip
      *
-     * @return hext.io.Bit
+     * @return hext.io.Bit the new value of the Bit
      *
      * @throws hext.IllegalArgumentException  if the index is negative
      * @throws hext.IndexOutOfBoundsException if the index is larger than the number of stored bits
      */
     public function flip(index:Int):Bit
     {
-        #if !LIB_PERFORMANCE
-            if (index < 0) {
-                throw new IllegalArgumentException("Cannot access negative index.");
-            }
-            if (index >= (this.length << 3)) {
-                throw new IndexOutOfBoundsException();
-            }
-        #end
-
-        var pos:Int    = Math.floor(index / 8);
-        var bits:Int   = this.get(pos);
-        var offset:Int = index - (pos << 3);
-        var value:Int  = bits ^ (1 << offset);
-        this.set(pos, value);
-
-        return value != 0;
+        (this:Bits)[index] = ~(this:Bits)[index];
+        return (this:Bits)[index];
     }
 
     /**
@@ -330,7 +319,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * Resets the Bits by setting all of them to 0.
      */
-    public function reset():Void
+    public inline function reset():Void
     {
         this.fill(0, this.length, 0);
     }
@@ -395,6 +384,19 @@ abstract Bits(Bytes) from Bytes to Bytes
         // }
 
         // return shifted;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function toArray():Array<Bit>
+    {
+        var arr:Array<Bit> = new Array<Bit>();
+        for (bit in (this:Bits)) {
+            arr.add(bit);
+        }
+
+        return arr;
     }
 
     /**
