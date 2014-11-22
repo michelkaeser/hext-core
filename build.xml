@@ -1,0 +1,51 @@
+<project name="hext-core" default="exit" basedir=".">
+    <description>Hext core, a completing yet alternative standard library for Haxe.</description>
+
+    <property environment="env" />
+    <property name="workspace" location="${env.WORKSPACE}" />
+    <property name="src" location="${workspace}/src" />
+    <property name="bin"  location="${workspace}/bin" />
+    <property name="build" location="${workspace}/build" />
+
+    <target name="init" description="Creates the directories needed to store output">
+        <echo>Creating all required directories...</echo>
+        <mkdir dir="${bin}" />
+    </target>
+
+    <target name="dependencies" depends="init" description="Installs required dependencies">
+        <echo>Installing required dependencies...</echo>
+        <exec executable="haxelib">
+            <arg value="install" />
+            <arg value="hxcpp" />
+        </exec>
+        <exec executable="haxelib">
+            <arg value="install" />
+            <arg value="hxcs" />
+        </exec>
+        <exec executable="haxelib">
+            <arg value="install" />
+            <arg value="hxjava" />
+        </exec>
+    </target>
+
+    <target name="build" depends="dependencies" description="Builds the unit test runners">
+        <echo>Building the API documentation...</echo>
+        <exec executable="haxe" resultproperty="build.code">
+            <arg value="${build}/build.hxml" />
+        </exec>
+        <condition property="build.failed">
+            <isfailure code="${build.code}" />
+        </condition>
+    </target>
+
+    <target name="cleanup" depends="build" description="Removes compiled files and directories">
+        <echo>Removing (temporary) directories...</echo>
+        <delete dir="${bin}" />
+    </target>
+
+    <target name="exit" depends="cleanup" description="Marks the build as failed if one of the targets failed">
+        <fail if="build.failed">Build step failed. Check output log for more information.</fail>
+        <fail if="test.failed">Unit tests step failed. Check output log for more information.</fail>
+        <echo>Everything went well. Good job!</echo>
+    </target>
+</project>

@@ -1,0 +1,14 @@
+{
+    "name": "hext-core",
+    "url" : "",
+    "license": "MIT",
+    "tags": ["core", "library", "std", "cross"],
+    "description": "Hext core, a completing yet alternative standard library for Haxe.",
+    "classPath": "src",
+    "version": "1.0.0-alpha",
+    "releasenote": "First haxelib release.",
+    "contributors": [
+       "MaddinXx",
+       "michelkaeser"
+    ]
+}
