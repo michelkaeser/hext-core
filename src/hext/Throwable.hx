@@ -52,10 +52,8 @@ class Throwable implements IStringable
     private function new(msg:Dynamic = "", ?info:PosInfos):Void
     {
         #if HEXT_DEBUG
-            var cs              = CallStack.callStack();
-            this.callStack      = CallStack.toString(cs);
-            var es              = CallStack.exceptionStack();
-            this.exceptionStack = CallStack.toString(es);
+            this.callStack      = CallStack.toString(CallStack.callStack());
+            this.exceptionStack = CallStack.toString(CallStack.exceptionStack());
         #else
             this.exceptionStack = "Exception stack available in debug mode only.";
             this.callStack      = "Call stack available in debug mode only.";
@@ -72,7 +70,6 @@ class Throwable implements IStringable
     public function getCallStack():String
     {
         var buffer:StringBuf = new StringBuf();
-
         buffer.add("CallStackTrace");
         buffer.add("\n".rpad("~", 39));
         buffer.add("\n");
@@ -89,7 +86,6 @@ class Throwable implements IStringable
     public function getExceptionStack():String
     {
         var buffer:StringBuf = new StringBuf();
-
         buffer.add("ExceptionStackTrace");
         buffer.add("\n".rpad("~", 39));
         buffer.add("\n");
@@ -107,7 +103,6 @@ class Throwable implements IStringable
     public function getSource():String
     {
         var buffer:StringBuf = new StringBuf();
-
         buffer.add("File: ");
         buffer.add(this.info.fileName);
         buffer.add(" | Line: ");
@@ -132,7 +127,6 @@ class Throwable implements IStringable
     public function toString():String
     {
         var buffer:StringBuf = new StringBuf();
-
         buffer.add(this.msg);
         buffer.add("\n");
         buffer.add(this.getSource());

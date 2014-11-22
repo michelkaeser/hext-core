@@ -14,6 +14,7 @@ import haxe.ds.Vector;
  * @generic T the type of value to reference
  */
 abstract Ref<T>(Vector<T>)
+// implements IStringable
 {
     /**
      * Property to access and set the reference's value.
@@ -50,12 +51,15 @@ abstract Ref<T>(Vector<T>)
      *
      * @param T val the value to set
      *
-     * @return T the new value
+     * @return T the old value
      */
     @:noCompletion
-    private inline function set_val(val:T):T
+    private function set_val(val:T):T
     {
-        return this[0] = val;
+        var old:T = this[0];
+        this[0] = val;
+
+        return old;
     }
 
     /**

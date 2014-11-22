@@ -15,6 +15,7 @@ using StringTools;
  *   - Reading/writing from/to streams. Working with characters might feel more natural than integers.
  */
 abstract Char(Bytes) from Bytes to Bytes
+// implements IStringable
 {
     /**
      * Constructor to initialize a new Char.
@@ -43,15 +44,26 @@ abstract Char(Bytes) from Bytes to Bytes
     /**
      * Operator method that is called when checking two Chars for equality.
      *
-     * @param hext.Char c the char to check against
+     * Note: The Chars' values are checked, not references.
      *
-     * @return hext.Char
+     * @param Null<hext.Char> c the char to check against
+     *
+     * @return Bool
      */
     @:noCompletion
     @:commutative
-    @:op(A == B) public function equals(c:Char):Bool
+    @:op(A == B) public function equals(c:Null<Char>):Bool
     {
-        return this.get(0) == c.toInt();
+        var equal:Bool = false;
+        if (this == null && c == null) {
+            equal = true;
+        } else if (this == null || c == null) {
+            equal = true;
+        } else {
+            equal = this.get(0) == c.toInt();
+        }
+
+        return equal;
     }
 
     /**
@@ -77,12 +89,12 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @return hext.Char
      *
-     * @throws hext.Error is the string has more than one character
+     * @throws hext.Error is the string has more than one character or is null
      */
     @:noCompletion @:noUsing
     @:from public static function fromString(str:String):Char
     {
-        if (str.length > 1) {
+        if (str == null || str.length > 1) {
             throw new Error("Unclosed character literal.");
         }
 
@@ -94,7 +106,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check against
      *
-     * @return hext.Char
+     * @return Bool
      */
     @:noCompletion
     @:op(A > B) public function greater(c:Char):Bool
@@ -191,7 +203,7 @@ abstract Char(Bytes) from Bytes to Bytes
      *
      * @param hext.Char c the char to check against
      *
-     * @return hext.Char
+     * @return Bool
      */
     @:noCompletion
     @:op(A < B) public function less(c:Char):Bool
@@ -202,15 +214,17 @@ abstract Char(Bytes) from Bytes to Bytes
     /**
      * Operator method that is called when checking two Chars for not equality.
      *
-     * @param hext.Char c the char to check against
+     * Note: The Chars' values are checked, not references.
      *
-     * @return hext.Char
+     * @param Null<hext.Char> c the char to check against
+     *
+     * @return Bool
      */
     @:noCompletion
     @:commutative
-    @:op(A != B) public function nequals(c:Char):Bool
+    @:op(A != B) public function nequals(c:Null<Char>):Bool
     {
-        return this.get(0) != c.toInt();
+        return !(this:Char).equals(c);
     }
 
     /**
