@@ -58,7 +58,7 @@ class PoolExecutor implements IExecutor
         for (i in 0...this.executors.length) {
             this.executors.set(i, Looper.create(function():Void {
                 var fn:Closure = this.jobs.pop(true);
-                #if LIB_DEBUG
+                #if HEXT_DEBUG
                     fn();
                 #else
                     try {
