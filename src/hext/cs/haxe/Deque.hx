@@ -4,6 +4,11 @@ package hext.cs.haxe;
     #error "hext.cs.haxe.Deque is only available on C# target."
 #end
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
 import hext.ds.SynchronizedQueue;
 import hext.ds.WaitList;
 import hext.vm.IDeque;
@@ -19,6 +24,7 @@ import hext.vm.Mutex;
  * @generic T the type of items the Deque can store
  */
 class Deque<T> implements IDeque<T>
+implements ICloneable<Deque<T>> implements ISerializable
 {
     /**
      * Stores the Lock used to block pop(true) calls.
@@ -65,6 +71,30 @@ class Deque<T> implements IDeque<T>
             this.lock.release();
         }
         this.mutex.release();
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Deque<T>
+    {
+        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be cloned.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be unserialized.");
     }
 
     /**
