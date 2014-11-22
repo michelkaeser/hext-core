@@ -4,7 +4,7 @@ package hext.cs.haxe;
     #error "hext.cs.haxe.Lock is only available on C# target."
 #end
 
-#if LIB_WIN
+#if HEXT_WIN
     import hext.cs.system.threading.SemaphoreSlim;
 #else
     import hext.cs.system.threading.Semaphore;

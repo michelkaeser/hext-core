@@ -106,7 +106,7 @@ class Deque<T> implements IDeque<T>
     /**
      * @see hext.vm.Deque.add()
      */
-    public function push(item:T):Void
+    public inline function push(item:T):Void
     {
         this.add(item);
     }
