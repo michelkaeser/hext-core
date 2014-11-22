@@ -1,6 +1,6 @@
 {
     "name": "hext-core",
-    "url" : "",
+    "url" : "https://github.com/michelkaeser/hext-core",
     "license": "MIT",
     "tags": ["core", "library", "std", "cross"],
     "description": "Hext core, a completing yet alternative standard library for Haxe.",
