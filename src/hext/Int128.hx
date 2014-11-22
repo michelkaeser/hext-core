@@ -8,24 +8,28 @@ import hext.io.Bit;
 import hext.io.Bits;
 
 /**
+ * An abstract cross-target 128-bit signed Integer implementation.
+ *
  * TODO:
  *   - div, mod
  *   - check immutability
+ *   - check if bits alone can be used as underlaying type
  *
- * PERFORMANCE:
+ * Performance:
  *   - SUPER: ++A, --B
  *   - GOOD:  A + B, A - B, A & B, A == B
  *   - OK:    A << B, A >> B, A >>> B, A | B, A ^ B
  *   - BAD:   A * B (but OK in relation to Int -> Int32)
  */
 abstract Int128({ bits:Bits })
+// implements IStringable
 {
     /**
      * Stores the max value an Int128 can hold.
      *
      * @var hext.Int128
      */
-    public static var MAX_VALUE:Int128 = {
+    public static var MAX_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
         i <<= Int128.NBITS - 1;
         i -= 1;
@@ -37,7 +41,7 @@ abstract Int128({ bits:Bits })
      *
      * @var hext.Int128
      */
-    public static var MIN_VALUE:Int128 = {
+    public static var MIN_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
         i <<= Int128.NBITS - 1;
         i;
@@ -66,8 +70,8 @@ abstract Int128({ bits:Bits })
      *
      * @var hext.Int128
      */
-    private static var ZERO:Int128 = Int128.fromInt32(0);
-    private static var ONE:Int128  = Int128.fromInt32(1);
+    public static var ZERO(default, never):Int128 = Int128.fromInt32(0);
+    public static var ONE(default, never):Int128  = Int128.fromInt32(1);
 
 
     /**
@@ -99,8 +103,13 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when adding two Int128s.
      *
      * @link https://en.wikipedia.org/wiki/Binary_number#Addition
+     *
+     * @param hext.Int128 i the Int128 to add
+     *
+     * @return hext.Int128
      */
     @:noCompletion
     @:commutative
@@ -181,7 +190,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Returns a copy of the passed-in Int128.
      *
+     * @param hext.Int128 i the Int128 to copy
+     *
+     * @return hext.Int128
      */
     public static function copy(i:Int128):Int128
     {
@@ -189,6 +202,8 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * TODO: implementation
+     *
      * @link http://stackoverflow.com/questions/5284898/implement-division-with-bit-wise-operator
      * @link http://www.wikihow.com/Divide-Binary-Numbers
      */
@@ -259,7 +274,7 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO: doesn't fire
+     * TODO: doesn't fire. we want that to ensure immutability
      */
     @:noCompletion @:noUsing
     @:from public static function fromInt128(i:Int128):Int128
@@ -281,7 +296,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when checking two Int128s for 'is greater or equal than'.
      *
+     * @param hext.Int128 i the Int128 to check against
+     *
+     * @return Bool
      */
     @:noCompletion
     @:op(A >= B) public function greaterEquals(i:Int128):Bool
@@ -327,7 +346,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when checking two Int128s for 'is less or equal than'.
      *
+     * @param hext.Int128 i the Int128 to check against
+     *
+     * @return Bool
      */
     @:noCompletion
     @:op(A <= B) public function lessEquals(i:Int128):Bool
@@ -364,7 +387,7 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO
+     * TODO: implementation
      */
     @:noCompletion
     @:op(A % B) public function mod(i:Int128):Int128
@@ -383,7 +406,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when post-decrementing an Int128.
      *
+     * Note: This operator modifies the Int128 in-place.
+     *
+     * @return hext.Int128 the Int128 before decrementation
      */
     @:noCompletion
     @:op(A--) public function postDec():Int128
@@ -404,7 +431,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when post-incrementing an Int128.
      *
+     * Note: This operator modifies the Int128 in-place.
+     *
+     * @return hext.Int128 the Int128 before incrementation
      */
     @:noCompletion
     @:op(A++) public function postInc():Int128
@@ -425,7 +456,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when pre-decrementing an Int128.
      *
+     * Note: This operator modifies the Int128 in-place.
+     *
+     * @return hext.Int128 the decremented Int128
      */
     @:noCompletion
     @:op(--A) public function preDec():Int128
@@ -445,7 +480,11 @@ abstract Int128({ bits:Bits })
     }
 
     /**
+     * Operator method that is called when pre-incrementing an Int128.
      *
+     * Note: This operator modifies the Int128 in-place.
+     *
+     * @return hext.Int128 the incremented Int128
      */
     @:noCompletion
     @:op(++A) public function preInc():Int128
@@ -474,10 +513,14 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO: a bit bit slow
+     * Operator method that is called when substracting two Int128s.
      *
      * @link https://en.wikipedia.org/wiki/Binary_number#Subtraction
      * @link http://courses.cs.vt.edu/~cs1104/BuildingBlocks/arithmetic.040.html
+     *
+     * @param hext.Int128 i the Int128 to substract
+     *
+     * @return hext.Int128
      */
     @:noCompletion
     @:op(A - B) public function subs(i:Int128):Int128
@@ -487,9 +530,13 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO: a bit slow
+     * Operator method that is called when mutliplication two Int128s.
      *
      * @link http://en.wikipedia.org/wiki/Bitwise_operation#Applications
+     *
+     * @param hext.Int128 i the value to multiplicate with
+     *
+     * @return hext.Int128 the sum of the multiplication
      */
     @:noCompletion
     @:op(A * B) public function times(i:Int128):Int128
@@ -527,7 +574,7 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO
+     * TODO: implementation
      *
      * @link http://en.wikipedia.org/wiki/Double_dabble
      * @link http://stackoverflow.com/questions/8023414/how-to-convert-a-128-bit-integer-to-a-decimal-ascii-string-in-c

@@ -34,7 +34,7 @@ class ArrayTools
     {
         var indexes:ArrayRange = { start: arr.length, end: -1 };
         for (item in items) {
-            arr.push(item);
+            ArrayTools.add(arr, item);
         }
         indexes.end = arr.length - 1;
 

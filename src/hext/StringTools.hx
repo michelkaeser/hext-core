@@ -4,6 +4,8 @@ import hext.Char;
 import hext.IllegalArgumentException;
 import hext.StringIterator;
 
+using hext.ArrayTools;
+
 /**
  * The StringTools utilities class adds several helpful methods
  * to the standard String class.
@@ -26,7 +28,7 @@ class StringTools
     /**
      * Checks if all string characters are lower-case.
      *
-     * Attn: If the string is empty, always true is returned.
+     * Attn: If the string is empty, true is returned.
      *
      * @param String str the string to check
      *
@@ -47,7 +49,7 @@ class StringTools
     /**
      * Checks if all string characters are upper-case.
      *
-     * Attn: If the string is empty, always true is returned.
+     * Attn: If the string is empty, true is returned.
      *
      * @param String str the string to check
      *
@@ -80,8 +82,6 @@ class StringTools
     /**
      * Reverses all characters of the String and returns the reversed one.
      *
-     * This method does not change the input String.
-     *
      * @param String str the String to reverse
      *
      * @return String the reversed String
@@ -107,17 +107,17 @@ class StringTools
      */
     public static function toBool(str:String):Bool
     {
-        if (str != "false" && str != "true") {
-            throw new IllegalArgumentException("String is not a valid Bool value.");
+        if (str == "false" || str == "true") {
+            return str == "true";
         }
 
-        return str == "true";
+        throw new IllegalArgumentException("String is not a valid Bool value.");
     }
 
     /**
      * Returns an Array of all characters of the String.
      *
-     * @param String str the String to get the characters from
+     * @param String str the String to get the characters for
      *
      * @return Array<hext.Char>
      */
@@ -125,7 +125,7 @@ class StringTools
     {
         var chars:Array<Char> = new Array<Char>();
         for (char in StringTools.iterator(str)) {
-            chars.push(char);
+            chars.add(char);
         }
 
         return chars;

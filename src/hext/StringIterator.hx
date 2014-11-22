@@ -15,7 +15,7 @@ using StringTools;
 class StringIterator
 {
      /**
-     * Stores current character index/position.
+     * Stores the current character index/position.
      *
      * @var Int
      */
@@ -43,7 +43,7 @@ class StringIterator
     /**
      * Checks if there is another character remaining.
      *
-     * @return Bool true if not yet at the end of the String
+     * @return Bool
      */
     public function hasNext():Bool
     {
