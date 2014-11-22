@@ -4,12 +4,19 @@ package hext.vm;
     #error "hext.vm.Deque is not available on target platform."
 #end
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
+import hext.utils.Reflector;
 import hext.vm.IDeque;
 
 /**
  * @{inherit}
  */
 class Deque<T> implements IDeque<T>
+implements ICloneable<Deque<T>> implements ISerializable
 {
     /**
      * Stores the underlaying native Deque.
@@ -33,6 +40,30 @@ class Deque<T> implements IDeque<T>
     public function add(item:T):Void
     {
         this.handle.add(item);
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Deque<T>
+    {
+        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be cloned.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be unserialized.");
     }
 
     /**

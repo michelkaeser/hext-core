@@ -11,6 +11,7 @@ package hext;
  *
  * @generic T the type of the value the clone method returns
  */
+@:keepSub
 interface ICloneable<T>
 {
     /**

@@ -13,6 +13,7 @@ import haxe.Unserializer;
  *
  * @link http://haxe.org/manual/std-serialization.html
  */
+@:keepSub
 interface ISerializable
 {
     /**
@@ -21,12 +22,8 @@ interface ISerializable
      * Implementing this method allows one to control how the current instance
      * is serialized.
      *
-     * Attn: You may need to add the '@:keep' meta to your implementation
-     * so DCE doesn't erase your implementation.
-     *
      * @param haxe.Serializer serializer the Serializer that does the current job
      */
-    @:keepSub
     public function hxSerialize(serializer:Serializer):Void;
 
     /**
@@ -35,11 +32,7 @@ interface ISerializable
      * Implementing this method allows one to control how the current instance
      * is unserialized.
      *
-     * Attn: You may need to add the '@:keep' meta to your implementation
-     * so DCE doesn't erase your implementation.
-     *
      * @param haxe.Unserializer unserializer the Unserializer used for current unserialization
      */
-    @:keepSub
     public function hxUnserialize(unserializer:Unserializer):Void;
 }

@@ -12,6 +12,11 @@ package hext.vm;
     import hext.vm.ILock;
     import hext.vm.Lock;
 #end
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
 
 /**
  * A wrapper class around the various platform specific VM Threads
@@ -24,6 +29,7 @@ package hext.vm;
  *   - ...
  */
 class Thread
+implements ICloneable<Thread> implements ISerializable
 {
     /**
      * Stores the underlaying native Thread.
@@ -68,6 +74,14 @@ class Thread
     }
 
     /**
+     * @{inherit}
+     */
+    public function clone():Thread
+    {
+        throw new UnsupportedOperationException("hext.vm.Thread instances cannot be cloned.");
+    }
+
+    /**
      * Returns the current Thread object.
      *
      * @return hext.vm.Thread
@@ -105,6 +119,22 @@ class Thread
         #end
 
         return thread;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Thread instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Thread instances cannot be unserialized.");
     }
 
     /**

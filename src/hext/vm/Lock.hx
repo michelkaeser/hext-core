@@ -4,6 +4,11 @@ package hext.vm;
     #error "hext.vm.Lock is not available on target platform."
 #end
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
 import hext.vm.ILock;
 
 /**
@@ -13,6 +18,7 @@ import hext.vm.ILock;
  *   - Block function callers until the internal state (working -> done) changes.
  */
 class Lock implements ILock
+implements ICloneable<Lock> implements ISerializable
 {
     /**
      * Stores the underlaying native Lock.
@@ -28,6 +34,30 @@ class Lock implements ILock
     public function new():Void
     {
         this.handle = new VMLock();
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Lock
+    {
+        throw new UnsupportedOperationException("hext.vm.Lock instances cannot be cloned.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Lock instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Lock instances cannot be unserialized.");
     }
 
     /**

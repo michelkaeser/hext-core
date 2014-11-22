@@ -29,7 +29,7 @@ class Reflector
      *
      * @return T the cloned data (structure)
      */
-    public static function clone<T>(v:T, deep:Bool = false):T
+    public static function clone<T>(v:T, deep:Bool = true):T
     {
         var childFn:T->T = if (deep) {
             Reflector.clone.bind(_, true);
