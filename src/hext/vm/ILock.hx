@@ -1,7 +1,7 @@
 package hext.vm;
 
 /**
- *
+ * TODO
  */
 interface ILock
 {

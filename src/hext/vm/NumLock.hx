@@ -81,12 +81,6 @@ class NumLock implements ILock
      */
     public function wait(?timeout:Float = -1.0):Bool
     {
-        #if (java || neko)
-            if (timeout == -1.0) {
-                timeout = null;
-            }
-        #end
-
         return this.handle.wait(timeout);
     }
 }

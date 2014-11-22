@@ -51,11 +51,6 @@ class MultiLock extends Lock
     {
         var thread:Thread = Thread.current();
         this.waiters.add(thread);
-        #if (java || neko)
-            if (timeout == -1.0) {
-                timeout = null;
-            }
-        #end
         var ret:Bool = super.wait(timeout);
         this.waiters.remove(thread);
 
