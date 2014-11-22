@@ -189,7 +189,7 @@ implements ICloneable<Progress> implements ISerializable implements IStringable
      */
     private function releaseLocks(value:Float):Void
     {
-        for (key in Lambda.array(this.valueLocks.keys())) {
+        for (key in Lambda.array(cast this.valueLocks.keys())) {
             if (Std.parseFloat(key) <= value) {
                 this.valueLocks.get(key).release();
                 this.valueLocks.remove(key);

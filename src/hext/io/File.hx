@@ -156,7 +156,7 @@ class File implements ICloneable<File> implements ISerializable implements IStri
      *
      * @return Bool
      */
-    public function exists():Bool
+    public inline function exists():Bool
     {
         return FileSystem.exists(this.path) && !FileSystem.isDirectory(this.path);
     }
@@ -212,7 +212,6 @@ class File implements ICloneable<File> implements ISerializable implements IStri
     /**
      * @{inherit}
      */
-    @:keep
     public function hxSerialize(serializer:Serializer):Void
     {
         serializer.serialize(this.path);
@@ -221,7 +220,6 @@ class File implements ICloneable<File> implements ISerializable implements IStri
     /**
      * @{inherit}
      */
-    @:keep
     public function hxUnserialize(unserializer:Unserializer):Void
     {
         this.path = unserializer.unserialize();
@@ -313,7 +311,7 @@ class File implements ICloneable<File> implements ISerializable implements IStri
      *
      * @return String the file's path
      */
-    public function toString():String
+    public inline function toString():String
     {
         return this.path;
     }

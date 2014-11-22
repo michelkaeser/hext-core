@@ -20,7 +20,8 @@ import sys.FileSystem;
  * Use cases:
  *   - Everything that includes working with FS directories.
  */
-class Directory implements ICloneable<Directory> implements ISerializable implements IStringable
+class Directory
+implements ICloneable<Directory> implements ISerializable implements IStringable
 {
     /**
      * Stores the path of the directory.
@@ -154,7 +155,7 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
      *
      * @return Bool
      */
-    public function exists():Bool
+    public inline function exists():Bool
     {
         return FileSystem.exists(this.path) && FileSystem.isDirectory(this.path);
     }
@@ -198,7 +199,6 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
     /**
      * @{inherit}
      */
-    @:keep
     public function hxSerialize(serializer:Serializer):Void
     {
         serializer.serialize(this.path);
@@ -207,7 +207,6 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
     /**
      * @{inherit}
      */
-    @:keep
     public function hxUnserialize(unserializer:Unserializer):Void
     {
         this.path = unserializer.unserialize();
@@ -297,7 +296,7 @@ class Directory implements ICloneable<Directory> implements ISerializable implem
      *
      * @return String the directory's path
      */
-    public function toString():String
+    public inline function toString():String
     {
         return this.path;
     }
