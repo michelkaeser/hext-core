@@ -17,6 +17,8 @@ package hext.vm;
  * A wrapper class around the various platform specific VM Threads
  * included in Haxe Std package.
  *
+ * TODO: join() method to wait for the thread
+ *
  * Use cases:
  *   - Well, doing some expensive calculations in the background...
  *   - ...
@@ -48,7 +50,7 @@ class Thread
             var handle = VMThread.CurrentThread;
             map.set(handle, new Thread(handle));
             map;
-        }
+        };
     #end
 
 
@@ -110,9 +112,9 @@ class Thread
      *
      * @param Bool block if true, execution is blocked until a message is available
      *
-     * @return Null<Dynamic> the message
+     * @return Null<Dynamic> the message read
      */
-    public static #if !cs inline #end function readMessage(block:Bool):Null<Dynamic>
+    public static function readMessage(block:Bool):Null<Dynamic>
     {
         #if cs
             return Thread.threads.get(VMThread.CurrentThread).messages.pop(block);
@@ -126,7 +128,7 @@ class Thread
      *
      * @param Dynamic msg the message to send
      *
-     * @return hext.vm.Thread
+     * @return hext.vm.Thread the 'this' instance
      */
     public function sendMessage(msg:Dynamic):Thread
     {

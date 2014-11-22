@@ -100,7 +100,7 @@ class Looper extends Thread
      *
      * @return Bool
      */
-    public function isAlive():Bool
+    public inline function isAlive():Bool
     {
         return !this.isDestroyed();
     }
