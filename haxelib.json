@@ -8,7 +8,6 @@
     "version": "1.0.0-alpha",
     "releasenote": "First haxelib release.",
     "contributors": [
-       "MaddinXx",
-       "michelkaeser"
+       "MaddinXx"
     ]
 }
