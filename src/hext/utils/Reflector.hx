@@ -2,7 +2,7 @@ package hext.utils;
 
 import Map;
 import haxe.ds.BalancedTree;
-import haxe.ds.GenericStack;
+//import haxe.ds.GenericStack;
 import haxe.ds.HashMap;
 import haxe.ds.Vector;
 import hext.ICloneable;
@@ -18,11 +18,11 @@ class Reflector
     /**
      * Returns a (deep-)copy of the provided data (structure).
      *
+     * TODO: fails for IMaps on Java target
+     *
      * Note: If the provided argument is an object and implements
      *       the hext.ICloneable interface, the clone method of the instance
      *       is called (which ensures a deep-copy).
-     *       If the argument is an object and has a public clone()
-     *       method, this method is called.
      *
      * @param T     v    the data to clone
      * @param Bool  deep either to do a deep clone or not
@@ -31,11 +31,10 @@ class Reflector
      */
     public static function clone<T>(v:T, deep:Bool = false):T
     {
-        var childFn:T->T;
-        if (deep) {
-            childFn = Reflector.clone.bind(_, true);
+        var childFn:T->T = if (deep) {
+            Reflector.clone.bind(_, true);
         } else {
-            childFn = function(v:T):T {
+            function(v:T):T {
                 return v;
             }
         }
@@ -44,14 +43,12 @@ class Reflector
         if (Reflect.isObject(v) && !Std.is(v, String)) { // reference type
             if (Std.is(v, ICloneable)) {
                 copy = untyped v.clone();
-            } else if (Reflect.fields(v).contains("clone")) {
-                copy = Reflect.callMethod(v, "clone", []);
             } else if (Std.is(v, Array)) {
                 copy = Type.createInstance(Type.getClass(v), []);
                 untyped {
                     var it:Iterator<Dynamic> = v.iterator();
                     for (item in it) {
-                        copy.push(childFn(item));
+                        copy.add(childFn(item));
                     }
                 }
             } else if (Std.is(v, BalancedTree) || Std.is(v, HashMap) || Std.is(v, IMap)) {
@@ -59,7 +56,6 @@ class Reflector
                 untyped {
                     var keys:Iterator<String> = v.keys();
                     for (key in keys) {
-                        trace(v.get(key));
                         copy.set(key, childFn(v.get(key)));
                     }
                 }
@@ -71,14 +67,14 @@ class Reflector
                         copy.push(childFn(item));
                     }
                 }
-            } else if (Std.is(v, GenericStack)) {
-                copy = Type.createInstance(Type.getClass(v), []);
-                untyped {
-                    var it:Iterator<Dynamic> = v.iterator();
-                    for (item in it) {
-                        copy.add(childFn(item));
-                    }
-                }
+            // } else if (Std.is(v, GenericStack)) {
+            //     copy = Type.createInstance(Type.getClass(v), []);
+            //     untyped {
+            //         var it:Iterator<Dynamic> = v.iterator();
+            //         for (item in it) {
+            //             copy.add(childFn(item));
+            //         }
+            //     }
             } else if (Std.is(v, Vector)) {
                 var length:Int = untyped v.length;
                 copy = Type.createInstance(Type.getClass(v), [length]);
