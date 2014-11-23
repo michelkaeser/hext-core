@@ -21,7 +21,7 @@ class Looper extends Thread
      *
      * @var hext.threading.ISynchronizer
      */
-    private var synchronizer:ISynchronizer;
+    @:final private var synchronizer:ISynchronizer;
 
     #if !cs
         /**

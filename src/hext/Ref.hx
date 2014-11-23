@@ -2,6 +2,8 @@ package hext;
 
 import haxe.ds.Vector;
 
+using hext.utils.Reflector;
+
 /**
  * Abstract helper that can be used to pass primitive types (Int, Float etc.) by reference.
  *
@@ -14,7 +16,7 @@ import haxe.ds.Vector;
  * @generic T the type of value to reference
  */
 abstract Ref<T>(Vector<T>)
-// implements IStringable
+// implements ICloneable
 {
     /**
      * Property to access and set the reference's value.
@@ -29,10 +31,20 @@ abstract Ref<T>(Vector<T>)
      *
      * @param T val the value to point to
      */
-    private inline function new(val:T):Void
+    public inline function new():Void
     {
-        this    = new Vector<T>(1);
-        this[0] = val;
+        this = new Vector<T>(1);
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Ref<T>
+    {
+        var ref:Ref<T> = new Ref<T>();
+        ref.val = (this:Ref<Dynamic>).val.clone();
+
+        return ref;
     }
 
     /**
@@ -51,15 +63,12 @@ abstract Ref<T>(Vector<T>)
      *
      * @param T val the value to set
      *
-     * @return T the old value
+     * @return T
      */
     @:noCompletion
     private function set_val(val:T):T
     {
-        var old:T = this[0];
-        this[0] = val;
-
-        return old;
+        return this[0] = val;
     }
 
     /**
@@ -72,13 +81,16 @@ abstract Ref<T>(Vector<T>)
     @:noCompletion @:noUsing
     @:from public static function to<A>(val:A):Ref<A>
     {
-        return new Ref<A>(val);
+        var ref:Ref<A> = new Ref<A>();
+        ref.val = val;
+
+        return ref;
     }
 
     /**
      * @{inherit}
      */
-    public function toString():String
+    public inline function toString():String
     {
         return '&{${Std.string(this[0])}}';
     }

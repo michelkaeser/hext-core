@@ -2,6 +2,7 @@ package hext;
 
 import hext.ArrayRange;
 import hext.IllegalArgumentException;
+import hext.utils.Reflector;
 
 /**
  * The ArrayTools utilities class adds several helpful methods
@@ -23,35 +24,24 @@ class ArrayTools
     }
 
     /**
-     * Adds all items from the Iterable to the Array.
+     * Adds all items from the Iterable to the end of the Array.
      *
-     * @param Array<T>    arr   the Array to which the items should be added
-     * @param Iterable<T> items the items to add
+     * @param Array<T>          arr   the Array to which the items should be added
+     * @param Null<Iterable<T>> items the items to add
      *
      * @return hext.ArrayRange range of indexes where the items have been placed
      */
-    public static function addAll<T>(arr:Array<T>, items:Iterable<T>):ArrayRange
+    public static function addAll<T>(arr:Array<T>, items:Null<Iterable<T>>):ArrayRange
     {
-        var indexes:ArrayRange = { start: arr.length, end: -1 };
-        for (item in items) {
-            ArrayTools.add(arr, item);
+        var indexes:ArrayRange = { start: arr.length, end: arr.length };
+        if (items != null) {
+            for (item in items) {
+                ArrayTools.add(arr, item);
+            }
+            indexes.end = arr.length - 1;
         }
-        indexes.end = arr.length - 1;
 
         return indexes;
-    }
-
-    /**
-     * Checks if the Array contains the given item.
-     *
-     * @param Array<T> arr  the Array to search in
-     * @param T        item the item to search
-     *
-     * @return Bool
-     */
-    public static inline function contains<T>(arr:Array<T>, item:T):Bool
-    {
-        return arr.indexOf(item) != -1;
     }
 
     /**
@@ -71,6 +61,33 @@ class ArrayTools
         }
 
         return arr.splice(index, 1);
+    }
+
+    /**
+     * Deletes the items with the given indexes from the Array.
+     *
+     * If the indeses iterable contains duplicate values or is longer than 'arr',
+     * the behavior is not defined and it can result in errors.
+     *
+     * @param Array<T>            arr the Array from which the indexes should be deleted
+     * @param Null<Iterable<Int>> indexes the indexes to remove
+     *
+     * @return Array<T> an Array containing all deleted items
+     */
+    public static function deleteAll<T>(arr:Array<T>, indexes:Null<Iterable<Int>>):Array<T>
+    {
+        var deleted:Array<T> = new Array<T>();
+        if (indexes != null) {
+            var _indexes:Array<Int> = Lambda.array(indexes);
+            _indexes.sort(Reflector.compare);
+            var i:Int = 0;
+            while (i < _indexes.length) {
+                deleted.push(ArrayTools.delete(arr, _indexes[i] - i)[0]);
+                ++i;
+            }
+        }
+
+        return deleted;
     }
 
     /**
@@ -96,17 +113,19 @@ class ArrayTools
      *
      * A purge means that all references to the item are removed rather than just the first one.
      *
-     * @param Array<T>    arr   the Array to purge the items from
-     * @param Iterable<T> items the items to purge
+     * @param Array<T>          arr   the Array to purge the items from
+     * @param Null<Iterable<T>> items the items to purge
      *
      * @return Int the number of purged items
      */
-    public static function purgeAll<T>(arr:Array<T>, items:Iterable<T>):Int
+    public static function purgeAll<T>(arr:Array<T>, items:Null<Iterable<T>>):Int
     {
         var counter:Int = 0;
-        for (item in items) {
-            if (ArrayTools.purge(arr, item)) {
-                ++counter;
+        if (items != null) {
+            for (item in items) {
+                if (ArrayTools.purge(arr, item)) {
+                    ++counter;
+                }
             }
         }
 
@@ -114,19 +133,29 @@ class ArrayTools
     }
 
     /**
+     * @see hext.ArrayTools.addAll
+     */
+    public static function pushAll<T>(arr:Array<T>, items:Null<Iterable<T>>):ArrayRange
+    {
+        return ArrayTools.addAll(arr, items);
+    }
+
+    /**
      * Removes all items defined in 'items' from the Array.
      *
-     * @param Array<T>    arr   the Array to remove the items from
-     * @param Iterable<T> items the items to remove
+     * @param Array<T>          arr   the Array to remove the items from
+     * @param Null<Iterable<T>> items the items to remove
      *
      * @return Int the number of removed items
      */
-    public static function removeAll<T>(arr:Array<T>, items:Iterable<T>):Int
+    public static function removeAll<T>(arr:Array<T>, items:Null<Iterable<T>>):Int
     {
         var counter:Int = 0;
-        for (item in items) {
-            if (arr.remove(item)) {
-                ++counter;
+        if (items != null) {
+            for (item in items) {
+                if (arr.remove(item)) {
+                    ++counter;
+                }
             }
         }
 

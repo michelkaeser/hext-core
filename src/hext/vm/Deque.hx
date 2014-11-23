@@ -23,7 +23,7 @@ implements ICloneable<Deque<T>> implements ISerializable
      *
      * @var hext.vm.Deque.VMDeque<T>
      */
-    private var handle:VMDeque<T>;
+    @:final private var handle:VMDeque<T>;
 
 
     /**

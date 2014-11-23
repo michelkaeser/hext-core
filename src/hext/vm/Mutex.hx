@@ -4,6 +4,12 @@ package hext.vm;
     #error "hext.vm.Mutex is not available on target platform."
 #end
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
+
 /**
  * @{inherit}
  *
@@ -13,13 +19,14 @@ package hext.vm;
  *     depends on the result of the 1st.
  */
 class Mutex
+implements ICloneable<Mutex> implements ISerializable
 {
     /**
      * Stores the underlaying native Mutex.
      *
      * @var hext.vm.Mutex.VMMUtex
      */
-    private var handle:VMMutex;
+    @:final private var handle:VMMutex;
 
 
     /**
@@ -51,6 +58,30 @@ class Mutex
         #else
             this.handle.acquire();
         #end
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Mutex
+    {
+        return new Mutex();
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Mutex instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.Mutex instances cannot be unserialized.");
     }
 
     /**

@@ -4,7 +4,8 @@ package hext.threading;
     import hext.threading.ISynchronizer;
     import hext.threading.Synchronizer;
 #end
-import hext.utils.Reflector;
+
+using hext.utils.Reflector;
 
 /**
  * Abstract helper that can be used to make any type thread safe.
@@ -17,7 +18,7 @@ import hext.utils.Reflector;
  * @generic T the type of the value to wrap
  */
 abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISynchronizer } #else T #end)
-// implements ICloneable implements IStringable
+// implements ICloneable
 {
     /**
      * Property to access and set the Atomic's value.
@@ -46,7 +47,7 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
      */
     public function clone():Atomic<T>
     {
-        return new Atomic<T>(Reflector.clone((cast this:Atomic<Dynamic>).val));
+        return new Atomic<T>((cast this:Atomic<Dynamic>).val.clone());
     }
 
     /**
@@ -87,23 +88,20 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
      *
      * @param T val the value to set
      *
-     * @return T the old value
+     * @return T
      */
     @:noCompletion
     private #if !(cpp || cs || java || neko) inline #end function set_val(val:T):T
     {
-        var old:T;
         #if (cpp || cs || java || neko)
             this.synchronizer.sync(function():Void {
-                old = this.value;
                 this.value = val;
             });
         #else
-            old = this;
             this = val;
         #end
 
-        return old;
+        return val;
     }
 
     /**

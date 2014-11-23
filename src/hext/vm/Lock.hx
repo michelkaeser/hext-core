@@ -25,7 +25,7 @@ implements ICloneable<Lock> implements ISerializable
      *
      * @var hext.vm.Lock.VMLock
      */
-    private var handle:VMLock;
+    @:final private var handle:VMLock;
 
 
     /**
@@ -41,7 +41,7 @@ implements ICloneable<Lock> implements ISerializable
      */
     public function clone():Lock
     {
-        throw new UnsupportedOperationException("hext.vm.Lock instances cannot be cloned.");
+        return new Lock();
     }
 
     /**

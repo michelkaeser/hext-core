@@ -132,14 +132,11 @@ class Parallel
      *
      * @param hext.threading.IExecutor executor the Executor to set
      *
-     * @return hext.threading.IExecutor the old executor
+     * @return hext.threading.IExecutor
      */
     private static function set_executor(executor:IExecutor):IExecutor
     {
-        var old:IExecutor = Parallel.executor;
-        Parallel.executor = executor;
-
-        return old;
+        return Parallel.executor = executor;
     }
 
     /**

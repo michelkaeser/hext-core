@@ -22,14 +22,13 @@ import hext.io.Bits;
  *   - BAD:   A * B, A / B
  */
 abstract Int128({ bits:Bits })
-// implements IStringable
 {
     /**
      * Stores the max value an Int128 can hold.
      *
      * @var hext.Int128
      */
-    public static var MAX_VALUE(default, never):Int128 = {
+    @:final public static var MAX_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
         i <<= Int128.NBITS - 1;
         i -= 1;
@@ -41,7 +40,7 @@ abstract Int128({ bits:Bits })
      *
      * @var hext.Int128
      */
-    public static var MIN_VALUE(default, never):Int128 = {
+    @:final public static var MIN_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
         i <<= Int128.NBITS - 1;
         i;
@@ -52,14 +51,14 @@ abstract Int128({ bits:Bits })
      *
      * @var Int
      */
-    private static inline var NBITS:Int = Int128.NBYTES << 3;
+    @:final private static inline var NBITS:Int = Int128.NBYTES << 3;
 
     /**
      * Stores the number of Bytes the Int128 needs.
      *
      * @var Int
      */
-    private static inline var NBYTES:Int = 16;
+    @:final private static inline var NBYTES:Int = 16;
 
     /**
      * Stores some commonly used loop condition values.
@@ -70,8 +69,8 @@ abstract Int128({ bits:Bits })
      *
      * @var hext.Int128
      */
-    public static var ZERO(default, never):Int128 = Int128.alloc();
-    public static var ONE(default, never):Int128  = Int128.fromInt32(1);
+    @:final public static var ZERO(default, never):Int128 = Int128.alloc();
+    @:final public static var ONE(default, never):Int128  = Int128.fromInt32(1);
 
 
     /**
@@ -577,9 +576,9 @@ abstract Int128({ bits:Bits })
      * @{inherit}
      */
     @:noCompletion
-    public function toOctal(group:Bool = true):String
+    public function toOctal():String
     {
-        return this.bits.toHex(group);
+        return this.bits.toOctal();
     }
 
     /**

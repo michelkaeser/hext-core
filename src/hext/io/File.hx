@@ -5,7 +5,6 @@ import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
 import hext.ICloneable;
 import hext.ISerializable;
-import hext.IStringable;
 import hext.io.FileNotFoundException;
 import hext.io.IOException;
 import hext.io.Path;
@@ -24,7 +23,8 @@ using hext.io.FileTools;
  * Use cases:
  *   - Everything that includes working with FS files.
  */
-class File implements ICloneable<File> implements ISerializable implements IStringable
+class File
+implements ICloneable<File> implements ISerializable
 {
     /**
      * Property to access the file's extension.
