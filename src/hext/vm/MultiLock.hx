@@ -1,7 +1,6 @@
 package hext.vm;
 
-import hext.ds.LinkedList;
-import hext.ds.SynchronizedList;
+import hext.threading.ds.SynchronizedList;
 import hext.vm.ILock;
 import hext.vm.Lock;
 import hext.vm.Thread;
@@ -19,9 +18,9 @@ class MultiLock extends Lock
     /**
      * Stores the list of Threads having called wait().
      *
-     * @var hext.ds.SynchronizedList<hext.vm.Thread>
+     * @var hext.threading.ds.SynchronizedList<hext.vm.Thread>
      */
-    private var waiters:SynchronizedList<Thread>;
+    @:final private var waiters:SynchronizedList<Thread>;
 
 
     /**
@@ -30,7 +29,15 @@ class MultiLock extends Lock
     public function new():Void
     {
         super();
-        this.waiters = new SynchronizedList<Thread>(new LinkedList<Thread>());
+        this.waiters = new SynchronizedList<Thread>();
+    }
+
+    /**
+     * @{inherit}
+     */
+    override public function clone():MultiLock
+    {
+        return new MultiLock();
     }
 
     /**
@@ -38,7 +45,7 @@ class MultiLock extends Lock
      */
     override public function release():Void
     {
-        for (waiter in this.waiters.toArray()) { // waiter = Thread; toArray so we don't iterate over the original structure (as we remove items from it)
+        for (waiter in Lambda.list(this.waiters)) { // waiter = Thread; make sure we iterate over a copy (as we remove items from it)
             this.waiters.remove(waiter);
             super.release();
         }

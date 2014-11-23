@@ -14,14 +14,14 @@ class BitsIterator
      *
      * @var hext.io.Bits
      */
-    private var bits:Bits;
+    @:final private var bits:Bits;
 
     /**
      * Stores the number of total Bits in the Bits instance.
      *
      * @var Int
      */
-    private var nbits:Int;
+    @:final private var nbits:Int;
 
     /**
     * Stores the current index/position.

@@ -36,7 +36,7 @@ implements ICloneable<Thread> implements ISerializable
      *
      * @var hext.vm.Thread.VMThread
      */
-    private var handle:VMThread;
+    @:final private var handle:VMThread;
 
     #if cs
         /**
@@ -44,14 +44,14 @@ implements ICloneable<Thread> implements ISerializable
          *
          * @var hext.vm.IDeque<Dynamic>
          */
-        private var messages:IDeque<Dynamic>;
+        @:final private var messages:IDeque<Dynamic>;
 
         /**
          * Stores the map of Threads so we can access their messages field.
          *
          * @var ObjectMap<hext.vm.Thread.VMThread, hext.vm.Thread>
          */
-        private static var threads:ObjectMap<VMThread, Thread> = {
+        @:final private static var threads:ObjectMap<VMThread, Thread> = {
             var map    = new ObjectMap<VMThread, Thread>();
             var handle = VMThread.CurrentThread;
             map.set(handle, new Thread(handle));

@@ -7,8 +7,6 @@ import hext.io.Bit;
 import hext.io.BitsIterator;
 import hext.ds.IndexOutOfBoundsException;
 
-using hext.ArrayTools;
-
 /**
  * TODO
  *
@@ -20,7 +18,6 @@ using hext.ArrayTools;
  */
 @:forward(length)
 abstract Bits(Bytes) from Bytes to Bytes
-// implements implements IArrayable implements IStringable
 {
     /**
      * Constructor to initialize a new Bits instance.
@@ -194,7 +191,7 @@ abstract Bits(Bytes) from Bytes to Bytes
      *
      * @return hext.io.BitsIterator
      */
-    public function iterator():BitsIterator
+    public inline function iterator():BitsIterator
     {
         return new BitsIterator(this);
     }
@@ -388,19 +385,6 @@ abstract Bits(Bytes) from Bytes to Bytes
 
     /**
      * @{inherit}
-     */
-    public function toArray():Array<Bit>
-    {
-        var arr:Array<Bit> = new Array<Bit>();
-        for (bit in (this:Bits)) {
-            arr.add(bit);
-        }
-
-        return arr;
-    }
-
-    /**
-     * @{inherit}
      *
      * @param Bool group either to add a space after each byte or not
      */
@@ -422,7 +406,7 @@ abstract Bits(Bytes) from Bytes to Bytes
     /**
      * TODO
      */
-    public function toOctal(group:Bool = true):String
+    public function toOctal():String
     {
         return "";
     }

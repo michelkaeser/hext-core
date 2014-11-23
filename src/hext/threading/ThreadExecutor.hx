@@ -26,7 +26,7 @@ class ThreadExecutor implements IExecutor
     /**
      * @{inherit}
      */
-    public function execute(fn:Closure):Void
+    public inline function execute(fn:Closure):Void
     {
         #if (flash || js)
             Timer.delay(fn, 0);

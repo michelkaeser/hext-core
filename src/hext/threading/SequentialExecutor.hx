@@ -18,7 +18,7 @@ class SequentialExecutor implements IExecutor
     /**
      * @{inherit}
      */
-    public function execute(fn:Closure):Void
+    public inline function execute(fn:Closure):Void
     {
         fn();
     }

@@ -1,6 +1,11 @@
 package hext.vm;
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import hext.ICloneable;
 import hext.IllegalArgumentException;
+import hext.ISerializable;
+import hext.UnsupportedOperationException;
 import hext.threading.ISynchronizer;
 import hext.threading.Synchronizer;
 import hext.vm.ILock;
@@ -13,27 +18,28 @@ import hext.vm.Lock;
  *   - Waiting for two Threads. Instead of having two regular Locks, one NumLock is enough.
  */
 class NumLock implements ILock
+implements ICloneable<NumLock> implements ISerializable
 {
     /**
      * Stores the decorated Lock.
      *
      * @var hext.vm.ILock
      */
-    private var handle:ILock;
+    @:final private var handle:ILock;
 
     /**
      * Stores the Synchronizer used to perform atomic operations.
      *
      * @var hext.threading.ISynchronizer
      */
-    private var synchronizer:ISynchronizer;
+    @:final private var synchronizer:ISynchronizer;
 
     /**
      * Stores the number of times the Lock needs to be released.
      *
      * @var Int
      */
-    private var times:Int;
+    @:final private var times:Int;
 
     /**
      * Stores the number of releases.
@@ -61,6 +67,30 @@ class NumLock implements ILock
         this.synchronizer = new Synchronizer();
         this.times        = times;
         this.releases     = 0;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():NumLock
+    {
+        throw new UnsupportedOperationException("hext.vm.NumLock instances cannot be cloned.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.NumLock instances cannot be serialized.");
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        throw new UnsupportedOperationException("hext.vm.NumLock instances cannot be unserialized.");
     }
 
     /**

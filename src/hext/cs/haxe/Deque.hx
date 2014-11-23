@@ -8,9 +8,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import hext.ICloneable;
 import hext.ISerializable;
-import hext.UnsupportedOperationException;
-import hext.ds.SynchronizedQueue;
-import hext.ds.WaitList;
+import hext.threading.ds.SynchronizedList;
 import hext.vm.IDeque;
 import hext.vm.ILock;
 import hext.vm.Lock;
@@ -27,25 +25,25 @@ class Deque<T> implements IDeque<T>
 implements ICloneable<Deque<T>> implements ISerializable
 {
     /**
+     * Stores the List to store the items.
+     *
+     * @var hext.threading.ds.SynchronizedList<T>
+     */
+    @:final private var list:SynchronizedList<T>;
+
+    /**
      * Stores the Lock used to block pop(true) calls.
      *
      * @var hext.vm.ILock
      */
-    private var lock:ILock;
+    @:final private var lock:ILock;
 
     /**
-     * Stores the Mutex used to synchronize access to pop() and isEmpty checks.
+     * Stores the Mutex used to synchronize access to pop() and length checks.
      *
      * @var hext.vm.Mutex
      */
-    private var mutex:Mutex;
-
-    /**
-     * Stores the queue to store the items.
-     *
-     * @var hext.ds.SynchronizedQueue<T>
-     */
-    private var queue:SynchronizedQueue<T>;
+    @:final private var mutex:Mutex;
 
 
     /**
@@ -53,21 +51,22 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function new():Void
     {
+        this.list  = new SynchronizedList<T>();
         this.lock  = new Lock();
         this.mutex = new Mutex();
-        this.queue = new SynchronizedQueue<T>(new WaitList<T>());
     }
 
     /**
-     * Adds the item to the end of the queue.
+     * Adds the item at the end of the Deque.
      *
      * @param T item the item to add
      */
     public function add(item:T):Void
     {
+        // need to keep an eye on that. may need try/catch wrapping to ensure mutex is released
         this.mutex.acquire();
-        this.queue.push(item);
-        if (this.queue.length == 1) {
+        this.list.add(item);
+        if (this.list.length == 1) {
             this.lock.release();
         }
         this.mutex.release();
@@ -78,7 +77,10 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function clone():Deque<T>
     {
-        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be cloned.");
+        var clone:Deque<T> = new Deque<T>();
+        clone.list         = this.list.clone();
+
+        return clone;
     }
 
     /**
@@ -86,7 +88,7 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function hxSerialize(serializer:Serializer):Void
     {
-        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be serialized.");
+        serializer.serialize(this.list);
     }
 
     /**
@@ -94,30 +96,33 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function hxUnserialize(unserializer:Unserializer):Void
     {
-        throw new UnsupportedOperationException("hext.cs.haxe.Deque instances cannot be unserialized.");
+        this.list  = unserializer.unserialize();
+        this.lock  = new Lock();
+        this.mutex = new Mutex();
     }
 
     /**
-     * Returns the first item in the queue.
+     * Returns the first item in the Deque.
      *
      * If 'block' is false and the Deque is empty, null is returned.
      *
-     * @param Bool block if true, wait until an item is available if the queue is empty
+     * @param Bool block if true, wait until an item is available if the Deque is empty
      *
      * @return Null<T>
      */
     public function pop(block:Bool):Null<T>
     {
-        var top:T = null;
+        // need to keep an eye on that. may need try/catch wrapping to ensure mutex is released
+        var top:Null<T> = null;
         this.mutex.acquire();
-        if (this.queue.isEmpty()) {
+        if (this.list.isEmpty()) {
             this.mutex.release();
             if (block) {
                 while (true) {
                     this.lock.wait(0.01);
                     this.mutex.acquire();
-                    if (!this.queue.isEmpty()) {
-                        top = this.queue.pop();
+                    if (!this.list.isEmpty()) {
+                        top = this.list.pop();
                         this.mutex.release();
                         break;
                     } else {
@@ -126,7 +131,7 @@ implements ICloneable<Deque<T>> implements ISerializable
                 }
             }
         } else {
-            top = this.queue.pop();
+            top = this.list.pop();
             this.mutex.release();
         }
 
@@ -134,10 +139,26 @@ implements ICloneable<Deque<T>> implements ISerializable
     }
 
     /**
-     * @see hext.vm.Deque.add()
+     * Adds the item at the beginning of the Deque.
+     *
+     * @param T item the item to add
      */
-    public inline function push(item:T):Void
+    public function push(item:T):Void
     {
-        this.add(item);
+        // need to keep an eye on that. may need try/catch wrapping to ensure mutex is released
+        this.mutex.acquire();
+        this.list.push(item);
+        if (this.list.length == 1) {
+            this.lock.release();
+        }
+        this.mutex.release();
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function toString():String
+    {
+        return this.list.toString();
     }
 }

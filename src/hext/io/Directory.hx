@@ -5,13 +5,14 @@ import haxe.Unserializer;
 import haxe.io.Path in HaxePath;
 import hext.ICloneable;
 import hext.ISerializable;
-import hext.IStringable;
 import hext.io.File;
 import hext.io.FileNotFoundException;
 import hext.io.IOException;
 import hext.io.Path;
 import sys.FileStat;
 import sys.FileSystem;
+
+using hext.io.DirectoryTools;
 
 /**
  * Local filesystem directory abstraction class combining various methods
@@ -21,7 +22,7 @@ import sys.FileSystem;
  *   - Everything that includes working with FS directories.
  */
 class Directory
-implements ICloneable<Directory> implements ISerializable implements IStringable
+implements ICloneable<Directory> implements ISerializable
 {
     /**
      * Stores the path of the directory.
@@ -158,42 +159,6 @@ implements ICloneable<Directory> implements ISerializable implements IStringable
     public inline function exists():Bool
     {
         return FileSystem.exists(this.path) && FileSystem.isDirectory(this.path);
-    }
-
-    /**
-     * Returns the paths of all iles and directories in the directory.
-     *
-     * @param Bool fullPath either to return the full paths (including directories) or not
-     *
-     * @return Array<Path> the directory entries
-     *
-     * @throws hext.io.IOException           when the content could not be read
-     * @throws hext.io.FileNotFoundException when the directory does not exist
-     */
-    public function getChildren(fullPath:Bool = false):Array<Path>
-    {
-        if (this.exists()) {
-            try {
-                var children:Array<Path> = FileSystem.readDirectory(this.path);
-                if (fullPath) {
-                    var i:Int = 0;
-                    while (i < children.length) {
-                        children[i] = this.path + children[i];
-                        ++i;
-                    }
-                    // Not so good as it creates a new Array
-                    // children = children.map(function(child:Path):Path {
-                    //     return this.path + child;
-                    // });
-                }
-
-                return children;
-            } catch (ex:Dynamic) {
-                throw new IOException("Error getting the directory's children.");
-            }
-        }
-
-        throw new FileNotFoundException();
     }
 
     /**

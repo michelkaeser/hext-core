@@ -2,7 +2,6 @@ package hext;
 
 import hext.ArrayRange;
 import hext.IllegalArgumentException;
-import hext.Ref;
 import hext.utils.Reflector;
 
 /**
@@ -25,14 +24,14 @@ class ArrayTools
     }
 
     /**
-     * Adds all items from the Iterable to the Array.
+     * Adds all items from the Iterable to the end of the Array.
      *
      * @param Array<T>          arr   the Array to which the items should be added
      * @param Null<Iterable<T>> items the items to add
      *
      * @return hext.ArrayRange range of indexes where the items have been placed
      */
-    public static function addAll<T>(arr:Array<T>, items:Iterable<T>):ArrayRange
+    public static function addAll<T>(arr:Array<T>, items:Null<Iterable<T>>):ArrayRange
     {
         var indexes:ArrayRange = { start: arr.length, end: arr.length };
         if (items != null) {
@@ -43,44 +42,6 @@ class ArrayTools
         }
 
         return indexes;
-    }
-
-    /**
-     * Checks if the Array contains the given item.
-     *
-     * @param Array<T> arr  the Array to search in
-     * @param T        item the item to search
-     *
-     * @return Bool
-     */
-    public static inline function contains<T>(arr:Array<T>, item:T):Bool
-    {
-        return arr.indexOf(item) != -1;
-    }
-
-    /**
-     * Checks if the array contains all items from the iterable.
-     *
-     * @param Array<T>          arr the Array to search in
-     * @param Iterable<T>       items the items to check
-     * @param Null<hext.Ref<T>> fail not null, its value will be set to the first item not found
-     *
-     * @return Bool
-     */
-    public static function containsAll<T>(arr:Array<T>, items:Iterable<T>, ?fail:Ref<T>):Bool
-    {
-        var contains:Bool = true;
-        for (item in items) {
-            if (!ArrayTools.contains(arr, item)) {
-                contains = false;
-                if (fail != null) {
-                    fail.val = item;
-                }
-                break;
-            }
-        }
-
-        return contains;
     }
 
     /**
@@ -152,17 +113,19 @@ class ArrayTools
      *
      * A purge means that all references to the item are removed rather than just the first one.
      *
-     * @param Array<T>    arr   the Array to purge the items from
-     * @param Iterable<T> items the items to purge
+     * @param Array<T>          arr   the Array to purge the items from
+     * @param Null<Iterable<T>> items the items to purge
      *
      * @return Int the number of purged items
      */
-    public static function purgeAll<T>(arr:Array<T>, items:Iterable<T>):Int
+    public static function purgeAll<T>(arr:Array<T>, items:Null<Iterable<T>>):Int
     {
         var counter:Int = 0;
-        for (item in items) {
-            if (ArrayTools.purge(arr, item)) {
-                ++counter;
+        if (items != null) {
+            for (item in items) {
+                if (ArrayTools.purge(arr, item)) {
+                    ++counter;
+                }
             }
         }
 
@@ -170,19 +133,29 @@ class ArrayTools
     }
 
     /**
+     * @see hext.ArrayTools.addAll
+     */
+    public static function pushAll<T>(arr:Array<T>, items:Null<Iterable<T>>):ArrayRange
+    {
+        return ArrayTools.addAll(arr, items);
+    }
+
+    /**
      * Removes all items defined in 'items' from the Array.
      *
-     * @param Array<T>    arr   the Array to remove the items from
-     * @param Iterable<T> items the items to remove
+     * @param Array<T>          arr   the Array to remove the items from
+     * @param Null<Iterable<T>> items the items to remove
      *
      * @return Int the number of removed items
      */
-    public static function removeAll<T>(arr:Array<T>, items:Iterable<T>):Int
+    public static function removeAll<T>(arr:Array<T>, items:Null<Iterable<T>>):Int
     {
         var counter:Int = 0;
-        for (item in items) {
-            if (arr.remove(item)) {
-                ++counter;
+        if (items != null) {
+            for (item in items) {
+                if (arr.remove(item)) {
+                    ++counter;
+                }
             }
         }
 

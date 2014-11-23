@@ -13,7 +13,6 @@ import hext.Error;
  *     by member methods should feel natural. Bits should help...
  */
 abstract Bit(Bool) from Bool to Bool
-// implements IStringable
 {
     /**
      * Constructor to initialize a new Bit.

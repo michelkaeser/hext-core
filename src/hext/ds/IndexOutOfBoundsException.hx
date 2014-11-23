@@ -4,7 +4,9 @@ import haxe.PosInfos;
 import hext.Exception;
 
 /**
- * TODO
+ * Exception to be thrown when trying to access an item by index
+ * and the index is larger/lower then the number of items contained
+ * within the data structure.
  */
 class IndexOutOfBoundsException extends Exception
 {

@@ -74,7 +74,7 @@ class StringTools
      *
      * @return hext.StringIterator
      */
-    public static function iterator(str:String):StringIterator
+    public static inline function iterator(str:String):StringIterator
     {
         return new StringIterator(str);
     }

@@ -15,7 +15,6 @@ using StringTools;
  *   - Reading/writing from/to streams. Working with characters might feel more natural than integers.
  */
 abstract Char(Bytes) from Bytes to Bytes
-// implements IStringable
 {
     /**
      * Constructor to initialize a new Char.

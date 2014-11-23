@@ -26,7 +26,7 @@ class StringIterator
      *
      * @var String
      */
-    private var string:String;
+    @:final private var string:String;
 
 
     /**

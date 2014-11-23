@@ -1,8 +1,12 @@
 package hext.threading;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import haxe.ds.Vector;
 import hext.Closure;
+import hext.ICloneable;
 import hext.IllegalArgumentException;
+import hext.ISerializable;
 import hext.threading.IExecutor;
 import hext.vm.Deque;
 import hext.vm.IDeque;
@@ -16,20 +20,21 @@ import hext.vm.Looper;
  * execute() method quite often.
  */
 class PoolExecutor implements IExecutor
+implements ICloneable<PoolExecutor> implements ISerializable
 {
     /**
      * Stores the executor threads that will handle the jobs.
      *
      * @var Vector<hext.vm.Looper>
      */
-    private var executors:Vector<Looper>;
+    @:final private var executors:Vector<Looper>;
 
     /**
      * Stores the jobs/callbacks the executors need to process.
      *
      * @var hext.vm.IDeque<hext.Closure>
      */
-    private var jobs:IDeque<Closure>;
+    @:final private var jobs:IDeque<Closure>;
 
 
     /**
@@ -47,6 +52,33 @@ class PoolExecutor implements IExecutor
 
         this.executors = new Vector<Looper>(pool);
         this.jobs      = new Deque<Closure>();
+        this.initialize();
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():PoolExecutor
+    {
+        return new PoolExecutor(this.executors.length);
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxSerialize(serializer:Serializer):Void
+    {
+        serializer.serialize(this.executors.length);
+        serializer.serialize(this.jobs);
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function hxUnserialize(unserializer:Unserializer):Void
+    {
+        this.executors = new Vector<Looper>(unserializer.unserialize());
+        this.jobs      = unserializer.unserialize();
         this.initialize();
     }
 

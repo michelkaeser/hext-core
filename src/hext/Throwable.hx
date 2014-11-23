@@ -2,8 +2,8 @@ package hext;
 
 import haxe.CallStack;
 import haxe.PosInfos;
-import hext.IStringable;
 
+using hext.utils.Reflector;
 using StringTools;
 
 /**
@@ -12,35 +12,36 @@ using StringTools;
  * as it helps finding bugs and program faults by providing the initially mentioned
  * information to the developer.
  */
-class Throwable implements IStringable
+class Throwable
+implements ICloneable<Throwable>
 {
     /**
      * Stores the method call stack.
      *
      * @var String
      */
-    private var callStack:String;
+    @:final private var callStack:String;
 
     /**
      * Stores the exception stack.
      *
      * @var String
      */
-    private var exceptionStack:String;
+    @:final private var exceptionStack:String;
 
     /**
      * Stores the stack position information.
      *
      * @var Null<haxe.PosInfos>
      */
-    private var info:Null<PosInfos>;
+    @:final private var info:Null<PosInfos>;
 
     /**
      * Stores the message to be displayed.
      *
      * @var Dynamic
      */
-    public var msg(default, null):Dynamic;
+    @:final public var msg(default, null):Dynamic;
 
 
     /**
@@ -60,6 +61,18 @@ class Throwable implements IStringable
         #end
         this.info               = info;
         this.msg                = msg;
+    }
+
+    /**
+     * @{inherit}
+     */
+    public function clone():Throwable
+    {
+        var clone:Throwable  = new Throwable(this.msg.clone(), this.info.clone());
+        clone.callStack      = this.callStack;
+        clone.exceptionStack = this.exceptionStack;
+
+        return clone;
     }
 
     /**

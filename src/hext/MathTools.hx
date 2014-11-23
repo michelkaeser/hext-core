@@ -12,12 +12,12 @@ class MathTools
      *
      * @var haxe.Int32
      */
-    public static inline var MAX_INT32:Int32 = 0x7FFFFFFF;
+    @:final public static inline var MAX_INT32:Int32 = 0x7FFFFFFF;
 
     /**
      * Stores the Int32's min value.
      *
      * @var haxe.Int32
      */
-    public static inline var MIN_INT32:Int32 = 0x80000000;
+    @:final public static inline var MIN_INT32:Int32 = 0x80000000;
 }
