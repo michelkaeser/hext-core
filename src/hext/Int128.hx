@@ -19,7 +19,7 @@ import hext.io.Bits;
  *   - SUPER: ++A, --B
  *   - GOOD:  A + B, A - B, A & B, A == B
  *   - OK:    A << B, A >> B, A >>> B, A | B, A ^ B
- *   - BAD:   A * B (but OK in relation to Int -> Int32)
+ *   - BAD:   A * B, A / B
  */
 abstract Int128({ bits:Bits })
 // implements IStringable
@@ -70,7 +70,7 @@ abstract Int128({ bits:Bits })
      *
      * @var hext.Int128
      */
-    public static var ZERO(default, never):Int128 = Int128.fromInt32(0);
+    public static var ZERO(default, never):Int128 = Int128.alloc();
     public static var ONE(default, never):Int128  = Int128.fromInt32(1);
 
 
@@ -202,10 +202,14 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO: implementation
+     * Operator method that is called when dividing an Int128.
      *
      * @link http://stackoverflow.com/questions/5284898/implement-division-with-bit-wise-operator
      * @link http://www.wikihow.com/Divide-Binary-Numbers
+     *
+     * @param hext.Int128 i the divisor
+     *
+     * @return hext.Int128
      */
     @:noCompletion
     @:op(A / B) public function div(i:Int128):Int128
@@ -214,7 +218,12 @@ abstract Int128({ bits:Bits })
             throw new UnsupportedOperationException("Division by zero.");
         }
 
-        return untyped this;
+        var sum:Int128 = Int128.alloc();
+        while ((i * sum) <= cast this) {
+            ++sum;
+        }
+
+        return --sum;
     }
 
     /**
@@ -541,14 +550,14 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A * B) public function times(i:Int128):Int128
     {
-        var div:Int128 = i; // Int128.copy(i) ?
+        var mul:Int128 = i;
         var sum:Int128 = Int128.alloc();
         var j:Int      = 0;
-        while ((div & Int128.ONE) != Int128.ZERO) {
-            if ((untyped div.bits:Bits)[0] == (1:Bit)) {
+        while (mul != Int128.ZERO) {
+            if ((untyped mul.bits:Bits)[0] == (1:Bit)) {
                 sum += new Int128(this.bits << j);
             }
-            div >>>= 1;
+            mul >>>= 1;
             ++j;
         }
 
