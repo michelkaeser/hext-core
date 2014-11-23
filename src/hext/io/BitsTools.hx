@@ -211,10 +211,6 @@ class BitsTools
     @:noUsing
     public static function fromString(str:Null<String>, base:Int = 2):Bits
     {
-        if (base != 2 && base != 8 && base != 16) {
-            throw new UnsupportedOperationException("Unsupported base. Only binary(2), octal(8) and hexadecimal(16) are supported.");
-        }
-
         var bits:Bits;
         if (str == null || str.length == 0) {
             bits = Bits.alloc(0);
@@ -223,7 +219,7 @@ class BitsTools
                 case  2: BitsTools.fromBinaryString(str);
                 case  8: BitsTools.fromOctalString(str);
                 case 16: BitsTools.fromHexString(str);
-                default: // not reached
+                default: throw new UnsupportedOperationException("Unsupported base. Only binary(2), octal(8) and hexadecimal(16) are supported.");
             }
         }
 

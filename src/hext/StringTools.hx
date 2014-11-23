@@ -107,6 +107,7 @@ class StringTools
      */
     public static function toBool(str:String):Bool
     {
+        str = str.toLowerCase();
         if (str == "false" || str == "true") {
             return str == "true";
         }

@@ -2,6 +2,8 @@ package hext;
 
 import hext.ArrayRange;
 import hext.IllegalArgumentException;
+import hext.Ref;
+import hext.utils.Reflector;
 
 /**
  * The ArrayTools utilities class adds several helpful methods
@@ -25,18 +27,20 @@ class ArrayTools
     /**
      * Adds all items from the Iterable to the Array.
      *
-     * @param Array<T>    arr   the Array to which the items should be added
-     * @param Iterable<T> items the items to add
+     * @param Array<T>          arr   the Array to which the items should be added
+     * @param Null<Iterable<T>> items the items to add
      *
      * @return hext.ArrayRange range of indexes where the items have been placed
      */
     public static function addAll<T>(arr:Array<T>, items:Iterable<T>):ArrayRange
     {
-        var indexes:ArrayRange = { start: arr.length, end: -1 };
-        for (item in items) {
-            ArrayTools.add(arr, item);
+        var indexes:ArrayRange = { start: arr.length, end: arr.length };
+        if (items != null) {
+            for (item in items) {
+                ArrayTools.add(arr, item);
+            }
+            indexes.end = arr.length - 1;
         }
-        indexes.end = arr.length - 1;
 
         return indexes;
     }
@@ -52,6 +56,31 @@ class ArrayTools
     public static inline function contains<T>(arr:Array<T>, item:T):Bool
     {
         return arr.indexOf(item) != -1;
+    }
+
+    /**
+     * Checks if the array contains all items from the iterable.
+     *
+     * @param Array<T>          arr the Array to search in
+     * @param Iterable<T>       items the items to check
+     * @param Null<hext.Ref<T>> fail not null, its value will be set to the first item not found
+     *
+     * @return Bool
+     */
+    public static function containsAll<T>(arr:Array<T>, items:Iterable<T>, ?fail:Ref<T>):Bool
+    {
+        var contains:Bool = true;
+        for (item in items) {
+            if (!ArrayTools.contains(arr, item)) {
+                contains = false;
+                if (fail != null) {
+                    fail.val = item;
+                }
+                break;
+            }
+        }
+
+        return contains;
     }
 
     /**
@@ -71,6 +100,33 @@ class ArrayTools
         }
 
         return arr.splice(index, 1);
+    }
+
+    /**
+     * Deletes the items with the given indexes from the Array.
+     *
+     * If the indeses iterable contains duplicate values or is longer than 'arr',
+     * the behavior is not defined and it can result in errors.
+     *
+     * @param Array<T>            arr the Array from which the indexes should be deleted
+     * @param Null<Iterable<Int>> indexes the indexes to remove
+     *
+     * @return Array<T> an Array containing all deleted items
+     */
+    public static function deleteAll<T>(arr:Array<T>, indexes:Null<Iterable<Int>>):Array<T>
+    {
+        var deleted:Array<T> = new Array<T>();
+        if (indexes != null) {
+            var _indexes:Array<Int> = Lambda.array(indexes);
+            _indexes.sort(Reflector.compare);
+            var i:Int = 0;
+            while (i < _indexes.length) {
+                deleted.push(ArrayTools.delete(arr, _indexes[i] - i)[0]);
+                ++i;
+            }
+        }
+
+        return deleted;
     }
 
     /**

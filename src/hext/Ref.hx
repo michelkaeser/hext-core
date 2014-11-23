@@ -29,10 +29,9 @@ abstract Ref<T>(Vector<T>)
      *
      * @param T val the value to point to
      */
-    private inline function new(val:T):Void
+    public inline function new():Void
     {
-        this    = new Vector<T>(1);
-        this[0] = val;
+        this = new Vector<T>(1);
     }
 
     /**
@@ -72,7 +71,10 @@ abstract Ref<T>(Vector<T>)
     @:noCompletion @:noUsing
     @:from public static function to<A>(val:A):Ref<A>
     {
-        return new Ref<A>(val);
+        var ref:Ref<A> = new Ref<A>();
+        ref.val = val;
+
+        return ref;
     }
 
     /**
