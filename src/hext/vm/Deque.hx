@@ -47,7 +47,11 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function clone():Deque<T>
     {
-        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be cloned.");
+        #if cs
+            return this.handle.clone();
+        #else
+            throw new UnsupportedOperationException("hext.vm.Deque instances cannot be cloned.");
+        #end
     }
 
     /**
@@ -55,7 +59,11 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function hxSerialize(serializer:Serializer):Void
     {
-        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be serialized.");
+        #if cs
+            serializer.serialize(this.handle);
+        #else
+            throw new UnsupportedOperationException("hext.vm.Deque instances cannot be serialized.");
+        #end
     }
 
     /**
@@ -63,7 +71,11 @@ implements ICloneable<Deque<T>> implements ISerializable
      */
     public function hxUnserialize(unserializer:Unserializer):Void
     {
-        throw new UnsupportedOperationException("hext.vm.Deque instances cannot be unserialized.");
+        #if cs
+            this.handle = unserializer.unserialize();
+        #else
+            throw new UnsupportedOperationException("hext.vm.Deque instances cannot be unserialized.");
+        #end
     }
 
     /**

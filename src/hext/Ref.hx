@@ -90,7 +90,7 @@ abstract Ref<T>(Vector<T>)
     /**
      * @{inherit}
      */
-    public inline function toString():String
+    public function toString():String
     {
         return '&{${Std.string(this[0])}}';
     }
