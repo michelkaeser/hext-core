@@ -1,6 +1,7 @@
 package hext;
 
 import hext.ArrayRange;
+import hext.Failure;
 import hext.IllegalArgumentException;
 import hext.utils.Reflector;
 
@@ -42,6 +43,61 @@ class ArrayTools
         }
 
         return indexes;
+    }
+
+    /**
+     * Checks if the Array contains the given item.
+     *
+     * @param Array<T> arr  the Array to search in
+     * @param T        item the item to search
+     *
+     * @return Bool
+     */
+    // using instead of IterableTools because of performance
+    public static inline function contains<T>(arr:Array<T>, item:T):Bool
+    {
+        return arr.indexOf(item) != -1;
+    }
+
+    /**
+     * Checks if the Array contains all items within 'items'.
+     *
+     * Attn: The search doesn't move forward. So the method will return true for
+     * the Array [1, 2] and a search Iterable of [1, 1].
+     *
+     * If the Iterable is empty, true is returned.
+     *
+     * @param Array<T>          arr   the Array to search in
+     * @param Null<Iterable<T>> items the items to search
+     * @param Null<Failure<T>>  fails if set and 'fail' is not null, the method will
+     *                          abort at the first item that is not contained and set
+     *                          the reference to its value. If 'fails' is not-null (on or the other)
+     *                          the method will check all and include all not-contained items within
+     *                          the fails Array.
+     *
+     * @return Bool
+     */
+    // using instead of IterableTools because of performance
+    public static function containsAll<T>(arr:Array<T>, items:Null<Iterable<T>>, ?fails:Failure<T>):Bool
+    {
+        var contains:Bool = true;
+        if (items != null) {
+            for (item in items) {
+                if (!ArrayTools.contains(arr, item)) {
+                    contains = false;
+                    if (fails != null) {
+                        if (fails.fail == null) {
+                            fails.fails.add(item);
+                        } else {
+                            fails.fail.val = item;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return contains;
     }
 
     /**

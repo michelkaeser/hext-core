@@ -1,7 +1,6 @@
 package hext;
 
 import hext.Failure;
-import hext.Ref;
 
 /**
  * The IterableTools utilities class adds several helpful methods
@@ -61,3 +60,50 @@ class IterableTools
 
         return contains;
     }
+
+    /**
+     * Checks if the Iterable is empty.
+     *
+     * @see http://api.haxe.org/Lambda.html#empty
+     *
+     * @param Iterable<T> it the Iterable to check
+     *
+     * @return Bool
+     */
+    public static inline function isEmpty(it:Iterable<Dynamic>):Bool
+    {
+        return Lambda.empty(it);
+    }
+
+    /**
+     * Returns an Array containing all items from the Iterable.
+     *
+     * If the Iterable is an Array, a copy is returned.
+     *
+     * @see http://api.haxe.org/Lambda.html#array
+     *
+     * @param Iterable<T> it the Iterable to get an Array of
+     *
+     * @return Array<T>
+     */
+    public static inline function toArray<T>(it:Iterable<T>):Array<T>
+    {
+        return Lambda.array(it);
+    }
+
+    /**
+     * Returns a List containing all items from the Iterable.
+     *
+     * If the Iterable is a List, a copy is returned.
+     *
+     * @see http://api.haxe.org/Lambda.html#list
+     *
+     * @param Iterable<T> it the Iterable to get a List of
+     *
+     * @return List<T>
+     */
+    public static inline function toList<T>(it:Iterable<T>):List<T>
+    {
+        return Lambda.list(it);
+    }
+}
