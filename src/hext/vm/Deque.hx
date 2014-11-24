@@ -48,7 +48,10 @@ implements ICloneable<Deque<T>> implements ISerializable
     public function clone():Deque<T>
     {
         #if cs
-            return this.handle.clone();
+            var clone:Deque<T> = new Deque<T>();
+            clone.handle = this.handle.clone();
+
+            return clone;
         #else
             throw new UnsupportedOperationException("hext.vm.Deque instances cannot be cloned.");
         #end
