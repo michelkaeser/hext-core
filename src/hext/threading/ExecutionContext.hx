@@ -26,23 +26,23 @@ class ExecutionContext
     /**
      * Propery holding the default Executor (for sequential operations).
      *
-     * @var hext.threading.IExecutor
+     * @var Null<hext.threading.IExecutor>
      */
-    @:isVar public static var defaultExecutor(get, set):IExecutor;
+    @:isVar public static var defaultExecutor(get, set):Null<IExecutor>;
 
     /**
      * Propery holding the default Executor for parallel operations.
      *
-     * @var hext.threading.IExecutor
+     * @var Null<hext.threading.IExecutor>
      */
-    @:isVar public static var parallelExecutor(get, set):IExecutor;
+    @:isVar public static var parallelExecutor(get, set):Null<IExecutor>;
 
     /**
      * Propery holding a reference to the prefered Executor instance.
      *
-     * @var hext.threading.IExecutor
+     * @var Null<hext.threading.IExecutor>
      */
-    public static var preferedExecutor:IExecutor = ExecutionContext.parallelExecutor;
+    @:isVar public static var preferedExecutor(get, set):Null<IExecutor>;
 
 
     /**
@@ -75,6 +75,20 @@ class ExecutionContext
     }
 
     /**
+     * Internal getter method for the preferedExecutor property.
+     *
+     * @return hext.threading.IExecutor
+     */
+    private static function get_preferedExecutor():IExecutor
+    {
+        if (ExecutionContext.preferedExecutor == null) {
+            ExecutionContext.preferedExecutor = ExecutionContext.parallelExecutor;
+        }
+
+        return ExecutionContext.preferedExecutor;
+    }
+
+    /**
      * Internal setter method for the defaultExecutor property.
      *
      * @param hext.threading.IExecutor executor the Executor to set
@@ -96,5 +110,17 @@ class ExecutionContext
     private static function set_parallelExecutor(executor:IExecutor):IExecutor
     {
         return ExecutionContext.parallelExecutor = executor;
+    }
+
+    /**
+     * Internal setter method for the preferedExecutor property.
+     *
+     * @param hext.threading.IExecutor executor the Executor to set
+     *
+     * @return hext.threading.IExecutor
+     */
+    private static function set_preferedExecutor(executor:IExecutor):IExecutor
+    {
+        return ExecutionContext.preferedExecutor = executor;
     }
 }

@@ -94,7 +94,7 @@ implements ICloneable<PoolExecutor> implements ISerializable
      */
     private function initialize():Void
     {
-        for (i in 0...this.executors.length) {
+        for (i in 0...this.size) {
             this.executors.set(i, Looper.create(function():Void {
                 var fn:Closure = this.jobs.pop(true);
                 #if HEXT_DEBUG

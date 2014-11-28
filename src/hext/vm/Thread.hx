@@ -35,9 +35,9 @@ implements ICloneable<Thread> implements ISerializable
     /**
      * Property to access the number of running threads (excl. the main thread).
      *
-     * @var hext.threading.Atomic<Int>
+     * @var Null<hext.threading.Atomic<Int>>
      */
-    public static var count(default, null):Atomic<Int> = new Atomic<Int>(0);
+    @:isVar public static var count(get, null):Null<Atomic<Int>>;
 
     /**
      * Stores the underlaying native Thread.
@@ -144,6 +144,24 @@ implements ICloneable<Thread> implements ISerializable
         #end
 
         return thread;
+    }
+
+    /**
+     * Internal getter method for the 'count' property.
+     *
+     * Note: Initializing the var with = new Atomic<Int>(0) didn't work since
+     * it is not ensured that init is done before calling static functions which
+     * leaded to errors.
+     *
+     * @return hext.threading.Atomic<Int>
+     */
+    private static function get_count():Atomic<Int>
+    {
+        if (Thread.count == null) {
+            Thread.count = new Atomic<Int>(0);
+        }
+
+        return Thread.count;
     }
 
     /**

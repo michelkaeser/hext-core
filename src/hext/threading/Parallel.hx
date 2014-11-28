@@ -27,9 +27,9 @@ class Parallel
     /**
      * Property holding the Executor that will process the tasks/callbacks.
      *
-     * @var hext.threading.IExecutor
+     * @var Null<hext.threading.IExecutor>
      */
-    @:isVar public static var executor(get, set):IExecutor;
+    @:isVar public static var executor(get, set):Null<IExecutor>;
 
 
     /**
