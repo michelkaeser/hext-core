@@ -11,6 +11,7 @@ using hext.ArrayTools;
  * The StringTools utilities class adds several helpful methods
  * to the standard String class.
  */
+@:final
 class StringTools
 {
     /**

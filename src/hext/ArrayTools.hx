@@ -9,6 +9,7 @@ import hext.utils.Reflector;
  * The ArrayTools utilities class adds several helpful methods
  * to the standard Array class.
  */
+@:final
 class ArrayTools
 {
     /**

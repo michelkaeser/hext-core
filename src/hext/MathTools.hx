@@ -5,6 +5,7 @@ import haxe.Int32;
 /**
  * Static only extension class for the standard Math class.
  */
+@:final
 class MathTools
 {
     /**

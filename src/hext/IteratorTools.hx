@@ -6,6 +6,7 @@ using hext.ArrayTools;
  * The IteratorTools utilities class adds several helpful methods
  * to the Iterator type.
  */
+@:final
 class IteratorTools
 {
     /**

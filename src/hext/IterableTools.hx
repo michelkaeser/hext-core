@@ -6,6 +6,7 @@ import hext.Failure;
  * The IterableTools utilities class adds several helpful methods
  * to Iterable data structures/instances.
  */
+@:final
 class IterableTools
 {
     /**

@@ -8,6 +8,7 @@ import sys.FileSystem;
 /**
  * The DirectoryTools utilities class adds several helpful methods to the hext.io.Directory class.
  */
+@:final
 class DirectoryTools
 {
     /**

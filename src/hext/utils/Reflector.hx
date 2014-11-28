@@ -13,6 +13,7 @@ using hext.ArrayTools;
  * Reflection methods/algorithms wrapper class that provides various
  * methods dedicated to getting information about an object instance.
  */
+@:final
 class Reflector
 {
     /**

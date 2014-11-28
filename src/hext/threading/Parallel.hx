@@ -22,6 +22,7 @@ import hext.vm.NumLock;
  * Use cases:
  *   - You want parallism but do not want to care about synchronization.
  */
+@:final
 class Parallel
 {
     /**

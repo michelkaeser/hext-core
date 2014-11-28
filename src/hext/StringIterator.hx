@@ -12,6 +12,7 @@ using StringTools;
  *
  * @see http://api.haxe.org/Iterator.html
  */
+@:final
 class StringIterator
 {
      /**

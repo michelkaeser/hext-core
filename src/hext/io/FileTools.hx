@@ -11,6 +11,7 @@ import hext.io.IOException;
 /**
  * The FileTools utilities class adds several helpful methods to the hext.io.File class.
  */
+@:final
 class FileTools
 {
     /**

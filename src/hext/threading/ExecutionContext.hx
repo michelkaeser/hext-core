@@ -21,6 +21,7 @@ import hext.threading.SequentialExecutor;
  *   - Implementing an eco-system where a lot hext.Callbacks are executed by hext.threading.IExecutors.
  *     Instead of passing executors each time, the implementation might get its default Executor from here.
  */
+@:final
 class ExecutionContext
 {
     /**

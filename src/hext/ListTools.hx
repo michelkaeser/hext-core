@@ -7,6 +7,7 @@ import hext.utils.Reflector;
  * The ListTools utilities class adds several helpful methods
  * to the standard List class.
  */
+@:final
 class ListTools
 {
     /**

@@ -14,6 +14,7 @@ using StringTools;
 /**
  * The BitsTools utilities class adds several helpful methods to the hext.io.Bits class.
  */
+@:final
 class BitsTools
 {
     /**
