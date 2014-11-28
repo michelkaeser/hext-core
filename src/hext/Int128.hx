@@ -21,7 +21,8 @@ import hext.io.Bits;
  *   - OK:    A << B, A >> B, A >>> B, A | B, A ^ B
  *   - BAD:   A * B, A / B
  */
-abstract Int128({ bits:Bits })
+@:forward(toHex, toOctal)
+abstract Int128(Bits)
 {
     /**
      * Stores the max value an Int128 can hold.
@@ -30,8 +31,8 @@ abstract Int128({ bits:Bits })
      */
     public static var MAX_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
-        i <<= Int128.NBITS - 1;
-        i -= 1;
+        i = i.lshift(Int128.NBITS - 1);
+        i = i.subs(1);
         i;
     };
 
@@ -42,7 +43,7 @@ abstract Int128({ bits:Bits })
      */
     public static var MIN_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
-        i <<= Int128.NBITS - 1;
+        i = i.lshift(Int128.NBITS - 1);
         i;
     };
 
@@ -80,7 +81,7 @@ abstract Int128({ bits:Bits })
      */
     private inline function new(b:Bits):Void
     {
-        this = { bits: b };
+        this = b;
     }
 
     /**
@@ -98,7 +99,7 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A & B) public function and(i:Int128):Int128
     {
-        return new Int128(this.bits & untyped i.bits);
+        return new Int128(this & cast i);
     }
 
     /**
@@ -114,10 +115,10 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A + B) public function add(i:Int128):Int128
     {
-        var x:Bytes    = this.bits;
-        var y:Bytes    = untyped i.bits;
-        var z:Bytes    = Bytes.alloc(Int128.NBYTES);
-        var carry:UInt = 0;
+        var x:Bytes   = this;
+        var y:Bytes   = cast i;
+        var z:Bytes   = Bytes.alloc(Int128.NBYTES);
+        var carry:Int = 0;
         for (i in 0...Int128.NBYTES) {
             var sum:Int = x.get(i) + y.get(i) + carry;
             z.set(i, sum);
@@ -125,18 +126,6 @@ abstract Int128({ bits:Bits })
         }
 
         return new Int128(z);
-
-        // not so fast...
-        // var x:Bits    = this.bits;
-        // var y:Bits    = untyped i.bits;
-        // var z:Bits    = Bytes.alloc(Int128.NBYTES);
-        // var carry:Bit = (0:Bit);
-        // for (i in 0...Int128.NBITS) {
-        //     z[i]  = (x[i] ^ y[i]) ^ carry;
-        //     carry = (carry & x[i]) | (x[i] & y[i]);
-        // // }
-
-        // return new Int128(z);
     }
 
     /**
@@ -150,13 +139,13 @@ abstract Int128({ bits:Bits })
      */
     private function compareTo(i:Int128):Int
     {
-        var x:Bytes = this.bits;
-        var y:Bytes = untyped i.bits;
+        var x:Bytes = this;
+        var y:Bytes = cast i;
         var a:Bit   = (x:Bits)[Int128.NBITS - 1];
         var b:Bit   = (y:Bits)[Int128.NBITS - 1];
-        if (a == (0:Bit) && b == (1:Bit)) {
+        if (~a && b) {
             return 1;
-        } else if (a == (1:Bit) && b == (0:Bit)) {
+        } else if (a && ~b) {
             return -1;
         } else {
             var i:Int = Int128.NBYTES - 1;
@@ -171,19 +160,6 @@ abstract Int128({ bits:Bits })
                 --i;
             }
 
-            // not so fast...
-            // var i:Int = Int128.NBITS - 2;
-            // while (i != -1) {
-            //     a = x[i];
-            //     b = y[i];
-            //     if (a == (0:Bit) && b == (1:Bit)) {
-            //         return -1;
-            //     } else if (a == (1:Bit) && b == (0:Bit)) {
-            //         return 1;
-            //     }
-            //     --i;
-            // }
-
             return 0;
         }
     }
@@ -197,11 +173,13 @@ abstract Int128({ bits:Bits })
      */
     public static function copy(i:Int128):Int128
     {
-        return new Int128((untyped i.bits:Bits).copy());
+        return new Int128((cast i:Bits).copy());
     }
 
     /**
      * Operator method that is called when dividing an Int128.
+     *
+     * TODO: negative values (either dividend or divisor)
      *
      * @link http://stackoverflow.com/questions/5284898/implement-division-with-bit-wise-operator
      * @link http://www.wikihow.com/Divide-Binary-Numbers
@@ -218,7 +196,7 @@ abstract Int128({ bits:Bits })
         }
 
         var sum:Int128 = Int128.alloc();
-        while ((i * sum) <= cast this) {
+        while ((sum.times(i)).lessEquals(cast this)) {
             ++sum;
         }
 
@@ -232,7 +210,7 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A == B) public function equals(i:Int128):Bool
     {
-        return this.bits == untyped i.bits;
+        return this == cast i;
     }
 
     /**
@@ -282,15 +260,6 @@ abstract Int128({ bits:Bits })
     }
 
     /**
-     * TODO: doesn't fire. we want that to ensure immutability
-     */
-    @:noCompletion @:noUsing
-    @:from public static function fromInt128(i:Int128):Int128
-    {
-        return new Int128((untyped i.bits:Bits).copy());
-    }
-
-    /**
      * Operator method that is called when comparing two Int128s for 'greater than'.
      *
      * @param hext.Int128 i the Int128 to check against
@@ -300,7 +269,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A > B) public function greater(i:Int128):Bool
     {
-        return i.compareTo(untyped this) == -1;
+        return i.compareTo(cast this) == -1;
     }
 
     /**
@@ -313,7 +282,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A >= B) public function greaterEquals(i:Int128):Bool
     {
-        return i.compareTo(untyped this) != 1;
+        return i.compareTo(cast this) != 1;
     }
 
     /**
@@ -325,7 +294,7 @@ abstract Int128({ bits:Bits })
      */
     public static function isNegative(i:Int128):Bool
     {
-        return (untyped i.bits:Bits)[Int128.NBITS - 1] == (1:Bit);
+        return (cast i:Bits)[Int128.NBITS - 1];
     }
 
     /**
@@ -350,7 +319,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A < B) public function less(i:Int128):Bool
     {
-        return i.compareTo(untyped this) == 1;
+        return i.compareTo(cast this) == 1;
     }
 
     /**
@@ -363,7 +332,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A <= B) public function lessEquals(i:Int128):Bool
     {
-        return i.compareTo(untyped this) != -1;
+        return i.compareTo(cast this) != -1;
     }
 
     /**
@@ -372,7 +341,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A << B) public function lshift(times:Int):Int128
     {
-        return new Int128(this.bits << times);
+        return new Int128(this << times);
     }
 
     /**
@@ -381,7 +350,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(~A) public function neg():Int128
     {
-        return new Int128(~this.bits);
+        return new Int128(~this);
     }
 
     /**
@@ -391,7 +360,18 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A != B) public function nequals(i:Int128):Bool
     {
-        return this.bits.nequals(untyped i.bits);
+        return this.nequals(cast i);
+    }
+
+    /**
+     * Operator method that is called when prefixing an Int128 with the minus sign.
+     *
+     * @return hext.Int128
+     */
+    @:noCompletion
+    @:op(-A) public function minus():Int128
+    {
+        return Int128.ZERO.subs(cast this);
     }
 
     /**
@@ -400,7 +380,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A % B) public function mod(i:Int128):Int128
     {
-        return untyped this;
+        return new Int128(this);
     }
 
     /**
@@ -410,7 +390,7 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A | B) public function or(i:Int128):Int128
     {
-        return new Int128(this.bits | untyped i.bits);
+        return new Int128(this | cast i);
     }
 
     /**
@@ -423,14 +403,14 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A--) public function postDec():Int128
     {
-        var copy:Bits = this.bits.copy();
+        var copy:Bits = this.copy();
         var i:Int     = 0;
         while (i < Int128.NBITS) {
-            if (this.bits[i] == (1:Bit)) {
-                this.bits[i] = (0:Bit);
+            if (this[i]) {
+                this[i] = (0:Bit);
                 break;
             } else {
-                this.bits[i] = (1:Bit);
+                this[i] = (1:Bit);
             }
             ++i;
         }
@@ -448,14 +428,14 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A++) public function postInc():Int128
     {
-        var copy:Bits = this.bits.copy();
+        var copy:Bits = this.copy();
         var i:Int     = 0;
         while (i < Int128.NBITS) {
-            if (this.bits[i] == (0:Bit)) {
-                this.bits[i] = (1:Bit);
-                break;
+            if (this[i]) {
+                this[i] = (0:Bit);
             } else {
-                this.bits[i] = (0:Bit);
+                this[i] = (1:Bit);
+                break;
             }
             ++i;
         }
@@ -475,11 +455,11 @@ abstract Int128({ bits:Bits })
     {
         var i:Int = 0;
         while (i < Int128.NBITS) {
-            if (this.bits[i] == (1:Bit)) {
-                this.bits[i] = (0:Bit);
+            if (this[i]) {
+                this[i] = (0:Bit);
                 break;
             } else {
-                this.bits[i] = (1:Bit);
+                this[i] = (1:Bit);
             }
             ++i;
         }
@@ -499,11 +479,11 @@ abstract Int128({ bits:Bits })
     {
         var i:Int = 0;
         while (i < Int128.NBITS) {
-            if (this.bits[i] == (0:Bit)) {
-                this.bits[i] = (1:Bit);
-                break;
+            if (this[i]) {
+                this[i] = (0:Bit);
             } else {
-                this.bits[i] = (0:Bit);
+                this[i] = (1:Bit);
+                break;
             }
             ++i;
         }
@@ -517,7 +497,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A >> B) public function rshift(times:Int):Int128
     {
-        return new Int128(this.bits >> times);
+        return new Int128(this >> times);
     }
 
     /**
@@ -533,8 +513,8 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A - B) public function subs(i:Int128):Int128
     {
-        var subs:Int128 = new Int128(~(untyped i.bits:Bits));
-        return ++subs + untyped this;
+        var subs:Int128 = new Int128(~(cast i:Bits));
+        return ++subs.add(cast this);
     }
 
     /**
@@ -549,36 +529,24 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A * B) public function times(i:Int128):Int128
     {
+        var negative:Bool = false;
+        if (Int128.isNegative(i)) {
+            i = i.minus();
+            negative = true;
+        }
+
         var mul:Int128 = i;
         var sum:Int128 = Int128.alloc();
         var j:Int      = 0;
-        while (mul != Int128.ZERO) {
-            if ((untyped mul.bits:Bits)[0] == (1:Bit)) {
-                sum += new Int128(this.bits << j);
+        while (mul.greater(Int128.ZERO)) {
+            if ((untyped mul:Bits)[0]) {
+                sum = sum.add(new Int128(this << j));
             }
-            mul >>>= 1;
+            mul = mul.urshift(1);
             ++j;
         }
 
-        return sum;
-    }
-
-    /**
-     * @{inherit}
-     */
-    @:noCompletion
-    public function toHex(group:Bool = true):String
-    {
-        return this.bits.toHex(group);
-    }
-
-    /**
-     * @{inherit}
-     */
-    @:noCompletion
-    public function toOctal():String
-    {
-        return this.bits.toOctal();
+        return negative ? sum.minus() : sum;
     }
 
     /**
@@ -591,7 +559,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     public function toString():String
     {
-        return this.bits.toString();
+        return this.toString();
     }
 
     /**
@@ -600,7 +568,7 @@ abstract Int128({ bits:Bits })
     @:noCompletion
     @:op(A >>> B) public function urshift(times:Int):Int128
     {
-        return new Int128(this.bits >>> times);
+        return new Int128(this >>> times);
     }
 
     /**
@@ -610,6 +578,6 @@ abstract Int128({ bits:Bits })
     @:commutative
     @:op(A ^ B) public function xor(i:Int128):Int128
     {
-        return new Int128(this.bits ^ untyped i.bits);
+        return new Int128(this ^ cast i);
     }
 }
