@@ -17,23 +17,23 @@ using hext.utils.Reflector;
  *
  * @generic T the type of the value to wrap
  */
-abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISynchronizer } #else T #end)
+abstract Atomic<T>(#if (cpp || cs || java || neko) { value:Null<T>, synchronizer:ISynchronizer } #else Null<T> #end)
 // implements ICloneable
 {
     /**
      * Property to access and set the Atomic's value.
      *
-     * @var T
+     * @var Null<T>
      */
-    public var val(get, set):T;
+    public var val(get, set):Null<T>;
 
 
     /**
      * Constructor to initialize a new Atomic instance.
      *
-     * @param T val the initial value to set
+     * @param Null<T> val the initial value to set
      */
-    private inline function new(val:T):Void
+    public inline function new(val:Null<T> = null):Void
     {
         #if (cpp || cs || java || neko)
             this = { value: val, synchronizer: new Synchronizer() };
@@ -53,12 +53,12 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
     /**
      * Type conversion method used when casting any type to an Atomic.
      *
-     * @param A val the value to cast/wrap
+     * @param Null<A> val the value to cast/wrap
      *
      * @return hext.threading.Atomic<A>
      */
     @:noCompletion @:noUsing
-    @:from public static function from<A>(val:A):Atomic<A>
+    @:from public static function from<A>(val:Null<A>):Atomic<A>
     {
         return new Atomic<A>(val);
     }
@@ -66,12 +66,12 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:T, synchronizer:ISync
     /**
      * Internal getter method for the 'val' property.
      *
-     * @return T
+     * @return Null<T>
      */
     @:noCompletion
-    @:to private function get_val():T
+    @:to private function get_val():Null<T>
     {
-        var val:T;
+        var val:Null<T>;
         #if (cpp || cs || java || neko)
             this.synchronizer.sync(function():Void {
                 val = this.value;

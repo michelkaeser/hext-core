@@ -36,6 +36,13 @@ implements ICloneable<PoolExecutor> implements ISerializable
      */
     @:final private var jobs:IDeque<Closure>;
 
+    /**
+     * Property to access the size of the thread pool.
+     *
+     * @var Int
+     */
+    public var size(get, never):Int;
+
 
     /**
      * Constructor to initialize a new PoolExecutor.
@@ -107,5 +114,15 @@ implements ICloneable<PoolExecutor> implements ISerializable
     public function execute(fn:Closure):Void
     {
         this.jobs.add(fn);
+    }
+
+    /**
+     * Internal getter method for the 'size' property.
+     *
+     * @return Int
+     */
+    private function get_size():Int
+    {
+        return this.executors.length;
     }
 }

@@ -17,6 +17,7 @@ import haxe.Unserializer;
 import hext.ICloneable;
 import hext.ISerializable;
 import hext.UnsupportedOperationException;
+import hext.threading.Atomic;
 
 /**
  * A wrapper class around the various platform specific VM Threads
@@ -31,6 +32,13 @@ import hext.UnsupportedOperationException;
 class Thread
 implements ICloneable<Thread> implements ISerializable
 {
+    /**
+     * Property to access the number of running threads (excl. the main thread).
+     *
+     * @var hext.threading.Atomic<Int>
+     */
+    public static var count(default, null):Atomic<Int> = new Atomic<Int>(0);
+
     /**
      * Stores the underlaying native Thread.
      *
@@ -108,14 +116,20 @@ implements ICloneable<Thread> implements ISerializable
         #if cs
             var t:VMThread = new VMThread(new ThreadStart(function():Void {
                 fn();
+                Thread.count.val -= 1;
                 Thread.threads.remove(Thread.current().handle);
             }));
             thread         = new Thread(t);
             t.IsBackground = true;
             Thread.threads.set(t, thread);
+            Thread.count.val += 1;
             t.Start();
         #else
-            thread = new Thread(VMThread.create(fn));
+            Thread.count.val += 1;
+            thread = new Thread(VMThread.create(function():Void {
+                fn();
+                Thread.count.val -= 1;
+            }));
         #end
 
         return thread;
