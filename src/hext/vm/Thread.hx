@@ -115,7 +115,13 @@ implements ICloneable<Thread> implements ISerializable
         var thread:Thread;
         #if cs
             var t:VMThread = new VMThread(new ThreadStart(function():Void {
-                fn();
+                try {
+                    fn();
+                } catch (ex:Dynamic) {
+                    Thread.count.val -= 1;
+                    Thread.threads.remove(Thread.current().handle);
+                    throw ex;
+                }
                 Thread.count.val -= 1;
                 Thread.threads.remove(Thread.current().handle);
             }));
@@ -127,7 +133,12 @@ implements ICloneable<Thread> implements ISerializable
         #else
             Thread.count.val += 1;
             thread = new Thread(VMThread.create(function():Void {
-                fn();
+                try {
+                    fn();
+                } catch (ex:Dynamic) {
+                    Thread.count.val -= 1;
+                    throw ex;
+                }
                 Thread.count.val -= 1;
             }));
         #end
