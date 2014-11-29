@@ -206,7 +206,7 @@ implements ICloneable<Thread> implements ISerializable
     public function sendMessage(msg:Dynamic):Thread
     {
         #if cs
-            Thread.threads.get(this.handle).messages.push(msg);
+            Thread.threads.get(this.handle).messages.add(msg);
         #else
             this.handle.sendMessage(msg);
         #end

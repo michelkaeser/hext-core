@@ -106,9 +106,16 @@ abstract Atomic<T>(#if (cpp || cs || java || neko) { value:Null<T>, synchronizer
 
     /**
      * @{inherit}
+     *
+     * FIXME:
+     *   - C#: error CS0246: The type or namespace name `T' could not be found. Are you missing an assembly reference?
      */
     public function toString():String
     {
-        return Std.string((cast this:Atomic<Dynamic>).val);
+        #if cs
+            return Std.string(this);
+        #else
+            return Std.string((cast this:Atomic<Dynamic>).val);
+        #end
     }
 }
