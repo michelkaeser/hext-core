@@ -59,7 +59,7 @@ implements ICloneable<Thread> implements ISerializable
          *
          * @var ObjectMap<hext.vm.Thread.VMThread, hext.vm.Thread>
          */
-        @:final private static var threads:ObjectMap<VMThread, Thread> = {
+        private static var threads:ObjectMap<VMThread, Thread> = {
             var map    = new ObjectMap<VMThread, Thread>();
             var handle = VMThread.CurrentThread;
             map.set(handle, new Thread(handle));
