@@ -97,7 +97,7 @@ implements ICloneable<SynchronizedList<T>> implements ISerializable
         var filtered:SynchronizedList<T> = new SynchronizedList<T>();
         this.mutex.acquire();
         try {
-            for (item in super) {
+            for (item in super.iterator()) {
                 if (filter(item)) {
                     filtered.add(item);
                 }
@@ -185,14 +185,6 @@ implements ICloneable<SynchronizedList<T>> implements ISerializable
         this.mutex.release();
 
         return empty;
-    }
-
-    /**
-     * @{inherit}
-     */
-    override public function iterator():SynchronizedIterator<T>
-    {
-        return new SynchronizedIterator<T>(super.iterator());
     }
 
     /**

@@ -1,10 +1,10 @@
 package hext.utils;
 
-import Map;
-import haxe.ds.BalancedTree;
-//import haxe.ds.GenericStack;
-import haxe.ds.HashMap;
+import haxe.ds.IntMap;
+import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import haxe.ds.Vector;
+import haxe.ds.WeakMap;
 import hext.ICloneable;
 
 using hext.ArrayTools;
@@ -55,7 +55,7 @@ class Reflector
                             copy.add(childFn(item));
                         }
                     }
-                } else if (Std.is(v, BalancedTree) || Std.is(v, HashMap) || Std.is(v, IMap)) {
+                } else if (Std.is(v, IntMap) || Std.is(v, ObjectMap) || Std.is(v, StringMap) || Std.is(v, WeakMap)) {
                     copy = Type.createInstance(Type.getClass(v), []);
                     untyped {
                         var keys:Iterator<String> = v.keys();
@@ -71,24 +71,8 @@ class Reflector
                             copy.push(childFn(item));
                         }
                     }
-                // } else if (Std.is(v, GenericStack)) {
-                //     copy = Type.createInstance(Type.getClass(v), []);
-                //     untyped {
-                //         var it:Iterator<Dynamic> = v.iterator();
-                //         for (item in it) {
-                //             copy.add(childFn(item));
-                //         }
-                //     }
-                } else if (Std.is(v, Vector)) {
-                    var length:Int = untyped v.length;
-                    copy = Type.createInstance(Type.getClass(v), [length]);
-                    untyped {
-                        for (i in 0...length) {
-                            copy.set(i, childFn(v.get(i)));
-                        }
-                    }
                 } else if (Type.getClass(v) == null) { // anonymous struct
-                    copy = Reflect.copy(v);
+                    copy = Reflect.copy(v); // TODO: check if is deep-copy
                 } else { // class
                     copy = Type.createEmptyInstance(Type.getClass(v));
                     for (field in Reflect.fields(v)) {
