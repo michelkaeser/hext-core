@@ -11,9 +11,8 @@ import hext.io.Bits;
  * An abstract cross-target 128-bit signed Integer implementation.
  *
  * TODO:
- *   - div, mod
+ *   - mod
  *   - check immutability
- *   - check if bits alone can be used as underlaying type
  *
  * Performance:
  *   - SUPER: ++A, --B
@@ -31,8 +30,8 @@ abstract Int128(Bits)
      */
     public static var MAX_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
-        i = i.lshift(Int128.NBITS - 1);
-        i = i.subs(1);
+        i <<= Int128.NBITS - 1;
+        i  -= 1;
         i;
     };
 
@@ -43,7 +42,7 @@ abstract Int128(Bits)
      */
     public static var MIN_VALUE(default, never):Int128 = {
         var i:Int128 = 1;
-        i = i.lshift(Int128.NBITS - 1);
+        i <<= Int128.NBITS - 1;
         i;
     };
 
@@ -179,8 +178,6 @@ abstract Int128(Bits)
     /**
      * Operator method that is called when dividing an Int128.
      *
-     * TODO: negative values (either dividend or divisor)
-     *
      * @link http://stackoverflow.com/questions/5284898/implement-division-with-bit-wise-operator
      * @link http://www.wikihow.com/Divide-Binary-Numbers
      *
@@ -195,12 +192,22 @@ abstract Int128(Bits)
             throw new UnsupportedOperationException("Division by zero.");
         }
 
+        var div:Int128    = cast this;
+        var negative:Bool = false;
+        if (Int128.isNegative(cast this) && Int128.isPositive(i)) {
+            div      = -div;
+            negative = true;
+        } else if (Int128.isNegative(i) && Int128.isPositive(cast this)) {
+            i        = -i;
+            negative = true;
+        }
         var sum:Int128 = Int128.alloc();
-        while ((sum.times(i)).lessEquals(cast this)) {
+        while ((sum * i) <= div) {
             ++sum;
         }
+        --sum;
 
-        return --sum;
+        return negative ? -sum : sum;
     }
 
     /**
@@ -371,7 +378,7 @@ abstract Int128(Bits)
     @:noCompletion
     @:op(-A) public function minus():Int128
     {
-        return Int128.ZERO.subs(cast this);
+        return Int128.ZERO - cast this;
     }
 
     /**
@@ -514,7 +521,7 @@ abstract Int128(Bits)
     @:op(A - B) public function subs(i:Int128):Int128
     {
         var subs:Int128 = new Int128(~(cast i:Bits));
-        return ++subs.add(cast this);
+        return ++subs + cast this;
     }
 
     /**
@@ -531,22 +538,22 @@ abstract Int128(Bits)
     {
         var negative:Bool = false;
         if (Int128.isNegative(i)) {
-            i = i.minus();
+            i = -i;
             negative = true;
         }
 
         var mul:Int128 = i;
         var sum:Int128 = Int128.alloc();
         var j:Int      = 0;
-        while (mul.greater(Int128.ZERO)) {
+        while (mul > Int128.ZERO) {
             if ((untyped mul:Bits)[0]) {
-                sum = sum.add(new Int128(this << j));
+                sum += new Int128(this << j);
             }
-            mul = mul.urshift(1);
+            mul >>>= 1;
             ++j;
         }
 
-        return negative ? sum.minus() : sum;
+        return negative ? -sum : sum;
     }
 
     /**
