@@ -119,9 +119,9 @@ class FileTools
             } catch (ex:Dynamic) {
                 throw new IOException(ex);
             }
+        } else {
+            throw new FileNotFoundException();
         }
-
-        throw new FileNotFoundException();
     }
 
     /**
@@ -141,9 +141,9 @@ class FileTools
             } catch (ex:Dynamic) {
                 throw new IOException(ex);
             }
+        } else {
+            throw new FileNotFoundException();
         }
-
-        throw new FileNotFoundException();
     }
 
     /**
